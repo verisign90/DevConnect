@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { Meteor } from "meteor/meteor";
 
 const Join = () => {
   //기술스택 목록
@@ -25,9 +26,9 @@ const Join = () => {
     "ReactNative",
   ];
 
-  const nameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const emailRef = useRef(null);
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [role, setRole] = useState("backend");
   const [myStack, setMyStack] = useState([]);
 
@@ -45,17 +46,41 @@ const Join = () => {
     setMyStack(myStack.filter((st) => st !== stack));
   };
 
+  //이름 중복확인
+  const checkName = () => {
+    if (!name) {
+      alert("이름을 입력해 주세요");
+      return;
+    }
+
+    Meteor.call("checkName", name, (err, isExist) => {
+      if (err) {
+        console.error(err);
+        alert("서버 에러가 발생했습니다");
+        return;
+      }
+
+      if (isExist) {
+        alert("이미 사용 중인 이름입니다");
+      } else {
+        alert("사용 가능한 이름입니다");
+      }
+    });
+  };
+
   //회원가입
-  const join = () => {
+  const join = (e) => {
+    e.preventDefault();
+
+    if (myStack.length === 0) {
+      alert("기술스택을 최소 1개 선택해 주세요");
+      return;
+    }
+
     const user = {
-      username: nameRef.current.value,
-      password: passwordRef.current.value,
-      emails: [
-        {
-          address: emailRef.current.value,
-          verified: false,
-        },
-      ],
+      username: name,
+      password: password,
+      email: email,
       profile: {
         role: role,
         techStack: myStack,
@@ -68,65 +93,86 @@ const Join = () => {
   return (
     <>
       <h2>회원가입</h2>
-      <input type="text" ref={nameRef} placeholder="닉네임을 입력해 주세요" />
-      <br />
-      <input
-        type="text"
-        ref={passwordRef}
-        placeholder="비밀번호를 입력해 주세요"
-      />
-      <br />
-      <input type="text" ref={emailRef} placeholder="이메일을 입력해 주세요" />
-      <br />
-
-      <label>
+      <form onSubmit={join}>
         <input
-          type="radio"
-          value="backend"
-          name="role"
-          checked={role === "backend"}
-          onChange={() => setRole("backend")}
-        />{" "}
-        백엔드
-      </label>
-      <label>
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="이름을 입력해 주세요"
+        />
+        <button type="button" onClick={checkName}>
+          중복확인
+        </button>
+        <br />
         <input
-          type="radio"
-          value="frontend"
-          name="role"
-          checked={role === "frontend"}
-          onChange={() => setRole("frontend")}
-        />{" "}
-        프론트엔드
-      </label>
-      <br />
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="비밀번호를 입력해 주세요"
+        />
+        <br />
+        <input
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="이메일을 입력해 주세요"
+        />
+        <button type="button">이메일인증</button>
+        <br />
 
-      <label>
-        <select onChange={selectStack} value="" disabled={myStack.length === 5}>
-          <option value="" disabled>
-            기술스택
-          </option>
-          {stackList.map((stack) => (
-            <option key={stack} value={stack}>
-              {stack}
+        <label>
+          <input
+            type="radio"
+            value="backend"
+            name="role"
+            checked={role === "backend"}
+            onChange={() => setRole("backend")}
+          />{" "}
+          백엔드
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="frontend"
+            name="role"
+            checked={role === "frontend"}
+            onChange={() => setRole("frontend")}
+          />{" "}
+          프론트엔드
+        </label>
+        <br />
+
+        <label>
+          <select
+            onChange={selectStack}
+            value=""
+            disabled={myStack.length === 5}
+          >
+            <option value="" disabled>
+              기술스택 (최대 5개 선택)
             </option>
-          ))}
-        </select>
-      </label>
-      <br />
-      {myStack.length > 0 && (
-        <>
-          {myStack.map((stack) => (
-            <span key={stack} style={{ marginRight: "10px" }}>
-              {stack}
-              <button onClick={() => deleteStack(stack)}>X</button>
-            </span>
-          ))}
-        </>
-      )}
-      <br />
+            {stackList.map((stack) => (
+              <option key={stack} value={stack}>
+                {stack}
+              </option>
+            ))}
+          </select>
+        </label>
+        <br />
+        {myStack.length > 0 && (
+          <>
+            {myStack.map((stack) => (
+              <span key={stack} style={{ marginRight: "10px" }}>
+                {stack}
+                <button onClick={() => deleteStack(stack)}>X</button>
+              </span>
+            ))}
+          </>
+        )}
+        <br />
 
-      <button onClick={join}>회원가입</button>
+        <button type="submit">회원가입</button>
+      </form>
     </>
   );
 };

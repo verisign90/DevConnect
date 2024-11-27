@@ -19,7 +19,6 @@ export const App = () => {
 
   //사용자가 로그인 중이면 표시. 로그인 처리가 완료되기 전까지 표시됨
   if (loggingIn) {
-    console.log("LOGINGING>...>>>>>>>>>>>>>>>>>>>>>>");
     return <div>... loading</div>;
   }
 
@@ -47,8 +46,10 @@ export const App = () => {
           element={<PostDetail></PostDetail>}
         ></Route>
         <Route path="*" element={<NotFound />}></Route>
+
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
+        <Route path="/editProfile" element={<EditProfile />} />
       </Routes>
     </Router>
   );
