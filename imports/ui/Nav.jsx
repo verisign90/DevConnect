@@ -23,6 +23,9 @@ export default () => {
             <li>
               <Link to="/join">회원가입</Link>
             </li>
+            <li>
+              <Link to="/editProfile">프로필 수정</Link>
+            </li>
           </ul>
         </nav>
       </header>

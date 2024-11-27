@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 
-//회원가입
+//로그인
 const Login = () => {
   //현재 로그인 상태를 자동으로 추적해서 컴포넌트 재렌더링
   useTracker(() => {

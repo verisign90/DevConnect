@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Meteor } from "meteor/meteor";
 
+//회원가입
 const Join = () => {
   //기술스택 목록
   const stackList = [
@@ -31,6 +32,7 @@ const Join = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("backend");
   const [myStack, setMyStack] = useState([]);
+  const [nameCheck, setNameCheck] = useState(false); //중복확인 했는지 여부
 
   //selectbox에서 선택한 기술스택을 중복되지 않게 myStack에 추가
   const selectStack = (e) => {
@@ -64,6 +66,7 @@ const Join = () => {
         alert("이미 사용 중인 이름입니다");
       } else {
         alert("사용 가능한 이름입니다");
+        setNameCheck(true);
       }
     });
   };
@@ -71,6 +74,11 @@ const Join = () => {
   //회원가입
   const join = (e) => {
     e.preventDefault();
+
+    if (!nameCheck) {
+      alert("이름 중복확인을 해주세요");
+      return;
+    }
 
     if (myStack.length === 0) {
       alert("기술스택을 최소 1개 선택해 주세요");
@@ -84,6 +92,7 @@ const Join = () => {
       profile: {
         role: role,
         techStack: myStack,
+        image: null,
       },
     };
     Accounts.createUser(user);
