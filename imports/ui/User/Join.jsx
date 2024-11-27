@@ -102,7 +102,7 @@ const Join = () => {
       <br />
 
       <label>
-        <select onChange={selectStack} disabled={myStack.length === 5}>
+        <select onChange={selectStack} value="" disabled={myStack.length === 5}>
           <option value="" disabled>
             기술스택
           </option>
