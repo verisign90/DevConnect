@@ -2,7 +2,7 @@ import { Mongo } from "meteor/mongo";
 import { FilesCollection } from "meteor/ostrio:files";
 
 //export const LinksCollection = new Mongo.Collection('links');
-export const userScore = new Mongo.Collection("userScores");
+export const userScores = new Mongo.Collection("userScores");
 
 export const Files = new FilesCollection({
   //FilesCollection 파일 업로드 기능을 제공하는 컬렉션
