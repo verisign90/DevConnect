@@ -26,7 +26,7 @@ const stackList = [
 ];
 
 // Meteor.users.remove({});
-userScores.remove({});
+// userScores.remove({});
 
 //admin이 없다면
 if (!Meteor.users.findOne({ username: "admin" })) {
@@ -87,47 +87,47 @@ if (!userScores.findOne()) {
 }
 
 //평가 받은 후 평균 점수를 계산해 유저의 점수로 갱신
-if (userScores.find()) {
-  Meteor.users.find({ username: { $ne: "admin" } }).forEach((user) => {
-    const total = {
-      manner: 0,
-      mentoring: 0,
-      passion: 0,
-      communication: 0,
-      time: 0,
-    };
+// if (userScores.find()) {
+//   Meteor.users.find({ username: { $ne: "admin" } }).forEach((user) => {
+//     const total = {
+//       manner: 0,
+//       mentoring: 0,
+//       passion: 0,
+//       communication: 0,
+//       time: 0,
+//     };
 
-    //평가 받은 점수 문서 모두 가져오기
-    const userScore = userScores.find({ userId: user._id }).fetch();
-    console.log(`유저 ${user._id} 점수: `, userScore);
-    //평가 문서 개수(평가한 사람 수)
-    const memberCount = userScore.length;
-    //총합 구하기
-    for (let i = 0; i < memberCount; i++) {
-      total.manner += userScore.score.manner;
-      total.mentoring += userScore.score.mentoring;
-      total.passion += userScore.score.passion;
-      total.communication += userScore.score.communication;
-      total.time += userScore.score.time;
-    }
+//     //평가 받은 점수 문서 모두 가져오기
+//     const userScore = userScores.find({ userId: user._id }).fetch();
+//     console.log(`유저 ${user._id} 점수: `, userScore);
+//     //평가 문서 개수(평가한 사람 수)
+//     const memberCount = userScore.length;
+//     //총합 구하기
+//     for (let i = 0; i < memberCount; i++) {
+//       total.manner += userScore.score.manner;
+//       total.mentoring += userScore.score.mentoring;
+//       total.passion += userScore.score.passion;
+//       total.communication += userScore.score.communication;
+//       total.time += userScore.score.time;
+//     }
 
-    //평균 구하기
-    total.manner /= memberCount;
-    total.mentoring /= memberCount;
-    total.passion /= memberCount;
-    total.communication /= memberCount;
-    total.time /= memberCount;
+//     //평균 구하기
+//     total.manner /= memberCount;
+//     total.mentoring /= memberCount;
+//     total.passion /= memberCount;
+//     total.communication /= memberCount;
+//     total.time /= memberCount;
 
-    //유저의 점수 갱신
-    Meteor.users.update(
-      {
-        _id: user._id,
-      },
-      {
-        $set: {
-          "profile.score": total,
-        },
-      }
-    );
-  });
-}
+//     //유저의 점수 갱신
+//     Meteor.users.update(
+//       {
+//         _id: user._id,
+//       },
+//       {
+//         $set: {
+//           "profile.score": total,
+//         },
+//       }
+//     );
+//   });
+// }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { Files } from "/imports/api/collections";
@@ -34,12 +34,33 @@ const EditProfile = () => {
   const fileInputRef = useRef(null);
   const [name, setName] = useState("");
   const [myStack, setMyStack] = useState([]);
+  const [nameCheck, setNameCheck] = useState(false);
+  const [nameModify, setNameModify] = useState(false);
+  const [photoModify, setPhotoModify] = useState(false);
+  const [techStackModify, setTechStackModify] = useState(false);
 
-  //현재 로그인한 사용자의 username 추적
-  const username = useTracker(() => {
+  //현재 로그인한 사용자의 이름, 기술스택 추적
+  const { username, techStack, isLoading } = useTracker(() => {
     const user = Meteor.user(); //현재 로그인된 유저 데이터
-    return user.username;
+    console.log(user);
+
+    return {
+      username: user?.username,
+      techStack: user?.profile.techStack,
+      isLoading: !user,
+    };
   });
+
+  //사용자의 기술스택이 변할 때마다 myStack 업데이트
+  useEffect(() => {
+    if (techStack && myStack.length === 0) {
+      setMyStack(techStack);
+    }
+  }, []);
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   //사용자가 선택한 파일에 대한 미리보기 url 설정
   const fileChange = (e) => {
@@ -47,42 +68,80 @@ const EditProfile = () => {
       const file = e.currentTarget.files[0];
       setSelectFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      setPhotoModify(true);
     }
   };
 
-  //파일 업로드
-  const fileUpload = () => {
-    if (!selectFile) {
-      alert("선택한 파일이 없습니다");
-      return;
+  //프로필 저장
+  const saveProfile = () => {
+    const profileData = {};
+
+    if (nameModify && name) {
+      profileData.username = name;
     }
 
-    //파일을 서버에 저장하고 업로드 진행 상태를 추적할 수 있는 upload 이벤트 리스너 반환
-    const upload = Files.insert(
-      {
-        file: selectFile,
-        //파일을 동적으로 chunk로 나누어 업로드(대용량 파일 업로드 시 성능 향상)
-        chunkSize: "dynamic",
-      },
-      false //파일 업로드 비동기 처리
-    );
+    if (techStackModify && myStack.length > 0) {
+      profileData.profile = { techStack: myStack };
+    }
 
-    //업로드 시작
-    upload.on("start", function () {
-      console.log("업로드 시작");
-    });
+    if (photoModify && selectFile) {
+      //파일을 서버에 저장하고 업로드 진행 상태를 추적할 수 있는 upload 이벤트 리스너 반환
+      const upload = Files.insert(
+        {
+          file: selectFile,
+          //파일을 동적으로 chunk로 나누어 업로드(대용량 파일 업로드 시 성능 향상)
+          chunkSize: "dynamic",
+        },
+        false //파일 업로드 비동기 처리
+      );
 
-    //업로드 완료
-    upload.on("end", function (err, fileObj) {
-      if (err) {
-        console.error("파일 업로드 end 에러: ", err);
-      } else {
-        alert("파일이 업로드되었습니다");
-      }
-    });
+      // 업로드 시작
+      upload.on("start", function () {
+        console.log("업로드 시작");
+      });
 
-    //실제 파일 업로드 프로세스 시작
-    upload.start();
+      // 업로드 완료
+      upload.on("end", function (err, fileObj) {
+        if (err) {
+          console.error("파일 업로드 end 에러: ", err);
+        } else {
+          console.log("파일이 업로드되었습니다");
+          const fileLink = Files.link(fileObj);
+
+          profileData.profile = { image: fileLink };
+          console.log(Meteor.user().id);
+          Meteor.call(
+            "updateProfile",
+            profileData,
+            Meteor.user()._id,
+            (err) => {
+              if (err) {
+                console.error("updateProfile 에러: ", err);
+              } else {
+                alert("프로필이 업데이트 되었습니다");
+              }
+            }
+          );
+        }
+      });
+
+      // 실제 파일 업로드 프로세스 비동기로 시작
+      upload.start();
+    } else {
+      //이름/기술스택/사진 변경을 서버에 반영
+      Meteor.call(
+        "updateProfile",
+        profileData,
+        Meteor.user()._id,
+        (err, rlt) => {
+          if (err) {
+            console.error("updateProfile 에러: ", err);
+          } else {
+            alert("프로필이 업데이트 되었습니다");
+          }
+        }
+      );
+    }
   };
 
   //사진 업로드 버튼 클릭 시, input type="file" 클릭됨
@@ -96,7 +155,37 @@ const EditProfile = () => {
 
     if (select && !myStack.includes(select)) {
       setMyStack([...myStack, select]);
+      setTechStackModify(true);
     }
+  };
+
+  //기술스택 삭제
+  const removeStack = (stack) => {
+    setMyStack(myStack.filter((st) => st !== stack));
+    setTechStackModify(true);
+  };
+
+  //이름 중복확인
+  const checkName = () => {
+    if (!name) {
+      alert("이름을 입력해 주세요");
+      return;
+    }
+
+    Meteor.call("checkName", name, (err, isExist) => {
+      if (err) {
+        console.error("프로필 수정 checkName 실패: ", err);
+        return;
+      }
+
+      if (isExist) {
+        alert("이미 사용 중인 이름입니다");
+      } else {
+        alert("사용 가능한 이름입니다");
+        setNameCheck(true);
+        setNameModify(true);
+      }
+    });
   };
 
   return (
@@ -146,7 +235,7 @@ const EditProfile = () => {
         onChange={(e) => setName(e.target.value)}
         placeholder={username}
       />
-      <button>중복확인</button>
+      <button onClick={checkName}>중복확인</button>
       <hr />
 
       <h3>기술스택 변경</h3>
@@ -162,13 +251,15 @@ const EditProfile = () => {
           ))}
         </select>
       </label>
+      <br />
       {myStack.map((stack) => (
         <span key={stack} style={{ marginRight: "10px" }}>
           {stack}
+          <button onClick={() => removeStack(stack)}>X</button>
         </span>
       ))}
       <br />
-      <button onClick={fileUpload}>프로필저장</button>
+      <button onClick={saveProfile}>프로필저장</button>
     </>
   );
 };

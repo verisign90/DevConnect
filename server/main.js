@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
-import "./join.js";
 import "./init.js";
+import "./user/join.js";
+import "./mypage/editprofile.js";
 
 //Meteor가 실행될 때 자동으로 호출되는 함수. 초기 설정할 때 유용. (환경변수/DB연결/외부 API 설정)
 Meteor.startup(() => {
