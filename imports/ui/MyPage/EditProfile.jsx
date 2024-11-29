@@ -40,13 +40,15 @@ const EditProfile = () => {
   const [techStackModify, setTechStackModify] = useState(false);
 
   //현재 로그인한 사용자의 이름, 기술스택 추적
-  const { username, techStack, isLoading } = useTracker(() => {
+  const { username, techStack, userFile, isLoading } = useTracker(() => {
     const user = Meteor.user(); //현재 로그인된 유저 데이터
     console.log(user);
+    const userFile = Files.findOne({ userId: user._id });
 
     return {
       username: user?.username,
       techStack: user?.profile.techStack,
+      userFile: userFile,
       isLoading: !user,
     };
   });
@@ -106,10 +108,12 @@ const EditProfile = () => {
           console.error("파일 업로드 end 에러: ", err);
         } else {
           console.log("파일이 업로드되었습니다");
+          console.log("fileObj: ", fileObj);
+          //fileObj 파일 업로드 완료 후 생성되는 객체
+          //link() fileObj에 대한 공개 url 생성
           const fileLink = Files.link(fileObj);
 
           profileData.profile = { image: fileLink };
-          console.log(Meteor.user().id);
           Meteor.call(
             "updateProfile",
             profileData,
@@ -192,7 +196,20 @@ const EditProfile = () => {
     <>
       <h2>프로필 수정</h2>
       <h3>사진 변경</h3>
-      {previewUrl ? (
+      {userFile ? (
+        <div style={{ marginBottom: "20px" }}>
+          <img
+            src={userFile.link()}
+            style={{
+              width: "300px",
+              height: "300px",
+              borderRadius: "50%", //모서리 둥글게
+              objectFit: "cover", //비율 유지하면서 완전히 채움
+              border: "2px solid #ddd",
+            }}
+          />
+        </div>
+      ) : previewUrl ? (
         <div style={{ marginBottom: "20px" }}>
           <img
             src={previewUrl}
