@@ -135,8 +135,8 @@ const Join = () => {
             name="role"
             checked={role === "backend"}
             onChange={() => setRole("backend")}
-          />{" "}
-          백엔드
+          />
+          백엔드{" "}
         </label>
         <label>
           <input
@@ -145,8 +145,8 @@ const Join = () => {
             name="role"
             checked={role === "frontend"}
             onChange={() => setRole("frontend")}
-          />{" "}
-          프론트엔드
+          />
+          프론트엔드{" "}
         </label>
         <br />
 

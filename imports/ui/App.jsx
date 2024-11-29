@@ -8,8 +8,11 @@ import { useTracker } from "meteor/react-meteor-data";
 
 import Login from "./User/Login.jsx";
 import Join from "./User/Join.jsx";
-import EditProfile from "./MyPage/EditProfile.jsx";
 import Password from "./User/Password.jsx";
+
+import EditProfile from "./MyPage/EditProfile.jsx";
+
+import Write from "./Project/Write.jsx";
 
 export const App = () => {
   //로그인 사용자 데이터 도착 전에 화면이 렌더링되지 않도록 로딩 페이지 적용
@@ -32,9 +35,7 @@ export const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
-          <Route path="/editProfile" element={<EditProfile />} />
-          <Route path="/resetPassword/:token" element={<Password />} />
-          <Route path="/resetPassword" element={<Password />} />
+          <Route path="/write" element={<Write />} />
         </Routes>
       </Router>
     );
@@ -57,6 +58,7 @@ export const App = () => {
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/resetPassword/:token" element={<Password />} />
         <Route path="/resetPassword" element={<Password />} />
+        <Route path="/write" element={<Write />} />
       </Routes>
     </Router>
   );

@@ -29,6 +29,9 @@ export default () => {
             <li>
               <Link to="/resetPassword">비밀번호 변경</Link>
             </li>
+            <li>
+              <Link to="/write">프로젝트 모집</Link>
+            </li>
           </ul>
         </nav>
       </header>
