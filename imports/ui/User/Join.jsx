@@ -126,7 +126,6 @@ const Join = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="이메일을 입력해 주세요"
         />
-        <button type="button">이메일인증</button>
         <br />
 
         <label>

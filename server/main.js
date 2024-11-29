@@ -8,5 +8,5 @@ Meteor.startup(() => {
   //process.env 노드에서 환경변수 다룰 때 사용
   //mail_url 이메일 전송 시 사용하는 환경변수
   process.env.MAIL_URL =
-    "smtps://aplint@naver.com:sbjwfaqddjvdiirp@smtp.gmail.com:465";
+    "smtps://aplint0109@gmail.com:bfbvexltskgleeoh@smtp.gmail.com:465";
 });

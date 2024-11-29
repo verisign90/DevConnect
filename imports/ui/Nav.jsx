@@ -26,6 +26,9 @@ export default () => {
             <li>
               <Link to="/editProfile">프로필 수정</Link>
             </li>
+            <li>
+              <Link to="/resetPassword">비밀번호 변경</Link>
+            </li>
           </ul>
         </nav>
       </header>
