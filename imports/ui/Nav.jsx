@@ -11,9 +11,6 @@ export default () => {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/postDetail/testID">DÒetailPage</Link>
-            </li>
-            <li>
               <Link to="/postInsert">NotFound</Link>
             </li>
 
@@ -30,7 +27,10 @@ export default () => {
               <Link to="/resetPassword">비밀번호 변경</Link>
             </li>
             <li>
-              <Link to="/write">프로젝트 모집</Link>
+              <Link to="/write">모집글 작성</Link>
+            </li>
+            <li>
+              <Link to="/detail">모집글 상세조회</Link>
             </li>
           </ul>
         </nav>

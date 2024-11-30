@@ -1,5 +1,6 @@
-import { UserScores } from "/imports/api/collections";
+import { UserScores, Studys } from "/imports/api/collections";
 import "/imports/lib/utils.js";
+import locationData from "./location.js";
 
 //기술스택 목록
 const stackList = [
@@ -126,4 +127,47 @@ const calculateaAvgScore = () => {
 };
 if (!UserScores.findOne()) {
   calculateaAvgScore();
+}
+
+//스터디(프로젝트) 모집글이 없다면
+if (!Studys.findOne()) {
+  Array.range(0, 5).forEach((i) => {
+    const user = Meteor.users.find().fetch().random();
+
+    //글 3개 이상 작성한 사용자는 더 이상 글을 작성할 수 없음
+    if (
+      Studys.find({
+        userId: user._id,
+        status: { $in: ["모집중", "모집완료"] },
+      }).count() >= 3
+    ) {
+      return;
+    }
+
+    //시/도, 구/군 설정
+    const randomCity = locationData.random();
+    const randomGubun = randomCity.gubun.random();
+
+    Studys.insert({
+      userId: user._id,
+      title: "제목" + i,
+      role: ["전체", "백엔드", "프론트엔드"].random(),
+      onOff: ["온라인", "오프라인", "온/오프라인"].random(),
+      location: {
+        city: randomCity.city,
+        gubun: randomGubun,
+      },
+      memberCount: [2, 3, 4, 5, 6].random(),
+      techStack: stackList.random(1, 5),
+      score: {
+        manner: [0, 1, 2, 3].random(),
+        mentoring: [0, 1, 2, 3].random(),
+        passion: [0, 1, 2, 3].random(),
+        communication: [0, 1, 2, 3].random(),
+        time: [0, 1, 2, 3].random(),
+      },
+      status: "모집중",
+      createdAt: new Date(),
+    });
+  });
 }

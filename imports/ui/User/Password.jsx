@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Accounts } from "meteor/accounts-base";
 
+//비밀번호 변경
 const Password = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

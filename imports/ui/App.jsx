@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./Home.jsx";
 import NotFound from "./NotFound.jsx";
 import Nav from "./Nav.jsx";
-import PostDetail from "./PostDetail.jsx";
 import { useTracker } from "meteor/react-meteor-data";
 
 import Login from "./User/Login.jsx";
@@ -13,6 +12,7 @@ import Password from "./User/Password.jsx";
 import EditProfile from "./MyPage/EditProfile.jsx";
 
 import Write from "./Project/Write.jsx";
+import Detail from "./Project/Detail.jsx";
 
 export const App = () => {
   //로그인 사용자 데이터 도착 전에 화면이 렌더링되지 않도록 로딩 페이지 적용
@@ -35,7 +35,7 @@ export const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
-          <Route path="/write" element={<Write />} />
+          <Route path="/detail/:id" element={<Detail />} />
         </Routes>
       </Router>
     );
@@ -47,18 +47,17 @@ export const App = () => {
       <Nav />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route
-          path="/postDetail/:_id"
-          element={<PostDetail></PostDetail>}
-        ></Route>
         <Route path="*" element={<NotFound />}></Route>
 
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
-        <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/resetPassword/:token" element={<Password />} />
         <Route path="/resetPassword" element={<Password />} />
+
+        <Route path="/editProfile" element={<EditProfile />} />
+
         <Route path="/write" element={<Write />} />
+        <Route path="/detail/:id" element={<Detail />} />
       </Routes>
     </Router>
   );

@@ -1,4 +1,4 @@
-export default () => [
+export default [
   {
     city: "서울특별시",
     gubun: [

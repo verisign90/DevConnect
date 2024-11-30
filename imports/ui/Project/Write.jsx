@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
+import { useNavigate } from "react-router-dom";
 import Location from "/imports/ui/Location.jsx";
 
+//모집글 작성
 const Write = () => {
   //기술스택 목록
   const stackList = [
@@ -29,8 +31,8 @@ const Write = () => {
   ];
 
   const titleRef = useRef(null);
-  const [role, setRole] = useState("all");
-  const [onOff, setOnOff] = useState("online");
+  const [role, setRole] = useState("백엔드/프론트엔드");
+  const [onOff, setOnOff] = useState("온라인");
   const [city, setCity] = useState("");
   const [gubun, setGubun] = useState("");
   const [gubunList, setGubunList] = useState([]);
@@ -42,7 +44,9 @@ const Write = () => {
   const [time, setTime] = useState(0); //시간준수
   const [mentoring, setMentoring] = useState(0); //재능기부
   const contentRef = useRef(null);
+  const navigate = useNavigate();
 
+  //로그인된 사용자 정보 추적
   const { user } = useTracker(() => {
     return { user: Meteor.user() };
   });
@@ -108,18 +112,19 @@ const Write = () => {
       content: contentRef.current.value,
     };
 
-    Meteor.call("insert", data, (err, rlt) => {
+    Meteor.call("insert", data, (err, studyId) => {
       if (err) {
         console.error("insert 실패: ", err);
       } else {
         alert("모집글이 업로드 되었습니다");
+        navigate(`/detail/${studyId}`);
       }
     });
   };
 
   return (
     <>
-      <h2>프로젝트 모집페이지</h2>
+      <h2>프로젝트 모집글 작성페이지</h2>
       <input type="text" ref={titleRef} placeholder="제목을 입력하세요" />
       <h4>모집분야</h4>
       <label>
@@ -127,7 +132,7 @@ const Write = () => {
           type="radio"
           value="all"
           name="role"
-          checked={role === "all"}
+          checked={role === "백엔드/프론트엔드"}
           onChange={() => setRole("all")}
         />
         전체{" "}
@@ -137,7 +142,7 @@ const Write = () => {
           type="radio"
           value="all"
           name="role"
-          checked={role === "backend"}
+          checked={role === "백엔드"}
           onChange={() => setRole("backend")}
         />
         백엔드{" "}
@@ -147,7 +152,7 @@ const Write = () => {
           type="radio"
           value="all"
           name="role"
-          checked={role === "frontend"}
+          checked={role === "프론트엔드"}
           onChange={() => setRole("frontend")}
         />
         프론트엔드{" "}
@@ -158,7 +163,7 @@ const Write = () => {
           type="radio"
           value="online"
           name="onOff"
-          checked={onOff === "online"}
+          checked={onOff === "온라인"}
           onChange={() => setOnOff("online")}
         />
         온라인{" "}
@@ -168,7 +173,7 @@ const Write = () => {
           type="radio"
           value="offline"
           name="onOff"
-          checked={onOff === "offline"}
+          checked={onOff === "오프라인"}
           onChange={() => setOnOff("offline")}
         />
         오프라인{" "}
@@ -178,7 +183,7 @@ const Write = () => {
           type="radio"
           value="onOffline"
           name="onOff"
-          checked={onOff === "onOffline"}
+          checked={onOff === "온/오프라인"}
           onChange={() => setOnOff("onOffline")}
         />
         온/오프라인{" "}
@@ -223,7 +228,6 @@ const Write = () => {
         <option value="" disabled>
           참여 인원 수를 선택하세요
         </option>
-        <option value="1">1명</option>
         <option value="2">2명</option>
         <option value="3">3명</option>
         <option value="4">4명</option>
