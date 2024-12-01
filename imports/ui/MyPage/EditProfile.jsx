@@ -42,8 +42,8 @@ const EditProfile = () => {
   //현재 로그인한 사용자의 이름, 기술스택 추적
   const { username, techStack, userFile, isLoading } = useTracker(() => {
     const user = Meteor.user(); //현재 로그인된 유저 데이터
-    console.log(user);
     const userFile = Files.findOne({ userId: user._id });
+    console.log("userFile: ", userFile);
 
     return {
       username: user?.username,

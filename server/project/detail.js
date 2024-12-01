@@ -1,5 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { Studys } from "/imports/api/collections";
+import { StudyUsers } from "/imports/api/collections";
 
 Meteor.methods({
   //작성한 모집글 정보 가져오기
@@ -20,5 +21,30 @@ Meteor.methods({
     }
 
     return study;
+  },
+
+  //삭제
+  delete: (studyId) => {
+    return Studys.remove({ _id: studyId });
+  },
+
+  //참여하기
+  join: (studyId) => {
+    //현재 로그인한 사용자의 id 가져오기(참여하기 버튼 클릭한 사용자)
+    const userId = Meteor.userId();
+
+    return StudyUsers.insert({
+      studyId: studyId,
+      userId: userId,
+      status: "대기",
+      createdAt: new Date(),
+    });
+  },
+
+  //참여 취소하기
+  cancelJoin: (studyId) => {
+    const userId = Meteor.userId();
+
+    return StudyUsers.remove({ studyId: studyId, userId: userId });
   },
 });

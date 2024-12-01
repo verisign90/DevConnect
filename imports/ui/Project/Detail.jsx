@@ -34,6 +34,7 @@ const Detail = () => {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [toggle, setToggle] = useState(false); //false : 참여하기, true : 참여취소하기
 
   //로그인된 사용자 정보 추적
   const { user } = useTracker(() => {
@@ -69,6 +70,42 @@ const Detail = () => {
     navigate(`/write/${id}`);
   };
 
+  //글 삭제
+  const remove = (id) => {
+    Meteor.call("delete", id, (err) => {
+      if (err) {
+        console.error("delete 실패: ", err);
+      } else {
+        alert("삭제되었습니다");
+        navigate("/");
+      }
+    });
+  };
+
+  //참여하기
+  const join = (id) => {
+    Meteor.call("join", id, (err) => {
+      if (err) {
+        console.error("join 실패: ", err);
+      } else {
+        alert("참여 신청이 전송되었습니다");
+        setToggle(true);
+      }
+    });
+  };
+
+  //참여 취소하기
+  const cancelJoin = (id) => {
+    Meteor.call("cancelJoin", id, (err) => {
+      if (err) {
+        console.error("cancelJoin 실패: ", err);
+      } else {
+        alert("참여 신청이 취소되었습니다");
+        setToggle(false);
+      }
+    });
+  };
+
   return (
     <>
       <h2>프로젝트 모집글 상세조회페이지</h2>
@@ -97,8 +134,13 @@ const Detail = () => {
       {writer && (
         <>
           <button onClick={edit}>수정</button>
-          <button>삭제</button>
+          <button onClick={() => remove(id)}>삭제</button>
         </>
+      )}
+      {!writer && (
+        <button onClick={() => (toggle ? cancelJoin(id) : join(id))}>
+          {toggle ? "참여신청 취소하기" : "참여신청하기"}
+        </button>
       )}
       <h4>프로젝트 참여자</h4>
       {project.image && (
