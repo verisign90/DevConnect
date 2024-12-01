@@ -13,6 +13,7 @@ import EditProfile from "./MyPage/EditProfile.jsx";
 
 import Write from "./Project/Write.jsx";
 import Detail from "./Project/Detail.jsx";
+import Project from "./Project/Project.jsx";
 
 export const App = () => {
   //로그인 사용자 데이터 도착 전에 화면이 렌더링되지 않도록 로딩 페이지 적용
@@ -33,8 +34,11 @@ export const App = () => {
       <Router>
         <Nav />
         <Routes>
+          <Route path="/" element={<Project />} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
+
           <Route path="/detail/:id" element={<Detail />} />
         </Routes>
       </Router>
@@ -46,7 +50,11 @@ export const App = () => {
     <Router>
       <Nav />
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/" element={<Project />} />
+        <Route path="/write" element={<Write />} />
+        <Route path="/write/:id" element={<Write />} />
+        <Route path="/detail/:id" element={<Detail />} />
+
         <Route path="*" element={<NotFound />}></Route>
 
         <Route path="/login" element={<Login />} />
@@ -55,10 +63,6 @@ export const App = () => {
         <Route path="/resetPassword" element={<Password />} />
 
         <Route path="/editProfile" element={<EditProfile />} />
-
-        <Route path="/write" element={<Write />} />
-        <Route path="/write/:id" element={<Write />} />
-        <Route path="/detail/:id" element={<Detail />} />
       </Routes>
     </Router>
   );

@@ -181,12 +181,12 @@ const Write = () => {
           checked={role === "백엔드/프론트엔드"}
           onChange={() => setRole("백엔드/프론트엔드")}
         />
-        전체{" "}
+        백엔드/프론트엔드{" "}
       </label>
       <label>
         <input
           type="radio"
-          value="all"
+          value="backend"
           name="role"
           checked={role === "백엔드"}
           onChange={() => setRole("백엔드")}
@@ -196,7 +196,7 @@ const Write = () => {
       <label>
         <input
           type="radio"
-          value="all"
+          value="frontend"
           name="role"
           checked={role === "프론트엔드"}
           onChange={() => setRole("프론트엔드")}

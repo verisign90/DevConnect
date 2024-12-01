@@ -8,7 +8,7 @@ export default () => {
         <nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">프로젝트 목록조회</Link>
             </li>
             <li>
               <Link to="/postInsert">NotFound</Link>

@@ -39,7 +39,7 @@ if (!Meteor.users.findOne({ username: "admin" })) {
 
 //일반 유저가 없다면
 if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 30; i++) {
     Accounts.createUser({
       username: "user" + i,
       password: "1234",
@@ -137,7 +137,7 @@ if (!UserScores.findOne()) {
 
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
-  Array.range(0, 5).forEach((i) => {
+  Array.range(0, 10).forEach((i) => {
     const user = Meteor.users.find().fetch().random();
 
     //글 3개 이상 작성한 사용자는 더 이상 글을 작성할 수 없음
@@ -157,7 +157,7 @@ if (!Studys.findOne()) {
     Studys.insert({
       userId: user._id,
       title: "제목" + i,
-      role: ["전체", "백엔드", "프론트엔드"].random(),
+      role: ["백엔드/프론트엔드", "백엔드", "프론트엔드"].random(),
       onOff: ["온라인", "오프라인", "온/오프라인"].random(),
       location: {
         city: randomCity.city,
