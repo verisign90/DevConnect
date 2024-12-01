@@ -48,3 +48,8 @@ Meteor.methods({
     return StudyUsers.remove({ studyId: studyId, userId: userId });
   },
 });
+
+/* 대기, 승인, 거절, 퇴장
+=> 대기, 승인일 경우 자유롭게 참여 취소가 가능하다
+=> 승인 됐을 때 참여 취소하면 status는 퇴장으로 바뀐다
+=> 거절 됐을 때 참여 취소가 불가능하다 */

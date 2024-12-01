@@ -1,4 +1,4 @@
-import { UserScores, Studys } from "/imports/api/collections";
+import { UserScores, Studys, StudyUsers } from "/imports/api/collections";
 import "/imports/lib/utils.js";
 import locationData from "./location.js";
 
@@ -129,7 +129,7 @@ if (!UserScores.findOne()) {
   calculateaAvgScore();
 }
 
-//스터디(프로젝트) 모집글이 없다면
+//스터디 모집글이 없다면
 if (!Studys.findOne()) {
   Array.range(0, 5).forEach((i) => {
     const user = Meteor.users.find().fetch().random();
@@ -167,7 +167,49 @@ if (!Studys.findOne()) {
         time: [0, 1, 2, 3].random(),
       },
       status: "모집중",
+      views: i,
       createdAt: new Date(),
     });
+  });
+}
+
+//스터디 신청자가 없다면
+if (!StudyUsers.findOne()) {
+  Studys.find().forEach((study) => {
+    //글 작성자는 승인된 상태로 제일 먼저 추가
+    StudyUsers.insert({
+      studyId: study._id,
+      userId: study.userId,
+      status: "승인",
+    });
+  });
+
+  //유저와 스터디를 각각 랜덤으로 뽑아 신청하는 상황 설정
+  const users = Meteor.users.find({ username: { $ne: "admin" } }).fetch();
+  const studies = Studys.find().fetch();
+  Array.range(0, 50).forEach((i) => {
+    const user = users.random();
+    const study = studies.random();
+
+    //스터디 모집글이 모집완료이면 신청 불가
+    if (study.status === "모집완료") return;
+    //유저의 점수 < 작성자 요구 점수이면 신청 불가. 유저의 점수 >= 작성자 요구 점수 신청 가능
+    if (user.profile.score.manner < study.score.manner) {
+      return;
+    }
+    if (user.profile.score.mentoring < study.score.manner) {
+      return;
+    }
+    if (user.profile.score.passion < study.score.manner) {
+      return;
+    }
+    if (user.profile.score.communication < study.score.manner) {
+      return;
+    }
+    if (user.profile.score.time < study.score.manner) {
+      return;
+    }
+    //같은 모집글에 이미 신청한 사용자는 두 번 신청할 수 없음
+    if (StudyUsers.findOne({ studyId: study._id, userId: user._id })) return;
   });
 }
