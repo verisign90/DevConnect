@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Location from "/imports/ui/Location.jsx";
 
 //모집글 작성
@@ -45,11 +45,45 @@ const Write = () => {
   const [mentoring, setMentoring] = useState(0); //재능기부
   const contentRef = useRef(null);
   const navigate = useNavigate();
+  const { id } = useParams(); //studyId
 
   //로그인된 사용자 정보 추적
   const { user } = useTracker(() => {
     return { user: Meteor.user() };
   });
+
+  //수정페이지 조회 시, id 파라미터에 맞는 데이터 가져오기
+  useEffect(() => {
+    console.log("useEffect 들어왔다");
+    if (id) {
+      Meteor.call("select", id, (err, rlt) => {
+        if (err) {
+          console.error("getStudyData 실패: ", err);
+        } else {
+          console.log(rlt);
+          titleRef.current.value = rlt.title;
+          setRole(rlt.role);
+          setOnOff(rlt.onOff);
+          setCity(rlt.location.city);
+
+          const filterGubun = Location.find(
+            (loc) => loc.city === rlt.location.city
+          );
+          setGubunList(filterGubun.gubun);
+
+          setGubun(rlt.location.gubun);
+          setMemberCount(rlt.memberCount);
+          setMyStack(rlt.techStack);
+          setManner(rlt.score.manner);
+          setCommunication(rlt.score.communication);
+          setPassion(rlt.score.passion);
+          setMentoring(rlt.score.mentoring);
+          setTime(rlt.score.time);
+          contentRef.current.value = rlt.content;
+        }
+      });
+    }
+  }, [id]);
 
   //시/도에 해당하는 구/군 목록 보여주기
   const cityGubun = (e) => {
@@ -112,14 +146,26 @@ const Write = () => {
       content: contentRef.current.value,
     };
 
-    Meteor.call("insert", data, (err, studyId) => {
-      if (err) {
-        console.error("insert 실패: ", err);
-      } else {
-        alert("모집글이 업로드 되었습니다");
-        navigate(`/detail/${studyId}`);
-      }
-    });
+    //수정할 경우 update, 작성할 경우 insert
+    if (id) {
+      Meteor.call("update", id, data, (err) => {
+        if (err) {
+          console.error("update 실패: ", err);
+        } else {
+          alert("수정되었습니다");
+          navigate(`/detail/${id}`);
+        }
+      });
+    } else {
+      Meteor.call("insert", data, (err, studyId) => {
+        if (err) {
+          console.error("insert 실패: ", err);
+        } else {
+          alert("모집글이 업로드 되었습니다");
+          navigate(`/detail/${studyId}`);
+        }
+      });
+    }
   };
 
   return (
@@ -133,7 +179,7 @@ const Write = () => {
           value="all"
           name="role"
           checked={role === "백엔드/프론트엔드"}
-          onChange={() => setRole("all")}
+          onChange={() => setRole("백엔드/프론트엔드")}
         />
         전체{" "}
       </label>
@@ -143,7 +189,7 @@ const Write = () => {
           value="all"
           name="role"
           checked={role === "백엔드"}
-          onChange={() => setRole("backend")}
+          onChange={() => setRole("백엔드")}
         />
         백엔드{" "}
       </label>
@@ -153,7 +199,7 @@ const Write = () => {
           value="all"
           name="role"
           checked={role === "프론트엔드"}
-          onChange={() => setRole("frontend")}
+          onChange={() => setRole("프론트엔드")}
         />
         프론트엔드{" "}
       </label>
@@ -164,7 +210,7 @@ const Write = () => {
           value="online"
           name="onOff"
           checked={onOff === "온라인"}
-          onChange={() => setOnOff("online")}
+          onChange={() => setOnOff("온라인")}
         />
         온라인{" "}
       </label>
@@ -174,7 +220,7 @@ const Write = () => {
           value="offline"
           name="onOff"
           checked={onOff === "오프라인"}
-          onChange={() => setOnOff("offline")}
+          onChange={() => setOnOff("오프라인")}
         />
         오프라인{" "}
       </label>
@@ -184,7 +230,7 @@ const Write = () => {
           value="onOffline"
           name="onOff"
           checked={onOff === "온/오프라인"}
-          onChange={() => setOnOff("onOffline")}
+          onChange={() => setOnOff("온/오프라인")}
         />
         온/오프라인{" "}
       </label>

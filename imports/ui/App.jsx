@@ -57,6 +57,7 @@ export const App = () => {
         <Route path="/editProfile" element={<EditProfile />} />
 
         <Route path="/write" element={<Write />} />
+        <Route path="/write/:id" element={<Write />} />
         <Route path="/detail/:id" element={<Detail />} />
       </Routes>
     </Router>

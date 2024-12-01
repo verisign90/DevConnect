@@ -42,13 +42,10 @@ const Detail = () => {
 
   //작성한 모집글 정보 가져오기
   useEffect(() => {
-    console.log("useEffect");
-    console.log("id: ", id);
     Meteor.call("getStudy", id, (err, rlt) => {
       if (err) {
         console.error("getStudy 실패: ", err);
       } else {
-        console.log("getStudy 성공", rlt);
         setProject(rlt);
         setLoading(false);
       }
@@ -59,8 +56,17 @@ const Detail = () => {
     return <div>로딩 중...</div>;
   }
 
+  //메인페이지로 이동
   const goMain = () => {
     navigate("/");
+  };
+
+  //현재 로그인한 사용자의 id와 글 작성자의 id를 비교하여 작성자인지 아닌지 확인
+  const writer = user && project && user._id === project.userId;
+
+  //수정버튼 클릭 시 작성페이지로 이동
+  const edit = () => {
+    navigate(`/write/${id}`);
   };
 
   return (
@@ -88,6 +94,12 @@ const Detail = () => {
       내용: {project.content}
       <hr />
       <button onClick={goMain}>목록</button>
+      {writer && (
+        <>
+          <button onClick={edit}>수정</button>
+          <button>삭제</button>
+        </>
+      )}
       <h4>프로젝트 참여자</h4>
       {project.image && (
         <img

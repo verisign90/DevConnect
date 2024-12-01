@@ -11,4 +11,16 @@ Meteor.methods({
       createdAt: new Date(),
     });
   },
+
+  //모집글 가져오기
+  select: (id) => {
+    return Studys.findOne({ _id: id });
+  },
+
+  //글 수정
+  update: (id, data) => {
+    const study = Studys.find({ _id: id });
+
+    return Studys.update({ _id: id }, { $set: { ...data } });
+  },
 });
