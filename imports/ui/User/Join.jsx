@@ -93,6 +93,13 @@ const Join = () => {
         role: role,
         techStack: myStack,
         image: null,
+        score: {
+          manner: 3,
+          mentoring: 3,
+          passion: 3,
+          communication: 3,
+          time: 3,
+        },
       },
     };
     Accounts.createUser(user);

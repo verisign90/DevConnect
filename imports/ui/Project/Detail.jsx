@@ -84,12 +84,14 @@ const Detail = () => {
 
   //참여하기
   const join = (id) => {
-    Meteor.call("join", id, (err) => {
+    Meteor.call("join", id, (err, rlt) => {
       if (err) {
         console.error("join 실패: ", err);
-      } else {
+      } else if (rlt.success) {
         alert("참여 신청이 전송되었습니다");
         setToggle(true);
+      } else {
+        alert(rlt.message);
       }
     });
   };

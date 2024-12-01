@@ -1,6 +1,5 @@
 import { Meteor } from "meteor/meteor";
-import { Studys } from "/imports/api/collections";
-import { StudyUsers } from "/imports/api/collections";
+import { Studys, StudyUsers } from "/imports/api/collections";
 
 Meteor.methods({
   //작성한 모집글 정보 가져오기
@@ -33,12 +32,34 @@ Meteor.methods({
     //현재 로그인한 사용자의 id 가져오기(참여하기 버튼 클릭한 사용자)
     const userId = Meteor.userId();
 
-    return StudyUsers.insert({
+    //참여 신청한 유저의 점수, 모집글에서 요구하는 점수 가져오기
+    const user = Meteor.users.findOne({ _id: userId });
+    const userScore = user.profile.score;
+    const study = Studys.findOne({ _id: studyId });
+    const studyScore = study.score;
+
+    //score 객체에서 키만 배열로 반환 ["manner", "mentoring", "passion", "communication", "time"]
+    const scoreKey = Object.keys(studyScore);
+    //유저의 점수와 모집글에서 요구하는 점수 비교
+    for (const key of scoreKey) {
+      if (userScore[key] < studyScore[key]) {
+        return {
+          success: false,
+          message:
+            "작성자가 요구하는 점수보다 부족하여 참여 신청이 불가능합니다.",
+        };
+      }
+    }
+
+    //모집글에서 요구하는 점수보다 이상일 경우 신청 가능
+    StudyUsers.insert({
       studyId: studyId,
       userId: userId,
       status: "대기",
       createdAt: new Date(),
     });
+
+    return { success: true };
   },
 
   //참여 취소하기

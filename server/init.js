@@ -48,7 +48,13 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
         role: ["백엔드", "프론트엔드"].random(),
         techStack: stackList.random(1, 5),
         image: null,
-        score: {},
+        score: {
+          manner: [1, 2, 3, 4, 5].random(),
+          mentoring: [1, 2, 3, 4, 5].random(),
+          passion: [1, 2, 3, 4, 5].random(),
+          communication: [1, 2, 3, 4, 5].random(),
+          time: [1, 2, 3, 4, 5].random(),
+        },
       },
     });
   }
@@ -166,6 +172,7 @@ if (!Studys.findOne()) {
         communication: [0, 1, 2, 3].random(),
         time: [0, 1, 2, 3].random(),
       },
+      content: "내용" + i,
       status: "모집중",
       views: i,
       createdAt: new Date(),
@@ -174,42 +181,42 @@ if (!Studys.findOne()) {
 }
 
 //스터디 신청자가 없다면
-if (!StudyUsers.findOne()) {
-  Studys.find().forEach((study) => {
-    //글 작성자는 승인된 상태로 제일 먼저 추가
-    StudyUsers.insert({
-      studyId: study._id,
-      userId: study.userId,
-      status: "승인",
-    });
-  });
+// if (!StudyUsers.findOne()) {
+//   Studys.find().forEach((study) => {
+//     //글 작성자는 승인된 상태로 제일 먼저 추가
+//     StudyUsers.insert({
+//       studyId: study._id,
+//       userId: study.userId,
+//       status: "승인",
+//     });
+//   });
 
-  //유저와 스터디를 각각 랜덤으로 뽑아 신청하는 상황 설정
-  const users = Meteor.users.find({ username: { $ne: "admin" } }).fetch();
-  const studies = Studys.find().fetch();
-  Array.range(0, 50).forEach((i) => {
-    const user = users.random();
-    const study = studies.random();
+//   //유저와 스터디를 각각 랜덤으로 뽑아 신청하는 상황 설정
+//   const users = Meteor.users.find({ username: { $ne: "admin" } }).fetch();
+//   const studies = Studys.find().fetch();
+//   Array.range(0, 50).forEach((i) => {
+//     const user = users.random();
+//     const study = studies.random();
 
-    //스터디 모집글이 모집완료이면 신청 불가
-    if (study.status === "모집완료") return;
-    //유저의 점수 < 작성자 요구 점수이면 신청 불가. 유저의 점수 >= 작성자 요구 점수 신청 가능
-    if (user.profile.score.manner < study.score.manner) {
-      return;
-    }
-    if (user.profile.score.mentoring < study.score.manner) {
-      return;
-    }
-    if (user.profile.score.passion < study.score.manner) {
-      return;
-    }
-    if (user.profile.score.communication < study.score.manner) {
-      return;
-    }
-    if (user.profile.score.time < study.score.manner) {
-      return;
-    }
-    //같은 모집글에 이미 신청한 사용자는 두 번 신청할 수 없음
-    if (StudyUsers.findOne({ studyId: study._id, userId: user._id })) return;
-  });
-}
+//     //스터디 모집글이 모집완료이면 신청 불가
+//     if (study.status === "모집완료") return;
+//     //유저의 점수 < 작성자 요구 점수이면 신청 불가. 유저의 점수 >= 작성자 요구 점수 신청 가능
+//     if (user.profile.score.manner < study.score.manner) {
+//       return;
+//     }
+//     if (user.profile.score.mentoring < study.score.manner) {
+//       return;
+//     }
+//     if (user.profile.score.passion < study.score.manner) {
+//       return;
+//     }
+//     if (user.profile.score.communication < study.score.manner) {
+//       return;
+//     }
+//     if (user.profile.score.time < study.score.manner) {
+//       return;
+//     }
+//     //같은 모집글에 이미 신청한 사용자는 두 번 신청할 수 없음
+//     if (StudyUsers.findOne({ studyId: study._id, userId: user._id })) return;
+//   });
+// }
