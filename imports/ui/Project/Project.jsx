@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTracker } from "meteor/react-meteor-data";
+import { useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { Studys } from "/imports/api/collections";
 
@@ -56,10 +57,11 @@ const Project = () => {
   const [myStack, setMyStack] = useState([]);
   const [searchTitle, setSearchTitle] = useState("");
   const [sort, setSort] = useState("최신순");
-  const [nowPage, setNowPage] = useState(1); //현재 페이지
+  const [nowPage, setNowPage] = useState(1);
+  const navigate = useNavigate();
 
   //작성글 필터링
-  const { filterList, totalPage, users } = useTracker(() => {
+  const { filterList, totalPage, data, users } = useTracker(() => {
     let data = Studys.find().fetch();
     console.log("초기 data: ", data);
 
@@ -99,12 +101,12 @@ const Project = () => {
     const itemsPerPage = 5; //페이지당 표시할 항목 개수
     const lastIndex = nowPage * itemsPerPage; //페이지당 마지막 항목의 인덱스. 1페이지면 5.
     const firstIndex = lastIndex - itemsPerPage; //페이지당 첫번째 항목의 인덱스. 1페이지면 0.
-    const filterList = data.slice(firstIndex, lastIndex); //첫 페이지는 0부터 4까지, 총 5개 표시
+    const filterList = data.slice(firstIndex, lastIndex); //페이지당 표시할 항목 설정. 첫 페이지는 0부터 4까지, 총 5개 표시
     const totalPage = Math.ceil(data.length / itemsPerPage); //전체 페이지 수 계산. 항목이 9개라면 9/5=1.x여서 2페이지
 
     const users = Meteor.users.find().fetch();
 
-    return { filterList, totalPage, users };
+    return { filterList, totalPage, data, users };
   });
 
   //페이지 번호 설정
@@ -126,6 +128,11 @@ const Project = () => {
   //선택한 기술스택 삭제
   const deleteStack = (stack) => {
     setMyStack(myStack.filter((st) => st !== stack));
+  };
+
+  //상세조회페이지로 이동
+  const goDetail = (studyId) => {
+    navigate(`/detail/${studyId}`);
   };
 
   return (
@@ -209,14 +216,18 @@ const Project = () => {
           </span>
         ))}
 
-      <h4>{filterList.length}개의 프로젝트</h4>
+      <h4>{data.length}개의 프로젝트</h4>
 
       <ul>
         {filterList.map((study) => {
           const user = users.find((u) => u._id === study.userId);
 
           return (
-            <li key={study._id}>
+            <li
+              key={study._id}
+              style={{ cursor: "pointer" }}
+              onClick={() => goDetail(study._id)}
+            >
               <p>
                 {study.role} {study.onOff}{" "}
                 {study.onOff !== "온라인" && study.location.city}
@@ -266,6 +277,12 @@ const Project = () => {
             {index + 1}
           </button>
         ))}
+        <button
+          onClick={() => pageChange(nowPage + 1)}
+          disabled={nowPage === totalPage}
+        >
+          다음
+        </button>
       </div>
     </>
   );
