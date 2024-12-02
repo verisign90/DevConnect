@@ -76,7 +76,7 @@ if (!UserScores.findOne()) {
         },
       });
     } else {
-      //프로젝트를 최소 한 번 이상 한 사용자 점수 설정
+      //프로젝트가 종료돼서 받은 평가 점수 설정
       UserScores.insert({
         userId: user._id,
         score: {
@@ -218,5 +218,11 @@ if (!Studys.findOne()) {
 //     }
 //     //같은 모집글에 이미 신청한 사용자는 두 번 신청할 수 없음
 //     if (StudyUsers.findOne({ studyId: study._id, userId: user._id })) return;
+//     //이미 시작한 프로젝트가 3개 이상인 사용자는 스터디 신청 불가
+//     if (
+//       StudyUsers.find({ userId: user._id, status: "프로젝트 시작" }).count() >=
+//       3
+//     )
+//       return;
 //   });
 // }

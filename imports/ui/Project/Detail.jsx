@@ -159,6 +159,13 @@ const Detail = () => {
       참여인원: {project.memberCount}
       <br />
       기술스택: {project.techStack.join(" ")}
+      <br />
+      요구역량{" "}
+      {Object.entries(project.score).map(([field, value]) => (
+        <li key={field}>
+          {field} : {value}
+        </li>
+      ))}
       <hr />
       내용: {project.content}
       <hr />

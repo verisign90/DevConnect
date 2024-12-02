@@ -21,16 +21,21 @@ export default () => {
               <Link to="/join">회원가입</Link>
             </li>
             <li>
+              <Link to="/resetPassword">비밀번호 변경</Link>
+            </li>
+
+            <li>
               <Link to="/editProfile">프로필 수정</Link>
             </li>
             <li>
-              <Link to="/resetPassword">비밀번호 변경</Link>
+              <Link to="/myList">내 프로젝트</Link>
             </li>
+            <li>
+              <Link to="/myList">팀장 페이지</Link>
+            </li>
+
             <li>
               <Link to="/write">모집글 작성</Link>
-            </li>
-            <li>
-              <Link to="/detail">모집글 상세조회</Link>
             </li>
           </ul>
         </nav>

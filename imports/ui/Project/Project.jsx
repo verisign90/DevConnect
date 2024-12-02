@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { Studys } from "/imports/api/collections";
 
+//메인페이지 프로젝트 목록조회
 const Project = () => {
   //작성일을 다양한 형식으로 설정
   const formatDay = (createdAt) => {
