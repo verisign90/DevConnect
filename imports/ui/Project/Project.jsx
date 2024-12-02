@@ -61,7 +61,9 @@ const Project = () => {
   const navigate = useNavigate();
 
   //작성글 필터링
-  const { filterList, totalPage, data, users } = useTracker(() => {
+  const { filterList, totalPage, data, users, user } = useTracker(() => {
+    const user = Meteor.user(); //현재 로그인한 사용자 정보 추적
+
     let data = Studys.find().fetch();
     console.log("초기 data: ", data);
 
@@ -106,7 +108,7 @@ const Project = () => {
 
     const users = Meteor.users.find().fetch();
 
-    return { filterList, totalPage, data, users };
+    return { filterList, totalPage, data, users, user };
   });
 
   //페이지 번호 설정

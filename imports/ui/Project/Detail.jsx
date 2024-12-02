@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { useParams, useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
+import { Comments } from "/imports/api/collections";
 import "/imports/lib/utils.js";
 
 //모집글 상세조회
@@ -33,12 +34,19 @@ const Detail = () => {
   const { id } = useParams(); //작성된 studyId
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const [toggle, setToggle] = useState(false); //false : 참여하기, true : 참여취소하기
+  const [comment, setComment] = useState("");
+  const navigate = useNavigate();
 
-  //로그인된 사용자 정보 추적
-  const { user } = useTracker(() => {
-    return { user: Meteor.user() };
+  //로그인된 사용자 정보, 실시간 댓글 데이터 추적
+  const { user, comments } = useTracker(() => {
+    return {
+      user: Meteor.user(),
+      comments: Comments.find(
+        { studyId: id },
+        { sort: { createdAt: 1 } }
+      ).fetch(),
+    };
   });
 
   //작성한 모집글 정보 가져오기
@@ -108,6 +116,30 @@ const Detail = () => {
     });
   };
 
+  //댓글 데이터 서버에 제출
+  const commentSubmit = (e) => {
+    e.preventDefault();
+
+    const data = {
+      studyId: id,
+      userId: user._id,
+      username: user.username,
+      image: user.profile.image,
+      comment: comment,
+    };
+
+    if (comment) {
+      Meteor.call("commentInsert", data, (err, rlt) => {
+        if (err) {
+          console.error("commentInsert 실패: ", err);
+        } else {
+          console.log("댓글 작성 성공");
+          setComment("");
+        }
+      });
+    }
+  };
+
   return (
     <>
       <h2>프로젝트 모집글 상세조회페이지</h2>
@@ -144,7 +176,7 @@ const Detail = () => {
           {toggle ? "참여신청 취소하기" : "참여신청하기"}
         </button>
       )}
-      <h4>프로젝트 참여자</h4>
+      <h3>프로젝트 참여자</h3>
       {project.image && (
         <img
           src={project.image}
@@ -152,6 +184,39 @@ const Detail = () => {
         />
       )}{" "}
       {project.username}
+      <h3>댓글 목록</h3>
+      <div>
+        {comments.map((cmt) => (
+          <li key={cmt._id}>
+            <p>
+              <img
+                src={cmt.image}
+                style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+              />{" "}
+              {cmt.username} {cmt.comment}
+            </p>
+            <p>{formatDay(cmt.createdAt)}</p>
+          </li>
+        ))}
+      </div>
+      <hr />
+      <h3>댓글 입력창</h3>
+      {user.profile.image && (
+        <img
+          src={user.profile.image}
+          style={{ width: "60px", height: "60px", borderRadius: "50%" }}
+        />
+      )}
+      {user.username}{" "}
+      <form onSubmit={commentSubmit}>
+        <input
+          type="text"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="댓글을 입력해 주세요"
+        />
+        <button>등록</button>
+      </form>
     </>
   );
 };

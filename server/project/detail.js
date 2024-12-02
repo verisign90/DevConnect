@@ -1,5 +1,5 @@
 import { Meteor } from "meteor/meteor";
-import { Studys, StudyUsers } from "/imports/api/collections";
+import { Studys, StudyUsers, Comments } from "/imports/api/collections";
 
 Meteor.methods({
   //작성한 모집글 정보 가져오기
@@ -67,6 +67,18 @@ Meteor.methods({
     const userId = Meteor.userId();
 
     return StudyUsers.remove({ studyId: studyId, userId: userId });
+  },
+
+  //댓글 작성
+  commentInsert: (data) => {
+    return Comments.insert({
+      studyId: data.studyId,
+      userId: data.userId,
+      username: data.username,
+      image: data.image,
+      comment: data.comment,
+      createdAt: new Date(),
+    });
   },
 });
 
