@@ -54,11 +54,15 @@ const Project = () => {
   const [role, setRole] = useState("전체");
   const [onOff, setOnOff] = useState("전체");
   const [myStack, setMyStack] = useState([]);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [sort, setSort] = useState("최신순");
+  const [nowPage, setNowPage] = useState(1); //현재 페이지
 
-  //모집분야, 모임형태, 기술스택별로 작성글 필터링, 유저 데이터 추적
+  //작성글 필터링
   const { filterList, users } = useTracker(() => {
     let data = Studys.find().fetch();
 
+    //모집분야, 모임형태, 기술스택별 필터링
     if (role !== "전체") {
       data = data.filter((study) => study.role === role);
     }
@@ -69,6 +73,24 @@ const Project = () => {
       data = data.filter((study) =>
         myStack.every((stack) => study.techStack.includes(stack))
       );
+    }
+
+    //제목 검색 필터링
+    if (searchTitle.trim() !== "") {
+      data = data.filter((study) =>
+        study.title.toLowerCase().includes(searchTitle.toLowerCase())
+      );
+    }
+
+    //최신순, 오래된순, 조회수순으로 필터링
+    if (sort === "최신순") {
+      data = Studys.find({}, { sort: { createdAt: -1 } }).fetch();
+    }
+    if (sort === "오래된순") {
+      data = Studys.find().fetch();
+    }
+    if (sort === "조회수순") {
+      data = Studys.find({}, { sort: { views: -1 } }).fetch();
     }
 
     const users = Meteor.users.find().fetch();
@@ -89,6 +111,8 @@ const Project = () => {
   const deleteStack = (stack) => {
     setMyStack(myStack.filter((st) => st !== stack));
   };
+
+  const itemsPerPage = 5; //한 페이지당 표시할 항목 개수
 
   return (
     <>
@@ -139,6 +163,29 @@ const Project = () => {
             ))}
           </select>
         </div>
+
+        <div>
+          <h4>제목 검색</h4>
+          <input
+            type="text"
+            value={searchTitle}
+            onChange={(e) => setSearchTitle(e.target.value)}
+            placeholder="검색어를 입력해 주세요"
+          />
+        </div>
+
+        <div>
+          <h4>정렬</h4>
+          <select
+            name="sort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <option value="최신순">최신순</option>
+            <option value="오래된순">오래된순</option>
+            <option value="조회수순">조회수순</option>
+          </select>
+        </div>
       </div>
       {myStack.length > 0 &&
         myStack.map((stack) => (
@@ -147,6 +194,8 @@ const Project = () => {
             <button onClick={() => deleteStack(stack)}>X</button>
           </span>
         ))}
+
+      <h4>{filterList.length}개의 프로젝트</h4>
 
       <ul>
         {filterList.map((study) => {

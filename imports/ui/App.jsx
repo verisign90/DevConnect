@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Home.jsx";
 import NotFound from "./NotFound.jsx";
 import Nav from "./Nav.jsx";
 import { useTracker } from "meteor/react-meteor-data";
