@@ -123,8 +123,6 @@ const Detail = () => {
     const data = {
       studyId: id,
       userId: user._id,
-      username: user.username,
-      image: user.profile.image,
       comment: comment,
     };
 

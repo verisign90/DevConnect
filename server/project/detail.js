@@ -71,11 +71,13 @@ Meteor.methods({
 
   //댓글 작성
   commentInsert: (data) => {
+    const user = Meteor.users.findOne({ _id: data.userId });
+
     return Comments.insert({
       studyId: data.studyId,
       userId: data.userId,
-      username: data.username,
-      image: data.image,
+      username: user.username,
+      image: user.profile?.image,
       comment: data.comment,
       createdAt: new Date(),
     });
