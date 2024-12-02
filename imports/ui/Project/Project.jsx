@@ -59,8 +59,9 @@ const Project = () => {
   const [nowPage, setNowPage] = useState(1); //현재 페이지
 
   //작성글 필터링
-  const { filterList, users } = useTracker(() => {
+  const { filterList, totalPage, users } = useTracker(() => {
     let data = Studys.find().fetch();
+    console.log("초기 data: ", data);
 
     //모집분야, 모임형태, 기술스택별 필터링
     if (role !== "전체") {
@@ -84,19 +85,34 @@ const Project = () => {
 
     //최신순, 오래된순, 조회수순으로 필터링
     if (sort === "최신순") {
-      data = Studys.find({}, { sort: { createdAt: -1 } }).fetch();
+      data = data.sort((a, b) => b.createdAt - a.createdAt);
     }
     if (sort === "오래된순") {
-      data = Studys.find().fetch();
+      data = data.sort((a, b) => a.createdAt - b.createdAt);
     }
     if (sort === "조회수순") {
-      data = Studys.find({}, { sort: { views: -1 } }).fetch();
+      data = data.sort((a, b) => b.views - a.views);
     }
+    console.log("필터링 후 data: ", data);
+
+    //페이지당 표시할 게시물 설정
+    const itemsPerPage = 5; //페이지당 표시할 항목 개수
+    const lastIndex = nowPage * itemsPerPage; //페이지당 마지막 항목의 인덱스. 1페이지면 5.
+    const firstIndex = lastIndex - itemsPerPage; //페이지당 첫번째 항목의 인덱스. 1페이지면 0.
+    const filterList = data.slice(firstIndex, lastIndex); //첫 페이지는 0부터 4까지, 총 5개 표시
+    const totalPage = Math.ceil(data.length / itemsPerPage); //전체 페이지 수 계산. 항목이 9개라면 9/5=1.x여서 2페이지
 
     const users = Meteor.users.find().fetch();
 
-    return { filterList: data, users };
+    return { filterList, totalPage, users };
   });
+
+  //페이지 번호 설정
+  const pageChange = (pageNumber) => {
+    if (pageNumber !== nowPage) {
+      setNowPage(pageNumber);
+    }
+  };
 
   //selectbox에서 선택한 기술스택을 중복되지 않게 myStack에 추가
   const selectStack = (e) => {
@@ -111,8 +127,6 @@ const Project = () => {
   const deleteStack = (stack) => {
     setMyStack(myStack.filter((st) => st !== stack));
   };
-
-  const itemsPerPage = 5; //한 페이지당 표시할 항목 개수
 
   return (
     <>
@@ -235,6 +249,24 @@ const Project = () => {
           );
         })}
       </ul>
+
+      <div>
+        <button
+          onClick={() => pageChange(nowPage - 1)}
+          disabled={nowPage === 1}
+        >
+          이전
+        </button>
+        {[...Array(totalPage)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => pageChange(index + 1)}
+            style={{ fontWeight: nowPage === index + 1 ? "bold" : "normal" }}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </>
   );
 };
