@@ -1,4 +1,9 @@
-import { UserScores, Studys, StudyUsers } from "/imports/api/collections";
+import {
+  UserScores,
+  Studys,
+  StudyUsers,
+  Notices,
+} from "/imports/api/collections";
 import "/imports/lib/utils.js";
 import locationData from "./location.js";
 
@@ -79,13 +84,7 @@ if (!UserScores.findOne()) {
       //프로젝트가 종료돼서 받은 평가 점수 설정
       UserScores.insert({
         userId: user._id,
-        score: {
-          manner: [1, 2, 3, 4, 5].random(),
-          mentoring: [1, 2, 3, 4, 5].random(),
-          passion: [1, 2, 3, 4, 5].random(),
-          communication: [1, 2, 3, 4, 5].random(),
-          time: [1, 2, 3, 4, 5].random(),
-        },
+        score: {},
       });
     }
   });
@@ -120,7 +119,7 @@ const calculateaAvgScore = () => {
     total.communication /= memberCount;
     total.time /= memberCount;
 
-    //유저의 점수 갱신
+    //유저 점수 갱신
     Meteor.users.update(
       { _id: user._id },
       {
@@ -138,7 +137,10 @@ if (!UserScores.findOne()) {
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
   Array.range(0, 10).forEach((i) => {
-    const user = Meteor.users.find().fetch().random();
+    const user = Meteor.users
+      .find({ username: { $ne: "admin" } })
+      .fetch()
+      .random();
 
     //글 3개 이상 작성한 사용자는 더 이상 글을 작성할 수 없음
     if (
@@ -199,7 +201,7 @@ if (!StudyUsers.findOne()) {
     const study = studies.random();
 
     //스터디 모집글이 모집완료이면 신청 불가
-    if (study.status === "모집완료") return;
+    if (study.status == "모집완료") return;
     //유저의 점수 < 작성자 요구 점수이면 신청 불가. 유저의 점수 >= 작성자 요구 점수 신청 가능
     if (user.profile.score.manner < study.score.manner) {
       return;
@@ -219,10 +221,7 @@ if (!StudyUsers.findOne()) {
     //같은 모집글에 이미 신청한 사용자는 두 번 신청할 수 없음
     if (StudyUsers.findOne({ studyId: study._id, userId: user._id })) return;
     //이미 시작한 프로젝트가 3개 이상인 사용자는 스터디 신청 불가
-    if (
-      StudyUsers.find({ userId: user._id, status: "프로젝트 시작" }).count() >=
-      3
-    )
+    if (StudyUsers.find({ userId: user._id, status: "시작" }).count() >= 3)
       return;
 
     StudyUsers.insert({
@@ -230,5 +229,65 @@ if (!StudyUsers.findOne()) {
       userId: user._id,
       status: "대기",
     });
+  });
+}
+
+//팀장이 신청자 목록을 봤을 때
+if (!StudyUsers.findOne({ status: "거절" })) {
+  //신청한 사용자를 팀장이 대기, 승인, 거절하는 상황 설정
+  Studys.find().forEach((study) => {
+    StudyUsers.find({ studyId: study._id, status: "대기" }).forEach(
+      (studyUsers) => {
+        const status = ["대기", "승인", "거절"].random();
+
+        //모집인원 넘게 승인된 유저 수가 생기지 않도록 설정
+        if (
+          studyUsers.find({ studyId: study._id, status: "승인" }).count() ===
+          study.memberCount
+        ) {
+          return;
+        }
+
+        StudyUsers.update(
+          { _id: studyUsers._id },
+          { $set: { status: status } }
+        );
+
+        //팀장이 대기 중인 유저를 승인/거절했을 경우 알림 전송
+        if (status === "승인" || status === "거절") {
+          Notices.insert({
+            studyId: study._id,
+            userId: studyUsers.userId,
+            message: `신청하신 ${study.title} 프로젝트에 ${status} 되었습니다`,
+            readAt: null,
+          });
+        }
+      }
+    );
+  });
+}
+
+//팀장이 모집완료 버튼을 눌렀을 때 설정
+if (!Studys.findOne({ status: "모집완료" })) {
+  Studys.find({ status: "모집중" }).forEach((study) => {
+    const status = ["모집중", "모집완료"].random();
+
+    Studys.update({ _id: study._id }, { $set: { status: status } });
+
+    //팀장이 모집완료 했을 경우 대기, 거절인 사용자에게 알림 전송
+    if (status === "모집완료") {
+      StudyUsers.find({
+        studyId: study._id,
+        status: { $in: ["대기", "거절"] },
+      }).forEach((studyUser) => {
+        Notices.insert({
+          studyId: study._id,
+          userId: studyUser.userId,
+          message: `${study.title}에 선택되지 않으셨습니다. 다른 모임을 찾아 보세요`,
+          readAt: null,
+        });
+        StudyUsers.remove({ _id: studyUser._id });
+      });
+    }
   });
 }
