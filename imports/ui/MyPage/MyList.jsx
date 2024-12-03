@@ -23,7 +23,8 @@ const MyList = () => {
       {writeList.map((study) => (
         <li key={study._id}>
           <Link to={`/leader/${study._id}`}>
-            {study.title} {study.memberCount} {study.status}
+            {study.title} {study.memberCount} {study.status}{" "}
+            {study.techStack.join(" ")}
           </Link>
         </li>
       ))}

@@ -15,6 +15,7 @@ import Leader from "./MyPage/Leader.jsx";
 import Write from "./Project/Write.jsx";
 import Detail from "./Project/Detail.jsx";
 import Project from "./Project/Project.jsx";
+import StudyUserList from "./MyPage/StudyUserList.jsx";
 
 export const App = () => {
   //로그인 사용자 데이터 도착 전에 화면이 렌더링되지 않도록 로딩 페이지 적용
@@ -66,6 +67,7 @@ export const App = () => {
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/myList" element={<MyList />} />
         <Route path="/leader/:id" element={<Leader />} />
+        <Route path="/studyUserList" element={<StudyUserList />} />
       </Routes>
     </Router>
   );

@@ -4,6 +4,7 @@ import "./init.js";
 import "./user/join.js";
 
 import "./mypage/editprofile.js";
+import "./mypage/leader.js";
 
 import "./project/write.js";
 import "./project/detail.js";
