@@ -39,9 +39,7 @@ const removeAll = () => {
   Notices.remove({});
 };
 
-//removeAll();
-
-const testUserCount = 100;
+const testUserCount = 30;
 
 //admin이 없다면
 if (!Meteor.users.findOne({ username: "admin" })) {
@@ -80,7 +78,7 @@ if (!Studys.findOne()) {
     if (
       Studys.find({
         userId: user._id,
-        status: { $in: ["모집중", "모집완료"] },
+        status: { $in: ["모집중", "시작"] },
       }).count() >= 3
     ) {
       return;
@@ -136,8 +134,6 @@ if (!StudyUsers.findOne()) {
     const user = users.random();
     const study = studies.random();
 
-    //스터디 모집글이 모집완료이면 신청 불가
-    //if (study.status == "모집완료") return;
     //유저의 점수 < 작성자 요구 점수이면 신청 불가. 유저의 점수 >= 작성자 요구 점수 신청 가능
     if (user.profile.score.manner < study.score.manner) {
       return;
@@ -156,9 +152,6 @@ if (!StudyUsers.findOne()) {
     }
     //같은 모집글에 이미 신청한 사용자는 두 번 신청할 수 없음
     if (StudyUsers.findOne({ studyId: study._id, userId: user._id })) return;
-    //이미 시작한 프로젝트가 3개 이상인 사용자는 스터디 신청 불가
-    // if (StudyUsers.find({ userId: user._id, status: "시작" }).count() >= 3)
-    //   return;
 
     StudyUsers.insert({
       studyId: study._id,
@@ -174,10 +167,16 @@ if (!StudyUsers.findOne({ status: "거절" })) {
   Studys.find().forEach((study) => {
     StudyUsers.find({ studyId: study._id, status: "대기" }).forEach(
       (studyUsers) => {
-        //팀장인 사용자는 status를 바꾸지 않음
-        if (studyUsers.status === "승인") return;
-
         const status = ["대기", "승인", "거절"].random();
+
+        //모집인원 넘게 승인된 유저 수가 생기지 않도록 설정
+        if (
+          StudyUsers.find({ studyId: study._id, status: "승인" }).count() >=
+          study.memberCount
+        ) {
+          return;
+        }
+
         StudyUsers.update(
           { _id: studyUsers._id },
           { $set: { status: status } }
@@ -189,102 +188,96 @@ if (!StudyUsers.findOne({ status: "거절" })) {
             studyId: study._id,
             userId: studyUsers.userId,
             message: `신청하신 ${study.title} 프로젝트에 ${status} 되었습니다`,
-            readAt: false,
+            read: false,
             createdAt: new Date(),
           });
         }
-
-        //모집인원 넘게 승인된 유저 수가 생기지 않도록 설정
-        if (
-          studyUsers.find({ studyId: study._id, status: "승인" }).count() >=
-          study.memberCount
-        ) {
-          return;
-        }
       }
     );
   });
 }
 
-//평가 후 유저들의 평균 점수를 계산해서 user.profile.score를 갱신하는 함수
-const calculateaAvgScore = () => {
-  Meteor.users.find({ username: { $ne: "admin" } }).forEach((user) => {
-    const total = {
-      manner: 0,
-      mentoring: 0,
-      passion: 0,
-      communication: 0,
-      time: 0,
-    };
+//removeAll();
 
-    //평가한 사람 수
-    const memberCount = UserScores.find({ userId: user._id }).count();
-    //유저가 받은 평가 문서를 모두 확인 후 항목당 총합 구하기
-    UserScores.find({ userId: user._id }).forEach((userScore) => {
-      total.manner += userScore.score.manner;
-      total.mentoring += userScore.score.mentoring;
-      total.passion += userScore.score.passion;
-      total.communication += userScore.score.communication;
-      total.time += userScore.score.time;
-    });
+// //평가 후 유저들의 평균 점수를 계산해서 user.profile.score를 갱신하는 함수
+// const calculateaAvgScore = () => {
+//   Meteor.users.find({ username: { $ne: "admin" } }).forEach((user) => {
+//     const total = {
+//       manner: 0,
+//       mentoring: 0,
+//       passion: 0,
+//       communication: 0,
+//       time: 0,
+//     };
 
-    //평균 구하기
-    total.manner /= memberCount;
-    total.mentoring /= memberCount;
-    total.passion /= memberCount;
-    total.communication /= memberCount;
-    total.time /= memberCount;
+//     //평가한 사람 수
+//     const memberCount = UserScores.find({ userId: user._id }).count();
+//     //유저가 받은 평가 문서를 모두 확인 후 항목당 총합 구하기
+//     UserScores.find({ userId: user._id }).forEach((userScore) => {
+//       total.manner += userScore.score.manner;
+//       total.mentoring += userScore.score.mentoring;
+//       total.passion += userScore.score.passion;
+//       total.communication += userScore.score.communication;
+//       total.time += userScore.score.time;
+//     });
 
-    //유저 점수 갱신
-    Meteor.users.update(
-      { _id: user._id },
-      {
-        $set: {
-          "profile.score": total,
-        },
-      }
-    );
-  });
-};
-if (!UserScores.findOne()) {
-  calculateaAvgScore();
-}
+//     //평균 구하기
+//     total.manner /= memberCount;
+//     total.mentoring /= memberCount;
+//     total.passion /= memberCount;
+//     total.communication /= memberCount;
+//     total.time /= memberCount;
 
-//모집완료가 없다면
-if (!Studys.findOne({ status: "모집완료" })) {
-  Studys.find({ status: "모집중" }).forEach((study) => {
-    const status = ["모집중", "모집완료"].random();
+//     //유저 점수 갱신
+//     Meteor.users.update(
+//       { _id: user._id },
+//       {
+//         $set: {
+//           "profile.score": total,
+//         },
+//       }
+//     );
+//   });
+// };
+// if (!UserScores.findOne()) {
+//   calculateaAvgScore();
+// }
 
-    Studys.update({ _id: study._id }, { $set: { status: status } });
+// //모집완료가 없다면
+// if (!Studys.findOne({ status: "모집완료" })) {
+//   Studys.find({ status: "모집중" }).forEach((study) => {
+//     const status = ["모집중", "모집완료"].random();
 
-    //팀장이 모집완료 했을 경우 대기, 거절인 사용자에게 알림 전송
-    if (status === "모집완료") {
-      StudyUsers.find({
-        studyId: study._id,
-        status: { $in: ["대기", "거절"] },
-      }).forEach((studyUser) => {
-        Notices.insert({
-          studyId: study._id,
-          userId: studyUser.userId,
-          message: `${study.title}에 선택되지 않으셨습니다. 다른 모임을 찾아 보세요`,
-          readAt: null,
-        });
-        StudyUsers.remove({ _id: studyUser._id });
-      });
-    }
-  });
-}
+//     Studys.update({ _id: study._id }, { $set: { status: status } });
 
-//프로젝트 종료가 없다면
-if (!Studys.findOne({ status: "프로젝트종료" })) {
-  Studys.find({ status: "모집완료" }).forEach((study) => {
-    const status = ["모집완료", "프로젝트종료"].random();
+//     //팀장이 모집완료 했을 경우 대기, 거절인 사용자에게 알림 전송
+//     if (status === "모집완료") {
+//       StudyUsers.find({
+//         studyId: study._id,
+//         status: { $in: ["대기", "거절"] },
+//       }).forEach((studyUser) => {
+//         Notices.insert({
+//           studyId: study._id,
+//           userId: studyUser.userId,
+//           message: `${study.title}에 선택되지 않으셨습니다. 다른 모임을 찾아 보세요`,
+//           readAt: null,
+//         });
+//         StudyUsers.remove({ _id: studyUser._id });
+//       });
+//     }
+//   });
+// }
 
-    if (status === "프로젝트종료") {
-      Studys.update({ _id: study._id }, { $set: { status: status } });
-    }
-  });
-}
+// //프로젝트 종료가 없다면
+// if (!Studys.findOne({ status: "프로젝트종료" })) {
+//   Studys.find({ status: "모집완료" }).forEach((study) => {
+//     const status = ["모집완료", "프로젝트종료"].random();
+
+//     if (status === "프로젝트종료") {
+//       Studys.update({ _id: study._id }, { $set: { status: status } });
+//     }
+//   });
+// }
 
 //프로젝트 종료 후 평가 기록이 없다면
 // if (!Evaluates.findOne()) {
