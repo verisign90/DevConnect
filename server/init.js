@@ -39,9 +39,7 @@ const removeAll = () => {
   Notices.remove({});
 };
 
-//removeAll();
-
-const testUserCount = 30;
+const testUserCount = 60;
 
 //admin이 없다면
 if (!Meteor.users.findOne({ username: "admin" })) {
@@ -62,7 +60,13 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
         role: ["백엔드", "프론트엔드"].random(),
         techStack: stackList.random(1, 5),
         image: null,
-        score: {},
+        score: {
+          manner: 3,
+          mentoring: 3,
+          passion: 3,
+          communication: 3,
+          time: 3,
+        },
       },
     });
   }
@@ -220,7 +224,7 @@ if (!Studys.findOne({ status: "시작" })) {
 
       StudyUsers.find({
         studyId: study._id,
-        status: { $in: ["대기"] },
+        status: { $in: ["대기", "거절"] },
       }).forEach((studyUser) => {
         Notices.insert({
           studyId: study._id,
@@ -268,53 +272,107 @@ if (!Studys.findOne({ status: "종료" })) {
 }
 console.log("프로젝트 종료 후 알림 전송");
 
+//프로젝트 종료 후 상호 평가
 //종료된 프로젝트의 팀원들 id 모두 추출하기(to : 평가 받는 사람)
 Studys.find({ status: "종료" }).forEach((study) => {
-  const to = StudyUsers.find({ studyId: study._id }).map((user) => {
+  const toIds = StudyUsers.find({ studyId: study._id }).map((user) => {
     return user.userId;
   });
-});
 
-//평가 후 유저들의 평균 점수를 계산해서 user.profile.score를 갱신하는 함수
-const calculateaAvgScore = () => {
-  Meteor.users.find({ username: { $ne: "admin" } }).forEach((user) => {
-    const total = {
-      manner: 0,
-      mentoring: 0,
-      passion: 0,
-      communication: 0,
-      time: 0,
-    };
+  //종료된 프로젝트의 팀원 목록을 모두 가져와서 from(평가 하는 사람)으로 설정
+  StudyUsers.find({ studyId: study._id }).forEach((studyUser) => {
+    toIds.forEach((toId) => {
+      const fromId = studyUser.userId;
 
-    //평가한 사람 수
-    const memberCount = UserScores.find({ userId: user._id }).count();
-    //유저가 받은 평가 문서를 모두 확인 후 항목당 총합 구하기
-    UserScores.find({ userId: user._id }).forEach((userScore) => {
-      total.manner += userScore.score.manner;
-      total.mentoring += userScore.score.mentoring;
-      total.passion += userScore.score.passion;
-      total.communication += userScore.score.communication;
-      total.time += userScore.score.time;
+      //내가 아닌 유저만 평가
+      if (fromId !== toId) {
+        //혹시 UserScores에 내가 A를 이미 평가한 기록이 있다면 return
+        if (
+          UserScores.findOne({
+            studyId: study._id,
+            from: fromId,
+            to: toId,
+          })
+        ) {
+          return;
+        }
+        UserScores.insert({
+          studyId: study._id,
+          from: fromId,
+          to: toId,
+          score: {},
+          isDone: false,
+        });
+      }
     });
+  });
+});
+console.log("from, to, isDone:false 평가 준비");
 
-    //평균 구하기
-    total.manner /= memberCount;
-    total.mentoring /= memberCount;
-    total.passion /= memberCount;
-    total.communication /= memberCount;
-    total.time /= memberCount;
+//평가 받는 사람의 평균 점수를 계산해서 user.profile.score로 갱신
+const runAvgScore = (toId) => {
+  const total = {
+    manner: 0,
+    mentoring: 0,
+    passion: 0,
+    communication: 0,
+    time: 0,
+  };
 
-    //유저 점수 갱신
-    Meteor.users.update(
-      { _id: user._id },
+  //나를 평가한 사람 수
+  const count = UserScores.find({ to: toId, isDone: true }).count();
+  //내가 받은 점수 총점
+  UserScores.find({ to: toId, isDone: true }).forEach((userScore) => {
+    total.manner += userScore.score.manner;
+    total.mentoring += userScore.score.mentoring;
+    total.passion += userScore.score.passion;
+    total.communication += userScore.score.communication;
+    total.time += userScore.score.time;
+  });
+  //평균 점수
+  total.manner /= count;
+  total.mentoring /= count;
+  total.passion /= count;
+  total.communication /= count;
+  total.time /= count;
+
+  if (count === 0) {
+    //미평가 신규회원
+    total.manner = 3;
+    total.mentoring = 3;
+    total.passion = 3;
+    total.communication = 3;
+    total.time = 3;
+  }
+
+  //평균 점수를 user.profiles.score로 갱신
+  Meteor.users.update({ _id: toId }, { $set: { "profile.score": total } });
+};
+console.log("평가 점수 갱신");
+
+//평가를 아무도 안 했다면
+if (UserScores.find({ isDone: false })) {
+  UserScores.find({ isDone: false }).forEach((userScore) => {
+    //평가 안 된 평가지의 평가 점수 설정
+    const to = userScore.to; //to: 평가 받는 사람
+    UserScores.update(
+      { _id: userScore._id },
       {
         $set: {
-          "profile.score": total,
+          isDone: true,
+          score: {
+            manner: [1, 2, 3, 4, 5].random(),
+            mentoring: [1, 2, 3, 4, 5].random(),
+            passion: [1, 2, 3, 4, 5].random(),
+            communication: [1, 2, 3, 4, 5].random(),
+            time: [1, 2, 3, 4, 5].random(),
+          },
         },
       }
     );
+
+    //평가 받는 사람의 평균 점수를 계산해서 user.profile.score로 갱신
+    runAvgScore(to);
   });
-};
-if (!UserScores.findOne()) {
-  calculateaAvgScore();
 }
+console.log("평가 점수 설정");
