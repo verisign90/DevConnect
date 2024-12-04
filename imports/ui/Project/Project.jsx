@@ -66,7 +66,6 @@ const Project = () => {
     const user = Meteor.user(); //현재 로그인한 사용자 정보 추적
 
     let data = Studys.find().fetch();
-    console.log("초기 data: ", data);
 
     //모집분야, 모임형태, 기술스택별 필터링
     if (role !== "전체") {
@@ -98,7 +97,6 @@ const Project = () => {
     if (sort === "조회수순") {
       data = data.sort((a, b) => b.views - a.views);
     }
-    console.log("필터링 후 data: ", data);
 
     //페이지당 표시할 게시물 설정
     const itemsPerPage = 5; //페이지당 표시할 항목 개수
@@ -118,6 +116,10 @@ const Project = () => {
       setNowPage(pageNumber);
     }
   };
+
+  if (!user) {
+    return <div>로딩 중...</div>;
+  }
 
   //selectbox에서 선택한 기술스택을 중복되지 않게 myStack에 추가
   const selectStack = (e) => {
@@ -246,7 +248,7 @@ const Project = () => {
                 {formatDay(study.createdAt)} 조회수 {study.views}
               </p>
               <p>
-                {user.profile?.image && (
+                {user.profile.image && (
                   <img
                     src={user.profile.image}
                     style={{

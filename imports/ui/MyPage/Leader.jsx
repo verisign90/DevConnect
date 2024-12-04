@@ -2,20 +2,23 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
-import { Studys } from "/imports/api/collections";
+import { Studys, StudyUsers } from "/imports/api/collections";
 
 //팀장페이지
 const Leader = () => {
   const { id } = useParams(); //studyId
   const navigate = useNavigate();
 
-  const { user, study } = useTracker(() => {
+  const { user, study, ok } = useTracker(() => {
     const user = Meteor.user();
     const study = Studys.findOne({ _id: id });
+    const okUsers = StudyUsers.find({ studyId: id, status: "승인" }).fetch();
+    const ok = okUsers.map((o) => Meteor.users.findOne(o.userId));
 
     return {
       user: user,
       study: study,
+      ok: ok,
     };
   });
 
@@ -56,7 +59,31 @@ const Leader = () => {
         : "프로젝트 일정이 등록되지 않았습니다"}
       <hr />
       <h3>팀원 정보</h3>
-      팀장: {user.username} <button onClick={goStudyUserList}>팀원 추가</button>
+      <button onClick={goStudyUserList}>팀원 추가</button>
+      <br />
+      팀장:{" "}
+      {user.profile.image && (
+        <img
+          src={user.profile.image}
+          style={{ width: "90px", height: "90px", borderRadius: "50%" }}
+        />
+      )}
+      {user.username}
+      <br />
+      팀원:{" "}
+      {ok
+        .filter((o) => o._id !== user._id)
+        .map((o) => (
+          <li key={o._id}>
+            {o.profile.image && (
+              <img
+                src={o.profile.image}
+                style={{ width: "60px", height: "60px", borderRadius: "50%" }}
+              />
+            )}
+            {o.username}
+          </li>
+        ))}
     </>
   );
 };

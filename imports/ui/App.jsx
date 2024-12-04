@@ -67,7 +67,7 @@ export const App = () => {
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/myList" element={<MyList />} />
         <Route path="/leader/:id" element={<Leader />} />
-        <Route path="/studyUserList" element={<StudyUserList />} />
+        <Route path="/studyUserList/:id" element={<StudyUserList />} />
       </Routes>
     </Router>
   );
