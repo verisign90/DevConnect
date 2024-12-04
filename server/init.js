@@ -39,6 +39,8 @@ const removeAll = () => {
   Notices.remove({});
 };
 
+//removeAll();
+
 const testUserCount = 30;
 
 //admin이 없다면
@@ -65,6 +67,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
     });
   }
 }
+console.log("유저 data 완성");
 
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
@@ -115,6 +118,7 @@ if (!Studys.findOne()) {
     });
   });
 }
+console.log("모집글 생성 완료");
 
 //스터디 신청자가 없다면
 if (!StudyUsers.findOne()) {
@@ -160,6 +164,7 @@ if (!StudyUsers.findOne()) {
     });
   });
 }
+console.log("신청자 목록 완성");
 
 //팀장이 신청자 목록을 봤을 때
 if (!StudyUsers.findOne({ status: "거절" })) {
@@ -196,101 +201,120 @@ if (!StudyUsers.findOne({ status: "거절" })) {
     );
   });
 }
+console.log("유저가 승인/거절/대기되는 상황 완료");
 
-//removeAll();
+//프로젝트 시작이 없다면
+if (!Studys.findOne({ status: "시작" })) {
+  Studys.find({ status: "모집중" }).forEach((study) => {
+    //팀원이 작성자 혼자일 경우 프로젝트 시작을 할 수 없음
+    if (StudyUsers.find({ studyId: study._id }).count() === 1) return;
 
-// //평가 후 유저들의 평균 점수를 계산해서 user.profile.score를 갱신하는 함수
-// const calculateaAvgScore = () => {
-//   Meteor.users.find({ username: { $ne: "admin" } }).forEach((user) => {
-//     const total = {
-//       manner: 0,
-//       mentoring: 0,
-//       passion: 0,
-//       communication: 0,
-//       time: 0,
-//     };
+    const status = ["모집중", "시작"].random();
 
-//     //평가한 사람 수
-//     const memberCount = UserScores.find({ userId: user._id }).count();
-//     //유저가 받은 평가 문서를 모두 확인 후 항목당 총합 구하기
-//     UserScores.find({ userId: user._id }).forEach((userScore) => {
-//       total.manner += userScore.score.manner;
-//       total.mentoring += userScore.score.mentoring;
-//       total.passion += userScore.score.passion;
-//       total.communication += userScore.score.communication;
-//       total.time += userScore.score.time;
-//     });
+    //프로젝트가 시작되면 대기, 거절된 사용자에게 알림 전송
+    if (status === "시작") {
+      Studys.update(
+        { _id: study._id },
+        { $set: { status: status, startDate: new Date() } }
+      );
 
-//     //평균 구하기
-//     total.manner /= memberCount;
-//     total.mentoring /= memberCount;
-//     total.passion /= memberCount;
-//     total.communication /= memberCount;
-//     total.time /= memberCount;
+      StudyUsers.find({
+        studyId: study._id,
+        status: { $in: ["대기"] },
+      }).forEach((studyUser) => {
+        Notices.insert({
+          studyId: study._id,
+          userId: studyUser.userId,
+          message: `${study.title}에 선택되지 않으셨습니다. 다른 모임을 찾아 보세요`,
+          read: false,
+          createdAt: new Date(),
+        });
+        StudyUsers.remove({ _id: studyUser._id });
+      });
+    }
+  });
+}
+console.log("프로젝트가 시작하면 대기 중인 사용자 정리");
 
-//     //유저 점수 갱신
-//     Meteor.users.update(
-//       { _id: user._id },
-//       {
-//         $set: {
-//           "profile.score": total,
-//         },
-//       }
-//     );
-//   });
-// };
-// if (!UserScores.findOne()) {
-//   calculateaAvgScore();
-// }
+//프로젝트 종료가 없다면
+if (!Studys.findOne({ status: "종료" })) {
+  Studys.find({ status: "시작" }).forEach((study) => {
+    const status = ["시작", "종료"].random();
 
-// //모집완료가 없다면
-// if (!Studys.findOne({ status: "모집완료" })) {
-//   Studys.find({ status: "모집중" }).forEach((study) => {
-//     const status = ["모집중", "모집완료"].random();
+    //종료날짜를 시작날짜로부터 1~6개월 후로 설정
+    let endDate = new Date(study.startDate);
+    const randomMonths = [1, 2, 3, 4, 5, 6].random();
+    endDate.setMonth(study.startDate.getMonth() + randomMonths);
 
-//     Studys.update({ _id: study._id }, { $set: { status: status } });
+    if (status === "종료") {
+      Studys.update(
+        { _id: study._id },
+        { $set: { status: status, endDate: endDate } }
+      );
+    }
 
-//     //팀장이 모집완료 했을 경우 대기, 거절인 사용자에게 알림 전송
-//     if (status === "모집완료") {
-//       StudyUsers.find({
-//         studyId: study._id,
-//         status: { $in: ["대기", "거절"] },
-//       }).forEach((studyUser) => {
-//         Notices.insert({
-//           studyId: study._id,
-//           userId: studyUser.userId,
-//           message: `${study.title}에 선택되지 않으셨습니다. 다른 모임을 찾아 보세요`,
-//           readAt: null,
-//         });
-//         StudyUsers.remove({ _id: studyUser._id });
-//       });
-//     }
-//   });
-// }
+    //프로젝트에 참여했던 모든 유저에게 알림 전송
+    const teamMembers = StudyUsers.find({ studyId: study._id }).fetch();
+    teamMembers.forEach((studyUser) => {
+      Notices.insert({
+        studyId: study._id,
+        userId: teamMembers.userId,
+        message: `${study.title} 프로젝트가 종료되었습니다. 팀원을 평가해 주세요`,
+        read: false,
+        createdAt: new Date(),
+      });
+    });
+  });
+}
+console.log("프로젝트 종료 후 알림 전송");
 
-// //프로젝트 종료가 없다면
-// if (!Studys.findOne({ status: "프로젝트종료" })) {
-//   Studys.find({ status: "모집완료" }).forEach((study) => {
-//     const status = ["모집완료", "프로젝트종료"].random();
+//종료된 프로젝트의 팀원들 id 모두 추출하기(to : 평가 받는 사람)
+Studys.find({ status: "종료" }).forEach((study) => {
+  const to = StudyUsers.find({ studyId: study._id }).map((user) => {
+    return user.userId;
+  });
+});
 
-//     if (status === "프로젝트종료") {
-//       Studys.update({ _id: study._id }, { $set: { status: status } });
-//     }
-//   });
-// }
+//평가 후 유저들의 평균 점수를 계산해서 user.profile.score를 갱신하는 함수
+const calculateaAvgScore = () => {
+  Meteor.users.find({ username: { $ne: "admin" } }).forEach((user) => {
+    const total = {
+      manner: 0,
+      mentoring: 0,
+      passion: 0,
+      communication: 0,
+      time: 0,
+    };
 
-//프로젝트 종료 후 평가 기록이 없다면
-// if (!Evaluates.findOne()) {
-//   //프로젝트가 종료됐을 때 참여한 인원의 아이디 가져오기
-//   Studys.find({ status: "프로젝트종료" }).forEach((study) => {
-//     const toIds = StudyUsers.find({ studyId: study._id }).forEach(
-//       (studyUser) => {
-//         return studyUser.userId;
-//       }
-//     );
+    //평가한 사람 수
+    const memberCount = UserScores.find({ userId: user._id }).count();
+    //유저가 받은 평가 문서를 모두 확인 후 항목당 총합 구하기
+    UserScores.find({ userId: user._id }).forEach((userScore) => {
+      total.manner += userScore.score.manner;
+      total.mentoring += userScore.score.mentoring;
+      total.passion += userScore.score.passion;
+      total.communication += userScore.score.communication;
+      total.time += userScore.score.time;
+    });
 
-//     StudyUsers.find({ studyId: study._id }).forEach((studyUsers) => {
-//       ddd;
-//     });
-//   });
-// }
+    //평균 구하기
+    total.manner /= memberCount;
+    total.mentoring /= memberCount;
+    total.passion /= memberCount;
+    total.communication /= memberCount;
+    total.time /= memberCount;
+
+    //유저 점수 갱신
+    Meteor.users.update(
+      { _id: user._id },
+      {
+        $set: {
+          "profile.score": total,
+        },
+      }
+    );
+  });
+};
+if (!UserScores.findOne()) {
+  calculateaAvgScore();
+}
