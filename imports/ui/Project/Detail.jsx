@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { useParams, useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
-import { Comments } from "/imports/api/collections";
+import { Comments, StudyUsers } from "/imports/api/collections";
 import "/imports/lib/utils.js";
 
 //모집글 상세조회
@@ -34,18 +34,24 @@ const Detail = () => {
   const { id } = useParams(); //작성된 studyId
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [toggle, setToggle] = useState(false); //false : 참여하기, true : 참여취소하기
+  const [toggle, setToggle] = useState(false); //false : 참여하기, true :  참여취소하기
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
 
   //로그인된 사용자 정보, 실시간 댓글 데이터 추적
-  const { user, comments } = useTracker(() => {
+  const { user, comments, ok } = useTracker(() => {
+    const user = Meteor.user();
+    const comments = Comments.find(
+      { studyId: id },
+      { sort: { createdAt: 1 } }
+    ).fetch();
+    const okUsers = StudyUsers.find({ studyId: id, status: "승인" }).fetch();
+    const ok = okUsers.map((o) => Meteor.users.findOne(o.userId));
+
     return {
-      user: Meteor.user(),
-      comments: Comments.find(
-        { studyId: id },
-        { sort: { createdAt: 1 } }
-      ).fetch(),
+      user: user,
+      comments: comments,
+      ok: ok,
     };
   });
 
@@ -189,6 +195,19 @@ const Detail = () => {
         />
       )}{" "}
       {project.username}
+      {ok
+        .filter((o) => o.username !== project.username)
+        .map((o) => (
+          <li key={o._id}>
+            {o.profile.image && (
+              <img
+                src={o.profile.image}
+                style={{ width: "60px", height: "60px", borderRadius: "50%" }}
+              />
+            )}
+            {o.username}
+          </li>
+        ))}
       <h3>댓글 목록</h3>
       <div>
         {comments.map((cmt) => (

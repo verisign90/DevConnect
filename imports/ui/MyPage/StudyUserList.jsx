@@ -11,11 +11,7 @@ const StudyUserList = () => {
   //대기, 거절인 사용자 / 로그인한 사용자 추적
   const { study, wait, no, user } = useTracker(() => {
     const user = Meteor.user();
-    const study = Studys.findOne({ studyId: id });
-
-    if (!study) {
-      return { study: null, wait: [], no: [], user: null };
-    }
+    const study = Studys.findOne({ _id: id });
 
     const waitUsers = StudyUsers.find({ studyId: id, status: "대기" }).fetch();
     const noUsers = StudyUsers.find({ studyId: id, status: "거절" }).fetch();
@@ -30,6 +26,7 @@ const StudyUserList = () => {
       user: user,
     };
   });
+  console.log("study: ", study);
 
   if (!study) {
     return <div>로딩 중...</div>;
@@ -46,7 +43,7 @@ const StudyUserList = () => {
       );
     } else {
       alert(
-        `프로젝트 참여 인원 총 ${study.memberCount}명이 모였습니다. 프로젝트를 시작하세요`
+        `목표인원 총 ${study.memberCount}명이 모집되어 팀이 구성되었습니다. 더 이상 승인할 수 없습니다.`
       );
     }
   };

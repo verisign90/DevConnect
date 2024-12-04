@@ -15,7 +15,6 @@ Meteor.methods({
       if (user) {
         study.username = user.username;
         study.image = user.profile.image;
-        console.log(study.image);
       }
     }
 
