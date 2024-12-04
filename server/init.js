@@ -71,7 +71,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
     });
   }
 }
-console.log("유저 data 완성");
+//console.log("유저 data 완성");
 
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
@@ -122,7 +122,7 @@ if (!Studys.findOne()) {
     });
   });
 }
-console.log("모집글 생성 완료");
+//console.log("모집글 생성 완료");
 
 //스터디 신청자가 없다면
 if (!StudyUsers.findOne()) {
@@ -168,7 +168,7 @@ if (!StudyUsers.findOne()) {
     });
   });
 }
-console.log("신청자 목록 완성");
+//console.log("신청자 목록 완성");
 
 //팀장이 신청자 목록을 봤을 때
 if (!StudyUsers.findOne({ status: "거절" })) {
@@ -205,13 +205,14 @@ if (!StudyUsers.findOne({ status: "거절" })) {
     );
   });
 }
-console.log("유저가 승인/거절/대기되는 상황 완료");
+//console.log("유저가 승인/거절/대기되는 상황 완료");
 
 //프로젝트 시작이 없다면
 if (!Studys.findOne({ status: "시작" })) {
   Studys.find({ status: "모집중" }).forEach((study) => {
     //팀원이 작성자 혼자일 경우 프로젝트 시작을 할 수 없음
-    if (StudyUsers.find({ studyId: study._id }).count() === 1) return;
+    if (StudyUsers.find({ studyId: study._id, status: "승인" }).count() === 1)
+      return;
 
     const status = ["모집중", "시작"].random();
 
@@ -238,7 +239,7 @@ if (!Studys.findOne({ status: "시작" })) {
     }
   });
 }
-console.log("프로젝트가 시작하면 대기 중인 사용자 정리");
+//console.log("프로젝트가 시작하면 대기 중인 사용자 정리");
 
 //프로젝트 종료가 없다면
 if (!Studys.findOne({ status: "종료" })) {
@@ -270,7 +271,7 @@ if (!Studys.findOne({ status: "종료" })) {
     });
   });
 }
-console.log("프로젝트 종료 후 알림 전송");
+//console.log("프로젝트 종료 후 알림 전송");
 
 //프로젝트 종료 후 상호 평가
 //종료된 프로젝트의 팀원들 id 모두 추출하기(to : 평가 받는 사람)
@@ -307,7 +308,7 @@ Studys.find({ status: "종료" }).forEach((study) => {
     });
   });
 });
-console.log("from, to, isDone:false 평가 준비");
+//console.log("from, to, isDone:false 평가 준비");
 
 //평가 받는 사람의 평균 점수를 계산해서 user.profile.score로 갱신
 const runAvgScore = (toId) => {
@@ -348,7 +349,7 @@ const runAvgScore = (toId) => {
   //평균 점수를 user.profiles.score로 갱신
   Meteor.users.update({ _id: toId }, { $set: { "profile.score": total } });
 };
-console.log("평가 점수 갱신");
+//console.log("평가 점수 갱신");
 
 //평가를 아무도 안 했다면
 if (UserScores.find({ isDone: false })) {
@@ -375,4 +376,4 @@ if (UserScores.find({ isDone: false })) {
     runAvgScore(to);
   });
 }
-console.log("평가 점수 설정");
+//console.log("평가 점수 설정");

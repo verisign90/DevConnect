@@ -34,18 +34,24 @@ const StudyUserList = () => {
 
   //프로젝트 참여 인원을 초과하지 않게 status를 승인으로 update
   const statusOk = (userId) => {
-    const okCount = StudyUsers.find({ studyId: id, status: "승인" }).count();
+    Meteor.call("statusOk", userId, id, (err) => {
+      if (err) {
+        alert(err.reason);
+      } else {
+        console.log("statusOk 성공");
+      }
+    });
+  };
 
-    if (study && okCount < study.memberCount) {
-      StudyUsers.update(
-        { userId: userId, studyId: id },
-        { $set: { status: "승인" } }
-      );
-    } else {
-      alert(
-        `목표인원 총 ${study.memberCount}명이 모집되어 팀이 구성되었습니다. 더 이상 승인할 수 없습니다.`
-      );
-    }
+  //status를 거절로 바꾸기
+  const statusNo = (userId) => {
+    Meteor.call("statusNo", userId, id, (err) => {
+      if (err) {
+        console.error("statusNo 실패: ", err);
+      } else {
+        console.log("statusNo 성공: ", userId);
+      }
+    });
   };
 
   return (
@@ -62,7 +68,7 @@ const StudyUserList = () => {
             )}
             {w.username} <button>프로필</button>{" "}
             <button onClick={() => statusOk(w._id)}>승인</button>{" "}
-            <button>거절</button>
+            <button onClick={() => statusNo(w._id)}>거절</button>
           </li>
         ))}
       </ul>
