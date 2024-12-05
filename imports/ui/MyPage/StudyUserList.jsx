@@ -64,20 +64,24 @@ const StudyUserList = () => {
     <>
       <h2>신청자 목록</h2>
       <ul>
-        {wait.map((w) => (
-          <li key={w._id}>
-            {w.profile.image && (
-              <img
-                src={w.profile.image}
-                style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-              />
-            )}
-            {w.username}{" "}
-            <button onClick={() => goProfile(w._id)}>프로필</button>{" "}
-            <button onClick={() => statusOk(w._id)}>승인</button>{" "}
-            <button onClick={() => statusNo(w._id)}>거절</button>
-          </li>
-        ))}
+        {wait && wait.length > 0 ? (
+          wait.map((w) => (
+            <li key={w._id}>
+              {w.profile.image && (
+                <img
+                  src={w.profile.image}
+                  style={{ width: "60px", height: "60px", borderRadius: "50%" }}
+                />
+              )}
+              {w.username}{" "}
+              <button onClick={() => goProfile(w._id)}>프로필</button>{" "}
+              <button onClick={() => statusOk(w._id)}>승인</button>{" "}
+              <button onClick={() => statusNo(w._id)}>거절</button>
+            </li>
+          ))
+        ) : (
+          <p>아직 신청한 사람이 없습니다</p>
+        )}
       </ul>
     </>
   );

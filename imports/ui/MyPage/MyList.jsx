@@ -1,12 +1,15 @@
 import React from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { Studys, StudyUsers } from "/imports/api/collections";
 import "/imports/lib/utils.js";
 
 //내가 참여하고 모집한 프로젝트 목록 조회
 const MyList = () => {
+  const navigate = useNavigate();
+
   //내가 모집한 리스트와 로그인한 사용자 정보 추적
   const { user, writeList, joinList } = useTracker(() => {
     const user = Meteor.user();
@@ -43,6 +46,11 @@ const MyList = () => {
     };
   });
 
+  //평가페이지로 이동
+  const evaluate = (studyId) => {
+    navigate(`/evaluate/${studyId}`);
+  };
+
   return (
     <>
       <h2>내 프로젝트</h2>
@@ -67,6 +75,9 @@ const MyList = () => {
                     ).toStringYMD()}`}{" "}
                 {study.techStack.join(" ")}
               </Link>
+              {study.status === "종료" && (
+                <button onClick={() => evaluate(study._id)}>평가하기</button>
+              )}
             </li>
           );
         })
@@ -81,9 +92,13 @@ const MyList = () => {
             <Link to={`/leader/${study._id}`}>
               {study.title} ({study.okCount}/{study.memberCount}){" "}
               {study.status === "시작"
-                ? `시작 ${study.startDate}`
+                ? `시작 ${new Date(study.startDate).toStringYMD()}`
                 : study.status === "종료"
-                ? `시작 ${study.startDate} 종료 ${study.endDate}`
+                ? `시작 ${new Date(
+                    study.startDate
+                  ).toStringYMD()} 종료 ${new Date(
+                    study.endDate
+                  ).toStringYMD()}`
                 : study.status}{" "}
               {study.techStack.join(" ")}
             </Link>

@@ -73,16 +73,16 @@ const Leader = () => {
       <br />
       프로젝트일정:{" "}
       {study.status === "시작"
-        ? `시작 ${study.startDate}`
+        ? `시작 ${new Date(study.startDate).toStringYMD()}`
         : study.status === "종료"
-        ? `시작 ${study.startDate} 종료 ${study.endDate}`
+        ? `시작 ${new Date(study.startDate).toStringYMD()} 종료 ${new Date(
+            study.endDate
+          ).toStringYMD()}`
         : "프로젝트 일정이 등록되지 않았습니다"}
       <hr />
       <h3>팀원 정보</h3>
-      {study.status !== "종료" ? (
+      {study.status !== "종료" && (
         <button onClick={goStudyUserList}>팀원 추가</button>
-      ) : (
-        <button onClick={goUserScore}>평가하기</button>
       )}
       <br />
       팀장:{" "}
