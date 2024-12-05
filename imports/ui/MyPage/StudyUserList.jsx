@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { StudyUsers, Studys } from "/imports/api/collections";
@@ -7,6 +7,7 @@ import { StudyUsers, Studys } from "/imports/api/collections";
 //신청자 목록 페이지
 const StudyUserList = () => {
   const { id } = useParams(); //studyId
+  const navigate = useNavigate();
 
   //대기, 거절인 사용자 / 로그인한 사용자 추적
   const { study, wait, no, user } = useTracker(() => {
@@ -54,6 +55,11 @@ const StudyUserList = () => {
     });
   };
 
+  //다른 사용자의 프로필 보기
+  const goProfile = (userId) => {
+    navigate(`/myProfile/${userId}`);
+  };
+
   return (
     <>
       <h2>신청자 목록</h2>
@@ -66,7 +72,8 @@ const StudyUserList = () => {
                 style={{ width: "60px", height: "60px", borderRadius: "50%" }}
               />
             )}
-            {w.username} <button>프로필</button>{" "}
+            {w.username}{" "}
+            <button onClick={() => goProfile(w._id)}>프로필</button>{" "}
             <button onClick={() => statusOk(w._id)}>승인</button>{" "}
             <button onClick={() => statusNo(w._id)}>거절</button>
           </li>

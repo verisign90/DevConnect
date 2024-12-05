@@ -66,9 +66,11 @@ export const App = () => {
         <Route path="/resetPassword" element={<Password />} />
 
         <Route path="/editProfile/:userId" element={<EditProfile />} />
+        <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/myList" element={<MyList />} />
         <Route path="/leader/:id" element={<Leader />} />
         <Route path="/studyUserList/:id" element={<StudyUserList />} />
+        <Route path="/myProfile/:userId" element={<MyProfile />} />
         <Route path="/myProfile" element={<MyProfile />} />
       </Routes>
     </Router>
