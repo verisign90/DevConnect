@@ -55,7 +55,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
     Accounts.createUser({
       username: "user" + i,
       password: "1234",
-      email: `user${i}@example.com,`,
+      email: `user${i}@example.com`,
       profile: {
         role: ["백엔드", "프론트엔드"].random(),
         techStack: stackList.random(1, 5),

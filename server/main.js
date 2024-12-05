@@ -17,3 +17,8 @@ Meteor.startup(() => {
   process.env.MAIL_URL =
     "smtps://aplint0109@gmail.com:bfbvexltskgleeoh@smtp.gmail.com:465";
 });
+
+//서버에서 클라이언트에 allUserEmails 구독 발행
+Meteor.publish("allUserEmails", function () {
+  return Meteor.users.find({}, { fields: { "emails.address": 1, profile: 1 } });
+});

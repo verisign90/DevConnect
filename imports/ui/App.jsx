@@ -11,6 +11,7 @@ import Password from "./User/Password.jsx";
 import EditProfile from "./MyPage/EditProfile.jsx";
 import MyList from "./MyPage/MyList.jsx";
 import Leader from "./MyPage/Leader.jsx";
+import MyProfile from "./MyPage/MyProfile.jsx";
 
 import Write from "./Project/Write.jsx";
 import Detail from "./Project/Detail.jsx";
@@ -64,10 +65,11 @@ export const App = () => {
         <Route path="/resetPassword/:token" element={<Password />} />
         <Route path="/resetPassword" element={<Password />} />
 
-        <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/editProfile/:userId" element={<EditProfile />} />
         <Route path="/myList" element={<MyList />} />
         <Route path="/leader/:id" element={<Leader />} />
         <Route path="/studyUserList/:id" element={<StudyUserList />} />
+        <Route path="/myProfile" element={<MyProfile />} />
       </Routes>
     </Router>
   );

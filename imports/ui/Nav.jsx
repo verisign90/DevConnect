@@ -25,6 +25,9 @@ export default () => {
             </li>
 
             <li>
+              <Link to="/myProfile">내 프로필</Link>
+            </li>
+            <li>
               <Link to="/editProfile">프로필 수정</Link>
             </li>
             <li>

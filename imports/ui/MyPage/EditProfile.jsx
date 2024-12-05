@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTracker } from "meteor/react-meteor-data";
+import { useParams } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { Files } from "/imports/api/collections";
 
@@ -38,6 +39,7 @@ const EditProfile = () => {
   const [nameModify, setNameModify] = useState(false);
   const [photoModify, setPhotoModify] = useState(false);
   const [techStackModify, setTechStackModify] = useState(false);
+  const { userId } = useParams();
 
   //현재 로그인한 사용자의 이름, 기술스택 추적
   const { username, techStack, userFile, isLoading } = useTracker(() => {
