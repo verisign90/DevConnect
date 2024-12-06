@@ -133,7 +133,7 @@ const Detail = () => {
     };
 
     if (comment) {
-      Meteor.call("commentInsert", data, (err, rlt) => {
+      Meteor.call("commentInsert", data, (err) => {
         if (err) {
           console.error("commentInsert 실패: ", err);
         } else {
@@ -225,13 +225,19 @@ const Detail = () => {
       </div>
       <hr />
       <h3>댓글 입력창</h3>
-      {user.profile.image && (
-        <img
-          src={user.profile.image}
-          style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-        />
+      {user ? (
+        <>
+          {user.profile.image && (
+            <img
+              src={user.profile.image}
+              style={{ width: "60px", height: "60px", borderRadius: "50%" }}
+            />
+          )}
+          {user.username}{" "}
+        </>
+      ) : (
+        <p>로그인하지 않은 사용자는 댓글을 입력할 수 없습니다.</p>
       )}
-      {user.username}{" "}
       <form onSubmit={commentSubmit}>
         <input
           type="text"

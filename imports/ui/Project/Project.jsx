@@ -117,10 +117,6 @@ const Project = () => {
     }
   };
 
-  if (!user) {
-    return <div>로딩 중...</div>;
-  }
-
   //selectbox에서 선택한 기술스택을 중복되지 않게 myStack에 추가
   const selectStack = (e) => {
     const select = e.target.value;

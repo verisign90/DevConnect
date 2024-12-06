@@ -6,6 +6,7 @@ import { Studys, StudyUsers } from "/imports/api/collections";
 //평가페이지
 const Evaluate = () => {
   const { id } = useParams(); //studyId
+  const [score, setScore] = useState({});
 
   //팀원 목록 추적
   const { user, study, teamMembers } = useTracker(() => {
@@ -40,7 +41,23 @@ const Evaluate = () => {
       {teamMembers.map((member) => (
         <li key={member._id}>
           <h3>{member.username}</h3>
-          {categories.map()}
+          {categories.map((category) => (
+            <div key={category}>
+              <label>{category}</label>
+              {[1, 2, 3, 4, 5].map((value) => (
+                <label key={value}>
+                  <input
+                    type="radio"
+                    name={`${member._id}-${category}`}
+                    value={value}
+                    checked={score[member._id][category] === value}
+                    onChange={() => scoreChange(member._id, category, value)}
+                  />
+                  {value}
+                </label>
+              ))}
+            </div>
+          ))}
         </li>
       ))}
     </>
