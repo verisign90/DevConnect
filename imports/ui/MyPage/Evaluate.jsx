@@ -6,7 +6,6 @@ import { Studys, StudyUsers } from "/imports/api/collections";
 //평가페이지
 const Evaluate = () => {
   const { id } = useParams(); //studyId
-  const [score, setScore] = useState({});
 
   //팀원 목록 추적
   const { user, study, teamMembers } = useTracker(() => {
@@ -27,23 +26,33 @@ const Evaluate = () => {
     return { user, study, teamMembers };
   });
 
-  const categories = [
-    "manner",
-    "communication",
-    "passion",
-    "time",
-    "mentoring",
-  ];
+  //평가 제출
+  const handleSubmit = () => {
+    const data = teamMembers.map((member) => {
+      const score = {
+        to: member._id,
+        score: {
+          manner: document.querySelector(
+            `input[name="${member._id}-manner"]:checked`
+          ).value,
+          mentoring: document.querySelector(
+            `input[name="${member._id}-mentoring"]:checked`
+          ).value,
+          communication: document.querySelector(
+            `input[name="${member._id}-communication"]:checked`
+          ).value,
+          passion: document.querySelector(
+            `input[name="${member._id}-passion]:checked`
+          ).value,
+          time: document.querySelector(
+            `input[name="${member._id}-time"]:checked`
+          ).value,
+        },
+      };
+      return score;
+    });
 
-  //to, score 설정
-  const scoreChange = (toId, category, value) => {
-    setScore((prev) => ({
-      ...prev,
-      [toId]: {
-        ...prev[toId],
-        [category]: value,
-      },
-    }));
+    Meteor.call("evaluate", user._id, data, (err, rlt) => {});
   };
 
   return (
@@ -52,26 +61,30 @@ const Evaluate = () => {
       {teamMembers.map((member) => (
         <li key={member._id}>
           <h3>{member.username}</h3>
-          {/* 5개 항목에 대해서 각 5개의 라이디오 박스 */}
-          {/* {categories.map((category) => (
-            <div key={category}>
-              <label>{category}</label>
-              {[1, 2, 3, 4, 5].map((value) => (
-                <label key={value}>
-                  <input
-                    type="radio"
-                    name={`${member._id}-${category}`}
-                    value={value}
-                    checked={score[member._id][category] === value}
-                    onChange={() => scoreChange(member._id, category, value)}
-                  />
-                  {value}
-                </label>
-              ))}
-            </div>
-          ))} */}
+          <div>
+            {["manner", "mentoring", "passion", "communication", "time"].map(
+              (category) => (
+                <div key={category} style={{ marginBottom: "10px" }}>
+                  <label>{category}</label>
+                  <div style={{ display: "inline-block" }}>
+                    {[1, 2, 3, 4, 5].map((scoreVal) => (
+                      <label key={scoreVal} style={{ marginRight: "5px" }}>
+                        <input
+                          type="radio"
+                          name={`${member._id}-${category}`}
+                          value={scoreVal}
+                        />
+                        {scoreVal}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )
+            )}
+          </div>
         </li>
       ))}
+      <button onClick={handleSubmit}>평가제출</button>
     </>
   );
 };

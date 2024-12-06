@@ -44,18 +44,18 @@ Meteor.methods({
             }
 
             //중복이 없다면 상호평가지 insert
-            UserScores.insert({
+            const doneRlt = UserScores.insert({
               studyId: studyId,
               from: fromId,
               to: toId,
               score: {},
               isDone: false,
             });
+            console.log(doneRlt);
           }
         });
       });
     }
-
     return result;
   },
 });

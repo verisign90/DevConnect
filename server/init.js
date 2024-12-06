@@ -39,6 +39,8 @@ const removeAll = () => {
   Notices.remove({});
 };
 
+removeAll();
+
 const testUserCount = 60;
 
 //admin이 없다면
@@ -138,7 +140,7 @@ if (!StudyUsers.findOne()) {
   //유저와 스터디를 각각 랜덤으로 뽑아 신청하는 상황 설정
   const users = Meteor.users.find({ username: { $ne: "admin" } }).fetch();
   const studies = Studys.find().fetch();
-  Array.range(0, testUserCount * 3).forEach((i) => {
+  Array.range(0, testUserCount * 5).forEach((i) => {
     const user = users.random();
     const study = studies.random();
 
