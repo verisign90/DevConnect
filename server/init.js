@@ -39,7 +39,7 @@ const removeAll = () => {
   Notices.remove({});
 };
 
-removeAll();
+//removeAll();
 
 const testUserCount = 60;
 
@@ -77,7 +77,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
 
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
-  Array.range(0, testUserCount * 0.2).forEach((i) => {
+  Array.range(0, 5).forEach((i) => {
     const user = Meteor.users
       .find({ username: { $ne: "admin" } })
       .fetch()
@@ -242,6 +242,8 @@ if (!Studys.findOne({ status: "시작" })) {
   });
 }
 //console.log("프로젝트가 시작하면 대기 중인 사용자 정리");
+
+return;
 
 //프로젝트 종료가 없다면
 if (!Studys.findOne({ status: "종료" })) {

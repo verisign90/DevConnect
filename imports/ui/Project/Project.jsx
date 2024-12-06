@@ -244,7 +244,7 @@ const Project = () => {
                 {formatDay(study.createdAt)} 조회수 {study.views}
               </p>
               <p>
-                {user.profile.image && (
+                {user.profile.image ? (
                   <img
                     src={user.profile.image}
                     style={{
@@ -253,7 +253,7 @@ const Project = () => {
                       borderRadius: "50%",
                     }}
                   />
-                )}
+                ) : null}
                 {user.username}
               </p>
               <hr />

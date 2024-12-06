@@ -28,7 +28,7 @@ const Evaluate = () => {
 
   //평가 제출
   const handleSubmit = () => {
-    const data = teamMembers.map((member) => {
+    const datas = teamMembers.map((member) => {
       const score = {
         to: member._id,
         score: {
@@ -42,7 +42,7 @@ const Evaluate = () => {
             `input[name="${member._id}-communication"]:checked`
           ).value,
           passion: document.querySelector(
-            `input[name="${member._id}-passion]:checked`
+            `input[name="${member._id}-passion"]:checked`
           ).value,
           time: document.querySelector(
             `input[name="${member._id}-time"]:checked`
@@ -52,7 +52,15 @@ const Evaluate = () => {
       return score;
     });
 
-    Meteor.call("evaluate", user._id, data, (err, rlt) => {});
+    console.log(datas);
+    //상호평가지 제출
+    Meteor.call("evaluate", user._id, datas, (err, rlt) => {
+      if (err) {
+        console.error("evaluate 실패: ", err);
+      } else {
+        console.log("evaluate 성공");
+      }
+    });
   };
 
   return (
