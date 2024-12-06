@@ -35,13 +35,25 @@ const Evaluate = () => {
     "mentoring",
   ];
 
+  //to, score 설정
+  const scoreChange = (toId, category, value) => {
+    setScore((prev) => ({
+      ...prev,
+      [toId]: {
+        ...prev[toId],
+        [category]: value,
+      },
+    }));
+  };
+
   return (
     <>
       <h2>{`${study.title} 평가 페이지`}</h2>
       {teamMembers.map((member) => (
         <li key={member._id}>
           <h3>{member.username}</h3>
-          {categories.map((category) => (
+          {/* 5개 항목에 대해서 각 5개의 라이디오 박스 */}
+          {/* {categories.map((category) => (
             <div key={category}>
               <label>{category}</label>
               {[1, 2, 3, 4, 5].map((value) => (
@@ -57,7 +69,7 @@ const Evaluate = () => {
                 </label>
               ))}
             </div>
-          ))}
+          ))} */}
         </li>
       ))}
     </>
