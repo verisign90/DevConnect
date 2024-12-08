@@ -1,14 +1,39 @@
 import { Meteor } from "meteor/meteor";
-import { Studys, UserScores, StudyUsers } from "/imports/api/collections";
+import {
+  Studys,
+  UserScores,
+  StudyUsers,
+  Notices,
+} from "/imports/api/collections";
 import "/imports/lib/utils.js";
 
 Meteor.methods({
-  //모집중 -> 시작으로 status 변경
+  //모집중 -> 시작으로 status 변경하고 대기, 거절된 사용자에게 알림 전송
   statusStart: (studyId) => {
-    return Studys.update(
+    //모집중 -> 시작으로 status 변경
+    const result = Studys.update(
       { _id: studyId },
       { $set: { status: "시작", startDate: new Date() } }
     );
+
+    if (result) {
+      //프로젝트가 시작되면 대기, 거절된 사용자에게 알림 전송
+      StudyUsers.find({
+        studyId: studyId,
+        status: { $in: ["대기", "거절"] },
+      }).forEach((studyUser) => {
+        const study = Studys.findOne({ _id: studyId });
+
+        Notices.insert({
+          studyId: studyId,
+          userId: studyUser.userId,
+          message: `${study.title}에 선택되지 않으셨습니다. 다른 모임을 찾아 보세요`,
+          read: false,
+          createdAt: new Date(),
+        });
+        StudyUsers.remove({ _id: studyUser._id });
+      });
+    }
   },
 
   //시작 -> 종료로 status 변경 후 UserScores에 상호평가지 insert

@@ -17,10 +17,15 @@ const Notice = () => {
 
   //이동할 경로 결정
   const navi = (message, studyId) => {
+    //신청하신 프로젝트에 승인 되었습니다
     if (message.includes("승인")) {
       return `/detail/${studyId}`;
+      //새로운 신청자가 있습니다
     } else if (message.includes("신청자")) {
       return `/studyUserList/${studyId}`;
+      //선택되지 않으셨습니다. 다른 모임을 찾아 보세요
+    } else if (message.includes("모임")) {
+      return `/detail/${studyId}`;
     }
   };
 
