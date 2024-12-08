@@ -320,6 +320,8 @@ Studys.find({ status: "종료" }).forEach((study) => {
 });
 //console.log("from, to, isDone:false 평가 준비");
 
+return;
+
 //평가 받는 사람의 평균 점수를 계산해서 user.profile.score로 갱신
 const runAvgScore = (toId) => {
   const total = {
@@ -340,7 +342,7 @@ const runAvgScore = (toId) => {
     total.communication += userScore.score.communication;
     total.time += userScore.score.time;
   });
-  //평균 점수
+  //평균 점수 계산
   total.manner /= count;
   total.mentoring /= count;
   total.passion /= count;

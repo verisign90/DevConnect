@@ -1,6 +1,43 @@
 import { Meteor } from "meteor/meteor";
 import { UserScores } from "/imports/api/collections";
 
+//평가 받는 사람의 평균 점수를 계산해서 user.profile.score로 갱신
+const runAvgScore = (toId) => {
+  const total = {
+    manner: 0,
+    mentoring: 0,
+    passion: 0,
+    communication: 0,
+    time: 0,
+  };
+
+  const categories = [
+    "manner",
+    "mentoring",
+    "passion",
+    "communication",
+    "time",
+  ];
+
+  //나를 평가한 사람 수
+  const count = UserScores.find({ to: toId, isDone: true }).count();
+  //내가 받은 점수 총점
+  UserScores.find({ to: toId, isDone: true }).forEach((userScore) => {
+    categories.forEach((category) => {
+      total[category] += Number(userScore.score[category]);
+    });
+  });
+  console.log("총합: ", total);
+  //평균 점수 계산
+  categories.forEach((category) => {
+    total[category] /= count;
+  });
+  console.log("평균: ", total);
+
+  //평균 점수를 user.profiles.score로 갱신
+  Meteor.users.update({ _id: toId }, { $set: { "profile.score": total } });
+};
+
 Meteor.methods({
   //평가하기, 누락된 팀원 평가지 체크
   evaluate: (userId, datas) => {
@@ -34,7 +71,10 @@ Meteor.methods({
           );
         } else {
           console.error("평가 score 업데이트에서 문제 있음");
+          return;
         }
+
+        runAvgScore(to);
       }
     });
 

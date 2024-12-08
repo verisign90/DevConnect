@@ -254,7 +254,7 @@ const Project = () => {
                     }}
                   />
                 ) : null}
-                {user.username}
+                {user?.username}
               </p>
               <hr />
             </li>
