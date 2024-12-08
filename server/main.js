@@ -7,6 +7,7 @@ import "./mypage/editprofile.js";
 import "./mypage/leader.js";
 import "./mypage/studyuserlist.js";
 import "./mypage/evaluate.js";
+import "./mypage/notice.js";
 
 import "./project/write.js";
 import "./project/detail.js";

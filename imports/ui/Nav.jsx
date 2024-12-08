@@ -1,7 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTracker } from "meteor/react-meteor-data";
+import { Notices } from "/imports/api/collections";
 
 export default () => {
+  //Notices 컬렉션에서 읽지 않은 알림 개수 가져오기
+  const { user, readFalseCount } = useTracker(() => {
+    const user = Meteor.user();
+    const readFalseCount = Notices.find({
+      userId: user._id,
+      read: false,
+    }).count();
+
+    return { user, readFalseCount };
+  });
+
   return (
     <>
       <header>
@@ -34,7 +47,7 @@ export default () => {
               <Link to="/myList">내 프로젝트</Link>
             </li>
             <li>
-              <Link to="/notice">알림페이지</Link>
+              <Link to="/notice">알림페이지 ({readFalseCount})</Link>
             </li>
 
             <li>
