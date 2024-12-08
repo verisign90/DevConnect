@@ -6,6 +6,7 @@ import { Studys, StudyUsers } from "/imports/api/collections";
 //평가페이지
 const Evaluate = () => {
   const { id } = useParams(); //studyId
+  const navigate = useNavigate();
 
   //팀원 목록 추적
   const { user, study, teamMembers } = useTracker(() => {
@@ -79,8 +80,13 @@ const Evaluate = () => {
         }
       } else {
         alert(rlt.message);
+        navigate("/myList");
       }
     });
+  };
+
+  const goProfile = (userId) => {
+    navigate(`/myProfile/${userId}`);
   };
 
   return (
@@ -88,7 +94,10 @@ const Evaluate = () => {
       <h2>{`${study.title} 평가 페이지`}</h2>
       {teamMembers.map((member) => (
         <li key={member._id}>
-          <h3>{member.username}</h3>
+          <h3 style={{ display: "inline-block", marginRight: "10px" }}>
+            {member.username}
+          </h3>
+          <button onClick={() => goProfile(member._id)}>프로필</button>
           <div>
             {["manner", "mentoring", "passion", "communication", "time"].map(
               (category) => (
