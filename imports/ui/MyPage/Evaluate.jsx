@@ -28,37 +28,57 @@ const Evaluate = () => {
 
   //평가 제출
   const handleSubmit = () => {
+    //누락된 항목이 있는 팀원 목록
+    const missing = [];
+
+    //평가해야되는 팀원별 누락된 항목이 있는지 없는지에 따라 분기 처리
     const datas = teamMembers.map((member) => {
-      const score = {
-        to: member._id,
-        score: {
-          manner: document.querySelector(
-            `input[name="${member._id}-manner"]:checked`
-          ).value,
-          mentoring: document.querySelector(
-            `input[name="${member._id}-mentoring"]:checked`
-          ).value,
-          communication: document.querySelector(
-            `input[name="${member._id}-communication"]:checked`
-          ).value,
-          passion: document.querySelector(
-            `input[name="${member._id}-passion"]:checked`
-          ).value,
-          time: document.querySelector(
-            `input[name="${member._id}-time"]:checked`
-          ).value,
-        },
-      };
-      return score;
+      const score = {};
+      let isComplete = true;
+
+      //팀원의 평가 항목과 값을 가져오기
+      ["manner", "mentoring", "communication", "passion", "time"].forEach(
+        (category) => {
+          const input = document.querySelector(
+            `input[name="${member._id}-${category}"]:checked`
+          );
+
+          //평가항목에 대한 값이 있다면 score 객체에 넣기
+          if (input) {
+            score[category] = input.value;
+          } else {
+            //평가항목에 대한 값이 누락된 게 있다면 false
+            isComplete = false;
+          }
+        }
+      );
+
+      //평가가 누락된 username을 missing 배열에 넣기
+      if (!isComplete) {
+        missing.push(member.username);
+      }
+
+      return { to: member._id, score };
     });
+
+    console.log("missing: ", missing);
+    //평가가 누락된 username이 있다면
+    if (missing.length > 0) {
+      alert(`${missing.join(", ")}님의 평가가 모두 완료되지 않았습니다`);
+      return;
+    }
 
     console.log(datas);
     //상호평가지 제출
     Meteor.call("evaluate", user._id, datas, (err, rlt) => {
       if (err) {
-        console.error("evaluate 실패: ", err);
+        if (err.reason === 400) {
+          alert(err.reason);
+        } else {
+          console.error("evaluate 실패: ", err);
+        }
       } else {
-        console.log("evaluate 성공");
+        alert(rlt.message);
       }
     });
   };

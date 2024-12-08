@@ -18,6 +18,7 @@ import Detail from "./Project/Detail.jsx";
 import Project from "./Project/Project.jsx";
 import StudyUserList from "./MyPage/StudyUserList.jsx";
 import Evaluate from "./MyPage/Evaluate.jsx";
+import Notice from "./MyPage/Notice.jsx";
 
 export const App = () => {
   //로그인 사용자 데이터 도착 전에 화면이 렌더링되지 않도록 로딩 페이지 적용
@@ -39,6 +40,7 @@ export const App = () => {
         <Nav />
         <Routes>
           <Route path="/" element={<Project />} />
+          <Route path="*" element={<NotFound />}></Route>
 
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
@@ -74,6 +76,7 @@ export const App = () => {
         <Route path="/myProfile/:userId" element={<MyProfile />} />
         <Route path="/myProfile" element={<MyProfile />} />
         <Route path="/evaluate/:id" element={<Evaluate />} />
+        <Route path="/notice" element={<Notice />} />
       </Routes>
     </Router>
   );

@@ -41,7 +41,7 @@ const removeAll = () => {
 
 //removeAll();
 
-const testUserCount = 60;
+const testUserCount = 100;
 
 //admin이 없다면
 if (!Meteor.users.findOne({ username: "admin" })) {
@@ -77,7 +77,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
 
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
-  Array.range(0, 5).forEach((i) => {
+  Array.range(0, testUserCount * 0.2).forEach((i) => {
     const user = Meteor.users
       .find({ username: { $ne: "admin" } })
       .fetch()
@@ -140,7 +140,7 @@ if (!StudyUsers.findOne()) {
   //유저와 스터디를 각각 랜덤으로 뽑아 신청하는 상황 설정
   const users = Meteor.users.find({ username: { $ne: "admin" } }).fetch();
   const studies = Studys.find().fetch();
-  Array.range(0, testUserCount * 5).forEach((i) => {
+  Array.range(0, testUserCount * 3).forEach((i) => {
     const user = users.random();
     const study = studies.random();
 
@@ -168,6 +168,14 @@ if (!StudyUsers.findOne()) {
       userId: user._id,
       status: "대기",
     });
+
+    Notices.insert({
+      studyId: study._id,
+      userId: user._id,
+      message: `${study.title}에 새로운 신청자가 있습니다`,
+      isRead: false,
+      createdAt: new Date(),
+    });
   });
 }
 //console.log("신청자 목록 완성");
@@ -194,7 +202,7 @@ if (!StudyUsers.findOne({ status: "거절" })) {
         );
 
         //팀장이 대기 중인 유저를 승인/거절했을 경우 알림 전송
-        if (status === "승인" || status === "거절") {
+        if (status === "승인") {
           Notices.insert({
             studyId: study._id,
             userId: studyUsers.userId,
@@ -242,8 +250,6 @@ if (!Studys.findOne({ status: "시작" })) {
   });
 }
 //console.log("프로젝트가 시작하면 대기 중인 사용자 정리");
-
-return;
 
 //프로젝트 종료가 없다면
 if (!Studys.findOne({ status: "종료" })) {
@@ -340,15 +346,6 @@ const runAvgScore = (toId) => {
   total.passion /= count;
   total.communication /= count;
   total.time /= count;
-
-  if (count === 0) {
-    //미평가 신규회원
-    total.manner = 3;
-    total.mentoring = 3;
-    total.passion = 3;
-    total.communication = 3;
-    total.time = 3;
-  }
 
   //평균 점수를 user.profiles.score로 갱신
   Meteor.users.update({ _id: toId }, { $set: { "profile.score": total } });

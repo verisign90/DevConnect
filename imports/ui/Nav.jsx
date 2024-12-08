@@ -33,6 +33,9 @@ export default () => {
             <li>
               <Link to="/myList">내 프로젝트</Link>
             </li>
+            <li>
+              <Link to="/notice">알림페이지</Link>
+            </li>
 
             <li>
               <Link to="/write">모집글 작성</Link>
