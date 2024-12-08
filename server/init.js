@@ -109,11 +109,11 @@ if (!Studys.findOne()) {
       memberCount: [2, 3, 4, 5, 6].random(),
       techStack: stackList.random(1, 5),
       score: {
-        manner: [0, 1, 2, 3].random(),
-        mentoring: [0, 1, 2, 3].random(),
-        passion: [0, 1, 2, 3].random(),
-        communication: [0, 1, 2, 3].random(),
-        time: [0, 1, 2, 3].random(),
+        manner: [0, 1, 2, 2, 3, 3, 4].random(),
+        mentoring: [0, 1, 2, 2, 3, 3, 4].random(),
+        passion: [0, 1, 2, 2, 3, 3, 4].random(),
+        communication: [0, 1, 2, 2, 3, 3, 4].random(),
+        time: [0, 1, 2, 2, 3, 3, 4].random(),
       },
       content: "내용" + i,
       status: "모집중",
@@ -169,11 +169,12 @@ if (!StudyUsers.findOne()) {
       status: "대기",
     });
 
+    //작성자에게 참여 버튼을 누른 신청자가 있다는 알림 전송
     Notices.insert({
       studyId: study._id,
-      userId: user._id,
+      userId: study.userId,
       message: `${study.title}에 새로운 신청자가 있습니다`,
-      isRead: false,
+      read: false,
       createdAt: new Date(),
     });
   });

@@ -32,11 +32,12 @@ Meteor.methods({
       );
     }
 
+    //팀장이 승인을 누르면 알림 전송
     Notices.insert({
       studyId: studyId,
       userId: userId,
       message: `신청하신 ${study.title} 프로젝트에 승인되었습니다`,
-      isRead: false,
+      read: false,
       createdAt: new Date(),
     });
   },

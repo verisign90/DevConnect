@@ -58,6 +58,15 @@ Meteor.methods({
       createdAt: new Date(),
     });
 
+    //작성자에게 참여 버튼을 누른 신청자가 있다는 알림 전송
+    Notices.insert({
+      studyId: study._id,
+      userId: study.userId,
+      message: `${study.title}에 새로운 신청자가 있습니다`,
+      read: false,
+      createdAt: new Date(),
+    });
+
     return { success: true };
   },
 
