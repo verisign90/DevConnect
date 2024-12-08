@@ -36,28 +36,29 @@ Meteor.methods({
     }
   },
 
-  //시작 -> 종료로 status 변경 후 UserScores에 상호평가지 insert
+  //시작 -> 종료로 status 변경되면 UserScores에 상호평가지 insert 후 알림 전송
   statusEnd: (studyId) => {
-    //시작 -> 종료로 status 변경
-    const result = Studys.update(
-      { _id: studyId },
-      { $set: { status: "종료", endDate: new Date() } }
-    );
+    try {
+      //시작 -> 종료로 status 변경
+      Studys.update(
+        { _id: studyId },
+        { $set: { status: "종료", endDate: new Date() } }
+      );
 
-    if (result) {
-      //종료된 프로젝트의 팀원 id 목록 추출하기
-      const toIds = StudyUsers.find({ studyId: studyId }).map((studyUsers) => {
-        return studyUsers.userId;
-      });
+      //종료된 프로젝트의 팀원 목록 가져오기
+      const teamMembers = StudyUsers.find({ studyId: studyId });
+      //팀원들의 id 목록 추출
+      const toIds = teamMembers.map((studyUser) => studyUser.userId);
 
-      //이중 for문으로 상호평가 준비. 바깥 for문-from(평가하는 사람), 안쪽 for문-to(평가 받는 사람)
-      StudyUsers.find({ studyId: studyId }).forEach((studyUser) => {
+      //상호평가지 데이터 insert
+      teamMembers.forEach((studyUser) => {
+        const fromId = studyUser.userId; //fromId 평가하는 사람
+
+        //toId 평가 받는 사람
         toIds.forEach((toId) => {
-          const fromId = studyUser.userId;
-
           //내가 아닌 사용자만 평가
           if (toId !== fromId) {
-            //혹시 중복이 있다면 리턴
+            //혹시 중복이 있다면 return
             if (
               UserScores.findOne({
                 studyId: studyId,
@@ -69,18 +70,31 @@ Meteor.methods({
             }
 
             //중복이 없다면 상호평가지 insert
-            const doneRlt = UserScores.insert({
+            UserScores.insert({
               studyId: studyId,
               from: fromId,
               to: toId,
               score: {},
               isDone: false,
             });
-            console.log(doneRlt);
           }
         });
       });
+
+      //종료된 프로젝트에 참여한 인원에게 알림 전송
+      teamMembers.forEach((studyUser) => {
+        const study = Studys.findOne({ _id: studyId });
+
+        Notices.insert({
+          studyId: studyId,
+          userId: studyUser.userId,
+          message: `${study.title} 프로젝트가 종료되었습니다. 팀원을 평가해 주세요`,
+          read: false,
+          createdAt: new Date(),
+        });
+      });
+    } catch (error) {
+      console.error("statusEnd 서버 실패: ", error);
     }
-    return result;
   },
 });

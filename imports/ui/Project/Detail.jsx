@@ -32,7 +32,7 @@ const Detail = () => {
   };
 
   const { id } = useParams(); //작성된 studyId
-  const [project, setProject] = useState(null);
+  const [project, setProject] = useState({});
   const [loading, setLoading] = useState(true);
   const [toggle, setToggle] = useState(false); //false : 참여하기, true :  참여취소하기
   const [comment, setComment] = useState("");
@@ -67,7 +67,7 @@ const Detail = () => {
     });
   }, []);
 
-  if (loading) {
+  if (loading || !project) {
     return <div>로딩 중...</div>;
   }
 
@@ -155,19 +155,19 @@ const Detail = () => {
       <br />
       조회수: {project?.views}
       <br />
-      작성자: {project.username}
+      작성자: {project?.username}
       <hr />
-      모집분야: {project.role}
+      모집분야: {project?.role}
       <br />
-      모임형태: {project.onOff}{" "}
-      {project.onOff !== "온라인" && <span>{project.location.city}</span>}
+      모임형태: {project?.onOff}{" "}
+      {project?.onOff !== "온라인" && <span>{project?.location.city}</span>}
       <br />
-      참여인원: {project.memberCount}
+      참여인원: {project?.memberCount}
       <br />
-      기술스택: {project.techStack.join(" ")}
+      기술스택: {project?.techStack.join(" ")}
       <br />
       요구역량{" "}
-      {Object.entries(project.score).map(([field, value]) => (
+      {Object.entries(project?.score).map(([field, value]) => (
         <li key={field}>
           {field} : {value}
         </li>

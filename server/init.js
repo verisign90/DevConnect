@@ -267,19 +267,19 @@ if (!Studys.findOne({ status: "종료" })) {
         { _id: study._id },
         { $set: { status: status, endDate: endDate } }
       );
-    }
 
-    //프로젝트에 참여했던 모든 유저에게 알림 전송
-    const teamMembers = StudyUsers.find({ studyId: study._id }).fetch();
-    teamMembers.forEach((studyUser) => {
-      Notices.insert({
-        studyId: study._id,
-        userId: teamMembers.userId,
-        message: `${study.title} 프로젝트가 종료되었습니다. 팀원을 평가해 주세요`,
-        read: false,
-        createdAt: new Date(),
+      //프로젝트에 참여했던 모든 유저에게 알림 전송
+      const teamMembers = StudyUsers.find({ studyId: study._id }).fetch();
+      teamMembers.forEach((studyUser) => {
+        Notices.insert({
+          studyId: study._id,
+          userId: teamMembers.userId,
+          message: `${study.title} 프로젝트가 종료되었습니다. 팀원을 평가해 주세요`,
+          read: false,
+          createdAt: new Date(),
+        });
       });
-    });
+    }
   });
 }
 //console.log("프로젝트 종료 후 알림 전송");

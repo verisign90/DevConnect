@@ -50,8 +50,6 @@ const Leader = () => {
     });
   };
 
-  const goUserScore = () => {};
-
   //신청자 목록으로 이동
   const goStudyUserList = () => {
     navigate(`/studyUserList/${id}`);

@@ -26,6 +26,9 @@ const Notice = () => {
       //선택되지 않으셨습니다. 다른 모임을 찾아 보세요
     } else if (message.includes("모임")) {
       return `/detail/${studyId}`;
+      //프로젝트가 종료되었습니다. 팀원을 평가해 주세요
+    } else if (message.includes("평가")) {
+      return `/myList`;
     }
   };
 
