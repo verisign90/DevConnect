@@ -42,7 +42,7 @@ const removeAll = () => {
 
 //removeAll();
 
-const testUserCount = 100;
+const testUserCount = 10;
 
 //admin이 없다면
 if (!Meteor.users.findOne({ username: "admin" })) {
@@ -78,7 +78,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
 
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
-  Array.range(0, testUserCount * 0.2).forEach((i) => {
+  Array.range(0, 10).forEach((i) => {
     const user = Meteor.users
       .find({ username: { $ne: "admin" } })
       .fetch()
@@ -107,14 +107,14 @@ if (!Studys.findOne()) {
         city: randomCity.city,
         gubun: randomGubun,
       },
-      memberCount: [2, 3, 4, 5, 6].random(),
+      memberCount: 6,
       techStack: stackList.random(1, 5),
       score: {
-        manner: [0, 1, 2, 2, 3, 3, 4].random(),
-        mentoring: [0, 1, 2, 2, 3, 3, 4].random(),
-        passion: [0, 1, 2, 2, 3, 3, 4].random(),
-        communication: [0, 1, 2, 2, 3, 3, 4].random(),
-        time: [0, 1, 2, 2, 3, 3, 4].random(),
+        manner: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
+        mentoring: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
+        passion: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
+        communication: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
+        time: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
       },
       content: "내용" + i,
       status: "모집중",
@@ -255,7 +255,7 @@ if (!Studys.findOne({ status: "시작" })) {
     if (StudyUsers.find({ studyId: study._id, status: "승인" }).count() === 1)
       return;
 
-    const status = ["모집중", "시작"].random();
+    const status = ["모집중", "시작", "시작"].random();
 
     //프로젝트가 시작되면 대기, 거절된 사용자에게 알림 전송
     if (status === "시작") {
@@ -281,6 +281,8 @@ if (!Studys.findOne({ status: "시작" })) {
   });
 }
 //console.log("프로젝트가 시작하면 대기 중인 사용자 정리");
+
+return;
 
 //프로젝트 종료가 없다면
 if (!Studys.findOne({ status: "종료" })) {
