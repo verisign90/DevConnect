@@ -100,7 +100,7 @@ const Detail = () => {
   const join = (id) => {
     Meteor.call("join", id, (err, rlt) => {
       if (err) {
-        if (err.error === "alreadyStart") {
+        if (err.error === "alreadyStart" || err.error === "tooManyProject") {
           alert(err.reason);
         }
         console.error("join 실패: ", err);

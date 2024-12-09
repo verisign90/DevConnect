@@ -34,12 +34,21 @@ Meteor.methods({
   //참여하기
   join: (studyId) => {
     const study = Studys.findOne({ _id: studyId });
+    const userId = Meteor.userId();
+
+    //이미 시작한 프로젝트엔 참여 신청할 수 없음
     if (study.status === "시작") {
       throw new Meteor.Error("alreadyStart", "이미 시작한 프로젝트입니다");
     }
+    //이미 시작한 프로젝트가 3개 이상일 경우 어떤 모집글에도 신청 불가
+    if (StudyUsers.find({ userId: userId, status: "승인" }).count() >= 3) {
+      throw new Meteor.Error(
+        "tooManyProject",
+        "이미 참여 중인 프로젝트가 3개이므로 더 이상 참여 신청이 불가합니다"
+      );
+    }
 
     //현재 로그인한 사용자의 id 가져오기(참여하기 버튼 클릭한 사용자)
-    const userId = Meteor.userId();
     //참여 신청한 유저의 점수, 모집글에서 요구하는 점수 가져오기
     const user = Meteor.users.findOne({ _id: userId });
     const userScore = user.profile.score;
