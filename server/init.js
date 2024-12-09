@@ -190,6 +190,15 @@ if (!StudyUsers.findOne()) {
       status: "대기",
     });
 
+    //어디에 내가 참여 신청을 했는지 알림 전송
+    Notices.insert({
+      studyId: study._id,
+      userId: user._id,
+      message: `${study.title}에 참여 신청이 완료되었습니다`,
+      read: false,
+      createdAt: new Date(),
+    });
+
     //작성자에게 참여 버튼을 누른 신청자가 있다는 알림 전송
     Notices.insert({
       studyId: study._id,

@@ -40,8 +40,22 @@ Meteor.methods({
     if (study.status === "시작") {
       throw new Meteor.Error("alreadyStart", "이미 시작한 프로젝트입니다");
     }
+
     //이미 시작한 프로젝트가 3개 이상일 경우 어떤 모집글에도 신청 불가
-    if (StudyUsers.find({ userId: userId, status: "승인" }).count() >= 3) {
+    //StudyUsers에서 현재 로그인한 사용자가 승인된 상태인 문서 모두 가져오기
+    const approveStudys = StudyUsers.find({
+      userId: userId,
+      status: "승인",
+    }).fetch();
+    //내가 승인된 모집글의 studyId 추출
+    const approveStudyIds = approveStudys.map((studyUser) => studyUser.studyId);
+    //내가 참여한 모집글 중에 status가 시작인 모집글 개수 가져오기
+    const startStudyCount = Studys.find({
+      _id: { $in: approveStudyIds },
+      status: "시작",
+    }).count();
+
+    if (startStudyCount >= 3) {
       throw new Meteor.Error(
         "tooManyProject",
         "이미 참여 중인 프로젝트가 3개이므로 더 이상 참여 신청이 불가합니다"
@@ -75,6 +89,15 @@ Meteor.methods({
       createdAt: new Date(),
     });
 
+    //어디에 내가 참여 신청을 했는지 알림 전송
+    Notices.insert({
+      studyId: studyId,
+      userId: userId,
+      message: `${study.title}에 참여 신청이 완료되었습니다`,
+      read: false,
+      createdAt: new Date(),
+    });
+
     //작성자에게 참여 버튼을 누른 신청자가 있다는 알림 전송
     Notices.insert({
       studyId: study._id,
@@ -92,7 +115,9 @@ Meteor.methods({
     const userId = Meteor.userId();
 
     //거절된 사용자는 참여 취소 불가능(다시 신청하지 못하도록)
-    if (StudyUsers.find({ studyId: studyId, userId: userId, status: "거절" })) {
+    if (
+      StudyUsers.findOne({ studyId: studyId, userId: userId, status: "거절" })
+    ) {
       throw new Meteor.Error(
         "LeaderReject",
         "팀장 권한으로 참여 취소가 불가능합니다"
@@ -116,8 +141,3 @@ Meteor.methods({
     });
   },
 });
-
-/* 대기, 승인, 거절, 퇴장
-=> 대기, 승인일 경우 자유롭게 참여 취소가 가능하다
-=> 승인 됐을 때 참여 취소하면 status는 퇴장으로 바뀐다
-=> 거절 됐을 때 참여 취소가 불가능하다 */

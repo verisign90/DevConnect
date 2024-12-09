@@ -49,6 +49,7 @@ const Detail = () => {
     ).fetch();
 
     //현재 모집글에 승인된 유저의 User 객체 가져오기
+    //모집글에 승인된 유저 모두 가져오기
     const okUsers = StudyUsers.find({ studyId: id, status: "승인" }).fetch();
     const ok = okUsers.map((o) => Meteor.users.findOne(o.userId));
 
