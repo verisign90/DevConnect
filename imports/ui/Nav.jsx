@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
-import { Notices } from "/imports/api/collections";
+import { Notices, Studys } from "/imports/api/collections";
 
 export default () => {
+  const [studyCount, setStudyCount] = useState(0);
+
   //Notices 컬렉션에서 읽지 않은 알림 개수 가져오기
   const { user, readFalseCount } = useTracker(() => {
     const user = Meteor.user();
+    if (!user) {
+      return { user: null, readFalseCount: 0 };
+    }
     const readFalseCount = Notices.find({
       userId: user._id,
       read: false,
@@ -14,6 +19,11 @@ export default () => {
 
     return { user, readFalseCount };
   });
+
+  useEffect(() => {
+    const count = Studys.find({ userId: user._id }).count();
+    setStudyCount(count);
+  }, []);
 
   return (
     <>
@@ -46,9 +56,11 @@ export default () => {
             <li>
               <Link to="/myList">내 프로젝트</Link>
             </li>
-            <li>
-              <Link to="/notice">알림페이지 ({readFalseCount})</Link>
-            </li>
+            {user && (
+              <li>
+                <Link to="/notice">알림페이지 ({readFalseCount})</Link>
+              </li>
+            )}
 
             <li>
               <Link to="/write">모집글 작성</Link>
