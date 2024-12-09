@@ -3,6 +3,7 @@ import {
   Studys,
   StudyUsers,
   Notices,
+  Comments,
 } from "/imports/api/collections";
 import "/imports/lib/utils.js";
 import locationData from "./location.js";
@@ -125,6 +126,26 @@ if (!Studys.findOne()) {
   });
 }
 //console.log("모집글 생성 완료");
+
+//댓글이 없다면
+if (!Comments.findOne()) {
+  const users = Meteor.users.find({ username: { $ne: "admin" } }).fetch();
+  const studys = Studys.find().fetch();
+
+  Array.range(0, testUserCount * 0.5).forEach((i) => {
+    const user = users.random();
+    const study = studys.random();
+
+    Comments.insert({
+      studyId: study._id,
+      userId: user._id,
+      username: user.username,
+      image: null,
+      comment: "댓글" + i,
+      createdAt: new Date(),
+    });
+  });
+}
 
 //스터디 신청자가 없다면
 if (!StudyUsers.findOne()) {
@@ -320,8 +341,6 @@ Studys.find({ status: "종료" }).forEach((study) => {
   });
 });
 //console.log("from, to, isDone:false 평가 준비");
-
-return;
 
 //평가 받는 사람의 평균 점수를 계산해서 user.profile.score로 갱신
 const runAvgScore = (toId) => {
