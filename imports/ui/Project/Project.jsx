@@ -57,7 +57,7 @@ const Project = () => {
   const [onOff, setOnOff] = useState("전체");
   const [myStack, setMyStack] = useState([]);
   const [searchTitle, setSearchTitle] = useState("");
-  const [sort, setSort] = useState("최신순");
+  const [sort, setSort] = useState("모집중");
   const [nowPage, setNowPage] = useState(1);
   const navigate = useNavigate();
 
@@ -87,15 +87,20 @@ const Project = () => {
       );
     }
 
-    //최신순, 오래된순, 조회수순으로 필터링
+    //최신순, 오래된순, 인기순으로 필터링
     if (sort === "최신순") {
       data = data.sort((a, b) => b.createdAt - a.createdAt);
     }
     if (sort === "오래된순") {
       data = data.sort((a, b) => a.createdAt - b.createdAt);
     }
-    if (sort === "조회수순") {
+    if (sort === "인기순") {
       data = data.sort((a, b) => b.views - a.views);
+    }
+    if (sort === "모집중") {
+      data = data
+        .filter((study) => study.status === "모집중")
+        .sort((a, b) => b.createdAt - a.createdAt);
     }
 
     //페이지당 표시할 게시물 설정
@@ -203,9 +208,10 @@ const Project = () => {
             value={sort}
             onChange={(e) => setSort(e.target.value)}
           >
+            <option value="모집중">모집중</option>
             <option value="최신순">최신순</option>
             <option value="오래된순">오래된순</option>
-            <option value="조회수순">조회수순</option>
+            <option value="인기순">인기순</option>
           </select>
         </div>
       </div>
