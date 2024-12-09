@@ -156,7 +156,7 @@ const Write = () => {
         }
       });
     } else {
-      Meteor.call("insert", data, (err, studyId) => {
+      Meteor.call("insert", data, user._id, (err, studyId) => {
         if (err) {
           console.error("insert 실패: ", err);
         } else {

@@ -10,6 +10,19 @@ import "/imports/lib/utils.js";
 Meteor.methods({
   //모집중 -> 시작으로 status 변경하고 대기, 거절된 사용자에게 알림 전송
   statusStart: (studyId) => {
+    const teamCount = StudyUsers.find({
+      studyId: studyId,
+      status: "승인",
+    }).count();
+    console.log(teamCount);
+
+    if (teamCount === 1) {
+      throw new Meteor.Error(
+        "onlyOne",
+        "팀원을 모으지 않으면 프로젝트를 시작할 수 없습니다"
+      );
+    }
+
     //모집중 -> 시작으로 status 변경
     const result = Studys.update(
       { _id: studyId },

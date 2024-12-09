@@ -21,7 +21,6 @@ const Leader = () => {
       ok: ok,
     };
   });
-  console.log("study: ", study);
 
   //상세페이지로 이동
   const goDetail = () => {
@@ -32,6 +31,9 @@ const Leader = () => {
   const start = () => {
     Meteor.call("statusStart", id, (err) => {
       if (err) {
+        if (err.error === "onlyOne") {
+          alert(err.reason);
+        }
         console.error("statusStart 실패: ", err);
       } else {
         alert("프로젝트를 시작합니다");
@@ -65,7 +67,15 @@ const Leader = () => {
       <br />
       프로젝트진행: {study.status}{" "}
       {study.status === "모집중" && (
-        <button onClick={start}>프로젝트 시작</button>
+        <button
+          onClick={start}
+          disabled={
+            StudyUsers.find({ studyId: study._id, status: "승인" }).count() ===
+            1
+          }
+        >
+          프로젝트 시작
+        </button>
       )}
       {study.status === "시작" && <button onClick={end}>프로젝트 종료</button>}
       <br />
