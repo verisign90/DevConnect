@@ -129,6 +129,9 @@ const Detail = () => {
   const cancelJoin = (id) => {
     Meteor.call("cancelJoin", id, (err) => {
       if (err) {
+        if (err.error === "LeaderReject") {
+          alert(err.reason);
+        }
         console.error("cancelJoin 실패: ", err);
       } else {
         alert("참여 신청이 취소되었습니다");

@@ -91,6 +91,14 @@ Meteor.methods({
   cancelJoin: (studyId) => {
     const userId = Meteor.userId();
 
+    //거절된 사용자는 참여 취소 불가능(다시 신청하지 못하도록)
+    if (StudyUsers.find({ studyId: studyId, userId: userId, status: "거절" })) {
+      throw new Meteor.Error(
+        "LeaderReject",
+        "팀장 권한으로 참여 취소가 불가능합니다"
+      );
+    }
+
     return StudyUsers.remove({ studyId: studyId, userId: userId });
   },
 
