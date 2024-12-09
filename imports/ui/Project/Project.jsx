@@ -87,7 +87,7 @@ const Project = () => {
       );
     }
 
-    //최신순, 오래된순, 인기순으로 필터링
+    //최신순, 오래된순, 인기순, 모집중으로 필터링
     if (sort === "최신순") {
       data = data.sort((a, b) => b.createdAt - a.createdAt);
     }

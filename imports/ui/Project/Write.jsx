@@ -158,6 +158,9 @@ const Write = () => {
     } else {
       Meteor.call("insert", data, user._id, (err, studyId) => {
         if (err) {
+          if (err.error === "missingField") {
+            alert(err.reason);
+          }
           console.error("insert 실패: ", err);
         } else {
           alert("모집글이 업로드 되었습니다");
@@ -233,22 +236,26 @@ const Write = () => {
         />
         온/오프라인{" "}
       </label>
-      <h4>지역</h4>
-      <select
-        name="location"
-        value={city}
-        onChange={cityGubun}
-        disabled={onOff === "online"}
-      >
-        <option value="" disabled>
-          시/도를 선택하세요
-        </option>
-        {Location.map((loc) => (
-          <option key={loc.city} value={loc.city}>
-            {loc.city}
-          </option>
-        ))}
-      </select>
+      {onOff !== "온라인" && (
+        <>
+          <h4>지역</h4>
+          <select
+            name="location"
+            value={city}
+            onChange={cityGubun}
+            disabled={onOff === "online"}
+          >
+            <option value="" disabled>
+              시/도를 선택하세요
+            </option>
+            {Location.map((loc) => (
+              <option key={loc.city} value={loc.city}>
+                {loc.city}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
       {city && onOff !== "online" && (
         <select
           name="gubun"
