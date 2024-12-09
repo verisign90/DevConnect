@@ -34,24 +34,35 @@ const Detail = () => {
   const { id } = useParams(); //작성된 studyId
   const [project, setProject] = useState({});
   const [loading, setLoading] = useState(true);
-  const [toggle, setToggle] = useState(false); //false : 참여하기, true :  참여취소하기
+  const [toggle, setToggle] = useState(false); //false : 참여하기, true : 참여취소하기
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
 
   //로그인된 사용자 정보, 실시간 댓글 데이터 추적
-  const { user, comments, ok } = useTracker(() => {
+  const { user, comments, ok, isStudyUser } = useTracker(() => {
     const user = Meteor.user();
+
+    //작성글에 달린 댓글 가져오기
     const comments = Comments.find(
       { studyId: id },
       { sort: { createdAt: 1 } }
     ).fetch();
+
+    //현재 모집글에 승인된 유저의 User 객체 가져오기
     const okUsers = StudyUsers.find({ studyId: id, status: "승인" }).fetch();
     const ok = okUsers.map((o) => Meteor.users.findOne(o.userId));
+
+    //StudyUsers에서 모집글에 참여한 기록이 있는지 확인
+    const isStudyUser = StudyUsers.findOne({
+      studyId: id,
+      userId: user._id,
+    });
 
     return {
       user: user,
       comments: comments,
       ok: ok,
+      isStudyUser: isStudyUser,
     };
   });
 
@@ -187,8 +198,8 @@ const Detail = () => {
         </>
       )}
       {!writer && project.status === "모집중" && (
-        <button onClick={() => (toggle ? cancelJoin(id) : join(id))}>
-          {toggle ? "참여신청 취소하기" : "참여신청하기"}
+        <button onClick={() => (isStudyUser ? cancelJoin(id) : join(id))}>
+          {isStudyUser ? "참여신청 취소하기" : "참여신청하기"}
         </button>
       )}
       <h3>프로젝트 참여자</h3>

@@ -305,7 +305,7 @@ const Write = () => {
       )}
       <h4>요구역량</h4>
       <label>manner</label>{" "}
-      {["0", "1", "2", "3"].map((value) => (
+      {["0", "1", "2", "3", "4"].map((value) => (
         <label key={`manner-${value}`}>
           <input
             type="radio"
@@ -319,7 +319,7 @@ const Write = () => {
       ))}
       <br />
       <label>communication</label>{" "}
-      {["0", "1", "2", "3"].map((value) => (
+      {["0", "1", "2", "3", "4"].map((value) => (
         <label key={`communication-${value}`}>
           <input
             type="radio"
@@ -333,7 +333,7 @@ const Write = () => {
       ))}
       <br />
       <label>passion</label>{" "}
-      {["0", "1", "2", "3"].map((value) => (
+      {["0", "1", "2", "3", "4"].map((value) => (
         <label key={`passion-${value}`}>
           <input
             type="radio"
@@ -347,7 +347,7 @@ const Write = () => {
       ))}
       <br />
       <label>mentoring</label>{" "}
-      {["0", "1", "2", "3"].map((value) => (
+      {["0", "1", "2", "3", "4"].map((value) => (
         <label key={`mentoring-${value}`}>
           <input
             type="radio"
@@ -361,7 +361,7 @@ const Write = () => {
       ))}
       <br />
       <label>time</label>{" "}
-      {["0", "1", "2", "3"].map((value) => (
+      {["0", "1", "2", "3", "4"].map((value) => (
         <label key={`time-${value}`}>
           <input
             type="radio"
