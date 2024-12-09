@@ -100,6 +100,7 @@ const Detail = () => {
   const join = (id) => {
     Meteor.call("join", id, (err, rlt) => {
       if (err) {
+        //이미 시작한 프로젝트 참여 불가, 참여 중인 프로젝트가 3개 이상일 경우 모집글 신청 불가
         if (err.error === "alreadyStart" || err.error === "tooManyProject") {
           alert(err.reason);
         }
@@ -185,7 +186,7 @@ const Detail = () => {
           <button onClick={() => remove(id)}>삭제</button>
         </>
       )}
-      {!writer && (
+      {!writer && project.status === "모집중" && (
         <button onClick={() => (toggle ? cancelJoin(id) : join(id))}>
           {toggle ? "참여신청 취소하기" : "참여신청하기"}
         </button>
