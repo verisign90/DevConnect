@@ -1,5 +1,10 @@
 import { Meteor } from "meteor/meteor";
-import { Studys, StudyUsers, Comments } from "/imports/api/collections";
+import {
+  Studys,
+  StudyUsers,
+  Comments,
+  Notices,
+} from "/imports/api/collections";
 
 Meteor.methods({
   //작성한 모집글 정보 가져오기
@@ -28,13 +33,16 @@ Meteor.methods({
 
   //참여하기
   join: (studyId) => {
+    const study = Studys.findOne({ _id: studyId });
+    if (study.status === "시작") {
+      throw new Meteor.Error("alreadyStart", "이미 시작한 프로젝트입니다");
+    }
+
     //현재 로그인한 사용자의 id 가져오기(참여하기 버튼 클릭한 사용자)
     const userId = Meteor.userId();
-
     //참여 신청한 유저의 점수, 모집글에서 요구하는 점수 가져오기
     const user = Meteor.users.findOne({ _id: userId });
     const userScore = user.profile.score;
-    const study = Studys.findOne({ _id: studyId });
     const studyScore = study.score;
 
     //score 객체에서 키만 배열로 반환 ["manner", "mentoring", "passion", "communication", "time"]

@@ -100,6 +100,9 @@ const Detail = () => {
   const join = (id) => {
     Meteor.call("join", id, (err, rlt) => {
       if (err) {
+        if (err.error === "alreadyStart") {
+          alert(err.reason);
+        }
         console.error("join 실패: ", err);
       } else if (rlt.success) {
         alert("참여 신청이 전송되었습니다");
