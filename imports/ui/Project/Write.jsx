@@ -54,7 +54,6 @@ const Write = () => {
 
   //수정페이지 조회 시, id 파라미터에 맞는 데이터 가져오기
   useEffect(() => {
-    console.log("useEffect 들어왔다");
     if (id) {
       Meteor.call("select", id, (err, rlt) => {
         if (err) {
