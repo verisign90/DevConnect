@@ -54,13 +54,15 @@ const Detail = () => {
     const ok = okUsers.map((o) => Meteor.users.findOne(o.userId));
 
     //StudyUsers에서 모집글에 참여한 기록이 있는지 확인
-    const isStudyUser = StudyUsers.findOne({
-      studyId: id,
-      userId: user._id,
-    });
+    const isStudyUser = user
+      ? StudyUsers.findOne({
+          studyId: id,
+          userId: user._id,
+        })
+      : null;
 
     return {
-      user: user,
+      user: user || null,
       comments: comments,
       ok: ok,
       isStudyUser: isStudyUser,

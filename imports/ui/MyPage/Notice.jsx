@@ -7,11 +7,15 @@ import "/imports/lib/utils.js";
 
 //알림페이지
 const Notice = () => {
-  //현재 로그인한 사용자의 Notice 문서 모두 가져오기
+  //현재 로그인한 사용자의 Notice 문서 내림차순으로 모두 가져오기
   const { user, notices } = useTracker(() => {
     const user = Meteor.user();
-    const notices = Notices.find({ userId: user._id }).fetch();
+    const notices = Notices.find(
+      { userId: user._id },
+      { sort: { createdAt: -1 } }
+    ).fetch();
 
+    //const notices = Notices.find({ userId: user._id }).fetch();
     return { user, notices };
   });
 
