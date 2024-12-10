@@ -69,7 +69,7 @@ export default () => {
   return (
     <Disclosure as="nav" className="bg-white shadow">
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 justify-between">
+        <div className="flex h-20 justify-between">
           <div className="flex">
             <div className="-ml-2 mr-2 flex items-center md:hidden">
               <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -98,30 +98,11 @@ export default () => {
                 프로젝트 목록조회
               </Link>
               <Link
-                to="/login"
-                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              >
-                로그인
-              </Link>
-              <Link
                 to="/join"
                 className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
               >
                 회원가입
               </Link>
-              {user && (
-                <Link
-                  to="/notice"
-                  className="relative inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                >
-                  알림페이지
-                  {readFalseCount > 0 && (
-                    <span className="absolute -top-2 -right-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                      {readFalseCount}
-                    </span>
-                  )}
-                </Link>
-              )}
               <Link
                 to="/write"
                 className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
@@ -131,7 +112,7 @@ export default () => {
             </div>
           </div>
           <div className="flex items-center">
-            <div className="shrink-0">
+            {/* <div className="shrink-0">
               <button
                 type="button"
                 onClick={toggleMyPageMenu}
@@ -140,26 +121,28 @@ export default () => {
                 <PlusIcon aria-hidden="true" className="-ml-0.5 size-5" />
                 마이페이지
               </button>
-            </div>
+            </div> */}
             <div className="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
               <button
                 type="button"
                 className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                <BellIcon aria-hidden="true" className="size-6" />
+                <BellIcon aria-hidden="true" className="size-12" />
                 {readFalseCount > 0 && (
-                  <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  <span className="absolute -top-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                     {readFalseCount}
                   </span>
                 )}
               </button>
               <Menu as="div" className="relative ml-3">
                 <MenuButton className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="h-8 w-8 rounded-full"
-                  />
+                  {user?.profile?.image && (
+                    <img
+                      alt=""
+                      src={user?.profile?.image}
+                      className="h-16 w-16 rounded-full"
+                    />
+                  )}
                 </MenuButton>
                 <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
                   <MenuItem>
@@ -179,12 +162,15 @@ export default () => {
                     </Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link
-                      to="/login"
+                    <button
+                      onClick={() => {
+                        Meteor.logout();
+                        navigate("/login");
+                      }}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       로그아웃
-                    </Link>
+                    </button>
                   </MenuItem>
                 </MenuItems>
               </Menu>
