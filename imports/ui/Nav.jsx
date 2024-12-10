@@ -3,8 +3,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { Notices, Studys } from "/imports/api/collections";
 
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/20/solid";
+
 export default () => {
   const navigate = useNavigate();
+  const [isMyPageOpen, setIsMyPageOpen] = useState(false);
+
+  const toggleMyPageMenu = () => {
+    setIsMyPageOpen((prev) => !prev);
+  };
 
   //읽지 않은 알림 개수, 모집중/시작인 문서 개수 추적
   const { user, readFalseCount, studyCount } = useTracker(() => {
@@ -28,6 +45,11 @@ export default () => {
     return { user, readFalseCount, studyCount };
   });
 
+  //url 경로가 변할 때마다 마이페이지 버튼 표시
+  // useEffect(() => {
+  //   setIsMyPageOpen(false);
+  // }, [location.pathname]);
+
   //모집글을 3개 이상 작성했을 경우 더 이상 작성 불가
   const handleClick = (e) => {
     console.log("handleClick, studyCount: ", studyCount);
@@ -45,50 +67,131 @@ export default () => {
   };
 
   return (
-    <>
-      <header>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">프로젝트 목록조회</Link>
-            </li>
-            <li>
-              <Link to="/postInsert">NotFound</Link>
-            </li>
-
-            <li>
-              <Link to="/login">로그인</Link>
-            </li>
-            <li>
-              <Link to="/join">회원가입</Link>
-            </li>
-            <li>
-              <Link to="/resetPassword">비밀번호 변경</Link>
-            </li>
-
-            <li>
-              <Link to="/myProfile">내 프로필</Link>
-            </li>
-            <li>
-              <Link to="/editProfile">프로필 수정</Link>
-            </li>
-            <li>
-              <Link to="/myList">내 프로젝트</Link>
-            </li>
-            {user && (
-              <li>
-                <Link to="/notice">알림페이지 ({readFalseCount})</Link>
-              </li>
-            )}
-
-            <li>
-              <Link to="/write" onClick={handleClick}>
+    <Disclosure as="nav" className="bg-white shadow">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 justify-between">
+          <div className="flex">
+            <div className="-ml-2 mr-2 flex items-center md:hidden">
+              <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <Bars3Icon
+                  aria-hidden="true"
+                  className="block size-6 group-data-[open]:hidden"
+                />
+                <XMarkIcon
+                  aria-hidden="true"
+                  className="hidden size-6 group-data-[open]:block"
+                />
+              </DisclosureButton>
+            </div>
+            <div className="flex shrink-0 items-center">
+              <img
+                alt="Your Company"
+                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
+                className="h-8 w-auto"
+              />
+            </div>
+            <div className="hidden md:ml-6 md:flex md:space-x-8">
+              <Link
+                to="/"
+                className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
+              >
+                프로젝트 목록조회
+              </Link>
+              <Link
+                to="/login"
+                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              >
+                로그인
+              </Link>
+              <Link
+                to="/join"
+                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              >
+                회원가입
+              </Link>
+              {user && (
+                <Link
+                  to="/notice"
+                  className="relative inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                >
+                  알림페이지
+                  {readFalseCount > 0 && (
+                    <span className="absolute -top-2 -right-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      {readFalseCount}
+                    </span>
+                  )}
+                </Link>
+              )}
+              <Link
+                to="/write"
+                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              >
                 모집글 작성
               </Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
-    </>
+            </div>
+          </div>
+          <div className="flex items-center">
+            <div className="shrink-0">
+              <button
+                type="button"
+                onClick={toggleMyPageMenu}
+                className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              >
+                <PlusIcon aria-hidden="true" className="-ml-0.5 size-5" />
+                마이페이지
+              </button>
+            </div>
+            <div className="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
+              <button
+                type="button"
+                className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                <BellIcon aria-hidden="true" className="size-6" />
+                {readFalseCount > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                    {readFalseCount}
+                  </span>
+                )}
+              </button>
+              <Menu as="div" className="relative ml-3">
+                <MenuButton className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <img
+                    alt=""
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    className="h-8 w-8 rounded-full"
+                  />
+                </MenuButton>
+                <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
+                  <MenuItem>
+                    <Link
+                      to="/myProfile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      내 프로필
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      to="/myList"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      내 프로젝트
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      to="/login"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      로그아웃
+                    </Link>
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Disclosure>
   );
 };
