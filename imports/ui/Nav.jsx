@@ -98,12 +98,6 @@ export default () => {
                 프로젝트 목록조회
               </Link>
               <Link
-                to="/join"
-                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              >
-                회원가입
-              </Link>
-              <Link
                 to="/write"
                 className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
               >
@@ -126,6 +120,7 @@ export default () => {
               <button
                 type="button"
                 className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={() => navigate("/notice")}
               >
                 <BellIcon aria-hidden="true" className="size-12" />
                 {readFalseCount > 0 && (
@@ -165,7 +160,7 @@ export default () => {
                     <button
                       onClick={() => {
                         Meteor.logout();
-                        navigate("/login");
+                        navigate("/");
                       }}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
