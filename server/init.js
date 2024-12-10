@@ -42,7 +42,7 @@ const removeAll = () => {
 
 //removeAll();
 
-const testUserCount = 10;
+const testUserCount = 100;
 
 //admin이 없다면
 if (!Meteor.users.findOne({ username: "admin" })) {
@@ -78,7 +78,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
 
 //스터디 모집글이 없다면
 if (!Studys.findOne()) {
-  Array.range(0, 10).forEach((i) => {
+  Array.range(0, testUserCount * 0.3).forEach((i) => {
     const user = Meteor.users
       .find({ username: { $ne: "admin" } })
       .fetch()
@@ -161,7 +161,7 @@ if (!StudyUsers.findOne()) {
   //유저와 스터디를 각각 랜덤으로 뽑아 신청하는 상황 설정
   const users = Meteor.users.find({ username: { $ne: "admin" } }).fetch();
   const studies = Studys.find().fetch();
-  Array.range(0, testUserCount * 3).forEach((i) => {
+  Array.range(0, testUserCount * 5).forEach((i) => {
     const user = users.random();
     const study = studies.random();
 
@@ -275,14 +275,64 @@ if (!Studys.findOne({ status: "시작" })) {
           read: false,
           createdAt: new Date(),
         });
+
         StudyUsers.remove({ _id: studyUser._id });
+      });
+
+      //1. 현재 모집글의 승인된 유저 목록 가져오기
+      const okUsers = StudyUsers.find({
+        studyId: study._id,
+        status: "승인",
+      }).fetch();
+
+      okUsers.forEach((studyUser) => {
+        //승인된 유저 목록의 userId 추출
+        const userId = studyUser.userId;
+        const username = Meteor.users.findOne({ _id: userId }).username;
+
+        //2. 사용자가 승인되어 참여 중인 모집글 중에 시작 상태인 모집글 개수 가져오기
+        const startCount = Studys.find({
+          _id: {
+            //사용자가 승인되어 참여 중인 프로젝트의 모든 studyId 추출
+            $in: StudyUsers.find({ userId: userId, status: "승인" }).map(
+              (doc) => doc.studyId
+            ),
+          },
+          status: "시작",
+        }).count();
+
+        //승인되어 시작한 모집글이 3개 이상이면, 승인됐지만 아직 모집중인 모집글에서 사용자 신청 이력 제거
+        if (startCount >= 3) {
+          //3. 사용자가 승인되어 참여 중인 모집글 중에서 모집중 상태인 것만 가져오기
+          const recruitStudy = Studys.find({
+            _id: {
+              $in: StudyUsers.find({ userId: userId, status: "승인" }).map(
+                (doc) => doc.studyId
+              ),
+            },
+            status: "모집중",
+          }).fetch();
+
+          //4. 스터디 신청 이력 제거
+          recruitStudy.forEach((study) => {
+            //모집중인 studyId, 모집중인 프로젝트에 승인된 userId
+            StudyUsers.remove({ studyId: study._id, userId: userId });
+
+            //모집중 상태인 모집글의 팀장에게 알림 전송
+            Notices.insert({
+              studyId: study._id,
+              userId: study.userId,
+              message: `${username}님이 ${study.title}에 참여할 수 없어서 승인 목록에서 삭제되었습니다`,
+              read: false,
+              createdAt: new Date(),
+            });
+          });
+        }
       });
     }
   });
 }
 //console.log("프로젝트가 시작하면 대기 중인 사용자 정리");
-
-return;
 
 //프로젝트 종료가 없다면
 if (!Studys.findOne({ status: "종료" })) {
