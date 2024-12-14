@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
 import { Notices, Studys } from "/imports/api/collections";
 
@@ -18,6 +18,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 export default () => {
   const navigate = useNavigate();
   const [isMyPageOpen, setIsMyPageOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMyPageMenu = () => {
     setIsMyPageOpen((prev) => !prev);
@@ -93,13 +94,21 @@ export default () => {
             <div className="hidden md:ml-6 md:flex md:space-x-8">
               <Link
                 to="/"
-                className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
+                className={`inline-flex items-center px-1 pt-1 text-lg font-semibold ${
+                  location.pathname === "/"
+                    ? "border-b-4 border-indigo-500 text-gray-900"
+                    : "border-b-4 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                }`}
               >
                 프로젝트 목록조회
               </Link>
               <Link
                 to="/write"
-                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                className={`inline-flex items-center px-1 pt-1 text-lg font-semibold ${
+                  location.pathname === "/write"
+                    ? "border-b-4 border-indigo-500 text-gray-900"
+                    : "border-b-4 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                }`}
               >
                 모집글 작성
               </Link>
