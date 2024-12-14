@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 
 //회원가입
@@ -33,6 +34,7 @@ const Join = () => {
   const [role, setRole] = useState("backend");
   const [myStack, setMyStack] = useState([]);
   const [nameCheck, setNameCheck] = useState(false); //중복확인 했는지 여부
+  const navigate = useNavigate();
 
   //selectbox에서 선택한 기술스택을 중복되지 않게 myStack에 추가
   const selectStack = (e) => {
@@ -104,6 +106,7 @@ const Join = () => {
     };
     Accounts.createUser(user);
     alert("가입되었습니다");
+    navigate("/");
   };
 
   return (
