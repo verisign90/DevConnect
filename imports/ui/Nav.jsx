@@ -128,7 +128,7 @@ export default () => {
               {!user && (
                 <Link
                   to="/login"
-                  className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-5 py-3 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-5 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 >
                   {/* <PlusIcon aria-hidden="true" className="-ml-0.5 size-5" /> */}
                   로그인
@@ -152,12 +152,22 @@ export default () => {
               )}
               <Menu as="div" className="relative ml-3">
                 <MenuButton className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  {user?.profile?.image && (
+                  {user?.profile?.image ? (
                     <img
-                      alt=""
-                      src={user?.profile?.image}
+                      alt="프로필 이미지"
+                      src={user.profile.image}
                       className="h-16 w-16 rounded-full"
                     />
+                  ) : (
+                    <span className="inline-block size-14 overflow-hidden rounded-full bg-gray-100">
+                      <svg
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className="size-full text-gray-300"
+                      >
+                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </span>
                   )}
                 </MenuButton>
                 <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
