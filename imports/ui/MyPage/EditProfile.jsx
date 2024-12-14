@@ -44,9 +44,7 @@ const EditProfile = () => {
   //현재 로그인한 사용자의 이름, 기술스택 추적
   const { username, techStack, userFile, isLoading } = useTracker(() => {
     const user = Meteor.user(); //현재 로그인된 유저 데이터
-    console.log("Files: ", Files);
     const userFile = Files.findOne({ userId: user._id });
-    console.log("userFile: ", userFile);
 
     return {
       username: user?.username,
@@ -63,10 +61,6 @@ const EditProfile = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("미리보기 url 변경", previewUrl);
-  }, [previewUrl]);
-
   if (isLoading) {
     return <div>로딩 중...</div>;
   }
@@ -75,15 +69,15 @@ const EditProfile = () => {
   const fileChange = (e) => {
     if (e.currentTarget.files && e.currentTarget.files[0]) {
       const file = e.currentTarget.files[0];
-      setSelectFile(file);
+      setSelectFile("file: ", file);
       setPreviewUrl(URL.createObjectURL(file));
-
-      console.log("선택한 파일: ", file);
-      console.log("미리보기 url: ", URL.createObjectURL(file));
-
       setPhotoModify(true);
     }
   };
+
+  // useEffect(() => {
+  //   console.log("미리보기 url 변경: ", previewUrl);
+  // }, [previewUrl]);
 
   //프로필 저장
   const saveProfile = () => {
