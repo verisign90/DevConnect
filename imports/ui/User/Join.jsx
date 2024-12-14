@@ -122,7 +122,7 @@ const Join = () => {
             <h2 className="mt-8 text-2xl/9 font-bold tracking-tight text-gray-900">
               DevConnect
             </h2>
-            <p className="mt-2 text-sm/6 text-gray-500">
+            <p className="mt-2 text-base/6 text-gray-500">
               나의 성장 메이트 DevConnect에서
               <br />
               <a
@@ -137,12 +137,12 @@ const Join = () => {
           <div className="mt-10">
             <form onSubmit={join} className="space-y-6">
               <div>
-                <label
+                {/* <label
                   htmlFor="name"
                   className="block text-lg font-medium leading-6 text-gray-900"
                 >
                   이름
-                </label>
+                </label> */}
                 <div className="mt-2 flex items-center gap-x-2">
                   <input
                     id="name"
@@ -163,12 +163,12 @@ const Join = () => {
               </div>
 
               <div>
-                <label
+                {/* <label
                   htmlFor="password"
                   className="block text-lg font-medium leading-6 text-gray-900"
                 >
                   비밀번호
-                </label>
+                </label> */}
                 <div className="mt-2">
                   <input
                     id="password"
@@ -182,12 +182,12 @@ const Join = () => {
               </div>
 
               <div>
-                <label
+                {/* <label
                   htmlFor="email"
                   className="block text-lg font-medium leading-6 text-gray-900"
                 >
                   이메일
-                </label>
+                </label> */}
                 <div className="mt-2">
                   <input
                     id="email"
@@ -201,10 +201,10 @@ const Join = () => {
               </div>
 
               <div>
-                <label className="text-lg font-medium leading-6 text-gray-900">
+                {/* <label className="text-lg font-medium leading-6 text-gray-900">
                   역할
-                </label>
-                <div className="mt-2 space-x-24">
+                </label> */}
+                <div className="mt-2 flex justify-between">
                   <label className="inline-flex items-center">
                     <input
                       type="radio"
@@ -214,7 +214,7 @@ const Join = () => {
                       onChange={() => setRole("backend")}
                       className="form-radio h-4 w-4 text-indigo-600"
                     />
-                    <span className="ml-2">백엔드</span>
+                    <span className="ml-2 text-base">백엔드</span>
                   </label>
                   <label className="inline-flex items-center">
                     <input
@@ -231,12 +231,12 @@ const Join = () => {
               </div>
 
               <div>
-                <label
+                {/* <label
                   htmlFor="stack"
                   className="block text-lg font-medium leading-6 text-gray-900"
                 >
                   기술스택
-                </label>
+                </label> */}
                 <div className="mt-2">
                   <select
                     id="stack"
@@ -245,7 +245,7 @@ const Join = () => {
                     disabled={myStack.length === 5}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   >
-                    <option value="" disabled>
+                    <option value="" disabled className="text-gray-900">
                       기술스택 (최대 5개 선택)
                     </option>
                     {stackList.map((stack) => (
