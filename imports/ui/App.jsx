@@ -63,7 +63,6 @@ export const App = () => {
 
         <Route path="*" element={<NotFound />}></Route>
 
-        <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
         <Route path="/resetPassword/:token" element={<Password />} />
         <Route path="/resetPassword" element={<Password />} />
