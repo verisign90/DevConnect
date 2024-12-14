@@ -102,42 +102,54 @@ export default () => {
               >
                 프로젝트 목록조회
               </Link>
-              <Link
-                to="/write"
-                className={`inline-flex items-center px-1 pt-1 text-lg font-semibold ${
-                  location.pathname === "/write"
-                    ? "border-b-4 border-indigo-500 text-gray-900"
-                    : "border-b-4 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                }`}
-              >
-                모집글 작성
-              </Link>
+              {user ? (
+                <Link
+                  to="/write"
+                  className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-lg font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                >
+                  모집글 작성
+                </Link>
+              ) : (
+                <Link
+                  to="/join"
+                  className={`inline-flex items-center px-1 pt-1 text-lg font-semibold ${
+                    location.pathname === "/join"
+                      ? "border-b-4 border-indigo-500 text-gray-900"
+                      : "border-b-4 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  }`}
+                >
+                  회원가입
+                </Link>
+              )}
             </div>
           </div>
           <div className="flex items-center">
-            {/* <div className="shrink-0">
-              <button
-                type="button"
-                onClick={toggleMyPageMenu}
-                className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              >
-                <PlusIcon aria-hidden="true" className="-ml-0.5 size-5" />
-                마이페이지
-              </button>
-            </div> */}
+            <div className="shrink-0">
+              {!user && (
+                <Link
+                  to="/login"
+                  className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-5 py-3 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                >
+                  {/* <PlusIcon aria-hidden="true" className="-ml-0.5 size-5" /> */}
+                  로그인
+                </Link>
+              )}
+            </div>
             <div className="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
-              <button
-                type="button"
-                className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={() => navigate("/notice")}
-              >
-                <BellIcon aria-hidden="true" className="size-12" />
-                {readFalseCount > 0 && (
-                  <span className="absolute -top-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                    {readFalseCount}
-                  </span>
-                )}
-              </button>
+              {user && (
+                <button
+                  type="button"
+                  className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => navigate("/notice")}
+                >
+                  <BellIcon aria-hidden="true" className="size-12" />
+                  {readFalseCount > 0 && (
+                    <span className="absolute -top-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      {readFalseCount}
+                    </span>
+                  )}
+                </button>
+              )}
               <Menu as="div" className="relative ml-3">
                 <MenuButton className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                   {user?.profile?.image && (
