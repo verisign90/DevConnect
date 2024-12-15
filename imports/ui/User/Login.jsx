@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTracker } from "meteor/react-meteor-data";
+import { useNavigate } from "react-router-dom";
 
 //로그인
 const Login = () => {
@@ -12,6 +13,7 @@ const Login = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   //로그인
   const login = (e) => {
@@ -33,6 +35,7 @@ const Login = () => {
       } else {
         console.log("로그인 성공");
         setError("");
+        navigate("/");
       }
     });
   };
