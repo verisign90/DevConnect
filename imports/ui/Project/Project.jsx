@@ -234,68 +234,130 @@ const Project = () => {
               placeholder="검색어를 입력해 주세요"
               value={searchTitle}
               onChange={(e) => setSearchTitle(e.target.value)}
-              className="col-start-1 row-start-1 block w-full rounded-md border-0 py-1.5 pl-10 pr-3 text-base text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mt-7" // 마진 더 크게 주기
+              className="col-start-1 row-start-1 block w-full rounded-md border-0 py-1.5 pl-10 pr-3 text-base text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mt-7"
             />
             <MagnifyingGlassIcon
               aria-hidden="true"
-              className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400 mt-7" // 같은 마진 값 적용
+              className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400 mt-7"
             />
           </div>
         </div>
       </div>
 
-      {myStack.length > 0 &&
-        myStack.map((stack) => (
-          <span key={stack} style={{ marginRight: "10px" }}>
-            {stack}
-            <button onClick={() => deleteStack(stack)}>X</button>
-          </span>
-        ))}
+      <div
+        className="bg-indigo-100 flex items-center"
+        style={{
+          width: "1460px",
+          height: "60px",
+          overflow: "auto",
+          marginTop: "20px",
+        }}
+      >
+        <div className="w-full pl-6 pr-6 flex flex-wrap gap-2 items-center">
+          {myStack.length > 0 ? (
+            myStack.map((stack) => (
+              <span
+                key={stack}
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-200 text-indigo-800 border border-gray-500"
+              >
+                {stack}
+                <button
+                  onClick={() => deleteStack(stack)}
+                  className="ml-2 inline-flex items-center justify-center w-4 h-4 text-indigo-400 hover:text-indigo-600"
+                >
+                  <svg
+                    className="w-3 h-3"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </span>
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm">
+              아직 선택한 기술스택이 없습니다
+            </p>
+          )}
+        </div>
+      </div>
 
-      <h4>{data.length}개의 프로젝트</h4>
+      <div
+        className="bg-white flex items-center"
+        style={{
+          width: "1460px",
+          height: "60px",
+        }}
+      >
+        <div className="w-full pl-6 pr-6 flex items-center">
+          <h4 className="text-lg tracking-tight text-gray-900">
+            <span className="font-bold text-indigo-600">{data.length}</span>
+            개의 프로젝트
+          </h4>
+        </div>
+      </div>
 
-      <ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filterList.map((study) => {
           const user = users.find((u) => u._id === study.userId);
 
           return (
-            <li
+            <div
               key={study._id}
-              style={{ cursor: "pointer" }}
+              className="overflow-hidden rounded-md bg-white shadow-sm cursor-pointer ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
               onClick={() => goDetail(study._id)}
             >
-              <p>
-                {study.role} {study.onOff}{" "}
-                {study.onOff !== "온라인" && study.location.city}
-              </p>
-              <h3>{study.title}</h3>
-              <p>
-                {study.techStack &&
-                  study.techStack.map((stack) => (
-                    <span key={stack} style={{ marginRight: "10px" }}>
-                      #{stack}
-                    </span>
-                  ))}
-                {formatDay(study.createdAt)} 조회수 {study.views}
-              </p>
-              <p>
-                {user?.profile.image ? (
-                  <img
-                    src={user.profile.image}
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                ) : null}
-                {user?.username}
-              </p>
-              <hr />
-            </li>
+              <div className="px-4 py-5 sm:p-6">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-xs text-gray-500">
+                    {study.role} {study.onOff}{" "}
+                    {study.onOff !== "온라인" && study.location.city}
+                  </p>
+                  <p className="text-xs text-gray-500">조회수 {study.views}</p>
+                </div>
+                <h3 className="text-base font-semibold text-gray-900 mb-2 truncate">
+                  {study.title}
+                </h3>
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {study.techStack &&
+                    study.techStack.map((stack) => (
+                      <span
+                        key={stack}
+                        className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full"
+                      >
+                        #{stack}
+                      </span>
+                    ))}
+                </div>
+              </div>
+              <div className="px-4 py-4 sm:px-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    {user?.profile.image ? (
+                      <img
+                        src={user.profile.image}
+                        className="w-6 h-6 rounded-full mr-2"
+                        alt={user.username}
+                      />
+                    ) : null}
+                    <p className="text-xs font-medium text-gray-900 truncate">
+                      {user?.username}
+                    </p>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {formatDay(study.createdAt)}
+                  </p>
+                </div>
+              </div>
+            </div>
           );
         })}
-      </ul>
+      </div>
 
       <div>
         <button
