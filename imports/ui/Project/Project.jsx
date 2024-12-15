@@ -3,6 +3,8 @@ import { useTracker } from "meteor/react-meteor-data";
 import { useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { Studys } from "/imports/api/collections";
+import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 //메인페이지 프로젝트 목록조회
 const Project = () => {
@@ -143,78 +145,105 @@ const Project = () => {
 
   return (
     <>
-      <h2>프로젝트 목록조회</h2>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div>
-          <h4>모집분야</h4>
-          <select
-            name="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="전체">전체</option>
-            <option value="백엔드">백엔드</option>
-            <option value="프론트엔드">프론트엔드</option>
-            <option value="백엔드/프론트엔드">백엔드/프론트엔드</option>
-          </select>
-        </div>
-
-        <div>
-          <h4>모임형태</h4>
-          <select
-            name="onOff"
-            value={onOff}
-            onChange={(e) => setOnOff(e.target.value)}
-          >
-            <option value="전체">전체</option>
-            <option value="온라인">온라인</option>
-            <option value="오프라인">오프라인</option>
-            <option value="온/오프라인">온/오프라인</option>
-          </select>
-        </div>
-
-        <div>
-          <h4>기술스택</h4>
-          <select
-            onChange={selectStack}
-            value=""
-            disabled={myStack.length === 5}
-          >
-            <option value="" disabled>
-              기술스택 (최대 5개 선택)
-            </option>
-            {stackList.map((stack) => (
-              <option key={stack} value={stack}>
-                {stack}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <h4>제목 검색</h4>
-          <input
-            type="text"
-            value={searchTitle}
-            onChange={(e) => setSearchTitle(e.target.value)}
-            placeholder="검색어를 입력해 주세요"
-          />
-        </div>
-
-        <div>
-          <h4>정렬</h4>
-          <select
-            name="sort"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-          >
-            <option value="모집중">모집중</option>
-            <option value="최신순">최신순</option>
-            <option value="오래된순">오래된순</option>
-            <option value="인기순">인기순</option>
-          </select>
+      <div className="bg-white">
+        <div className="max-w-7xl pl-6 pr-6 py-12 sm:py-14 lg:flex lg:items-center lg:justify-between">
+          <h2 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
+            프로젝트
+          </h2>
         </div>
       </div>
+
+      <div className="flex gap-4 pl-6">
+        <div>
+          <h4 className="text-base font-medium text-gray-900">모집분야</h4>
+          <div className="mt-1 grid grid-cols-1">
+            <select
+              name="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="전체">전체</option>
+              <option value="백엔드">백엔드</option>
+              <option value="프론트엔드">프론트엔드</option>
+              <option value="백엔드/프론트엔드">백엔드/프론트엔드</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-base font-medium text-gray-900">모임형태</h4>
+          <div className="mt-1 grid grid-cols-1">
+            <select
+              name="onOff"
+              value={onOff}
+              onChange={(e) => setOnOff(e.target.value)}
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="전체">전체</option>
+              <option value="온라인">온라인</option>
+              <option value="오프라인">오프라인</option>
+              <option value="온/오프라인">온/오프라인</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-base font-medium text-gray-900">기술스택</h4>
+          <div className="mt-1 grid grid-cols-1">
+            <select
+              onChange={selectStack}
+              value=""
+              disabled={myStack.length === 5}
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="" disabled>
+                기술스택 (최대 5개 선택)
+              </option>
+              {stackList.map((stack) => (
+                <option key={stack} value={stack}>
+                  {stack}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-base font-medium text-gray-900">정렬</h4>
+          <div className="mt-1 grid grid-cols-1">
+            <select
+              name="sort"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="모집중">모집중</option>
+              <option value="최신순">최신순</option>
+              <option value="오래된순">오래된순</option>
+              <option value="인기순">인기순</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex flex-1 items-center justify-center px-6 lg:ml-6 lg:justify-end">
+          <div className="grid w-full max-w-lg grid-cols-1 lg:max-w-xs">
+            <input
+              name="search"
+              type="search"
+              placeholder="검색어를 입력해 주세요"
+              value={searchTitle}
+              onChange={(e) => setSearchTitle(e.target.value)}
+              className="col-start-1 row-start-1 block w-full rounded-md border-0 py-1.5 pl-10 pr-3 text-base text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mt-7" // 마진 더 크게 주기
+            />
+            <MagnifyingGlassIcon
+              aria-hidden="true"
+              className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400 mt-7" // 같은 마진 값 적용
+            />
+          </div>
+        </div>
+      </div>
+
       {myStack.length > 0 &&
         myStack.map((stack) => (
           <span key={stack} style={{ marginRight: "10px" }}>
