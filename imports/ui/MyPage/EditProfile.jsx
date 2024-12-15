@@ -69,7 +69,7 @@ const EditProfile = () => {
   const fileChange = (e) => {
     if (e.currentTarget.files && e.currentTarget.files[0]) {
       const file = e.currentTarget.files[0];
-      setSelectFile("file: ", file);
+      setSelectFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       setPhotoModify(true);
     }
