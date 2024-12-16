@@ -5,6 +5,10 @@ import { Meteor } from "meteor/meteor";
 import { Studys } from "/imports/api/collections";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import {
+  ArrowLongLeftIcon,
+  ArrowLongRightIcon,
+} from "@heroicons/react/20/solid";
 
 //메인페이지 프로젝트 목록조회
 const Project = () => {
@@ -55,7 +59,7 @@ const Project = () => {
     "ReactNative",
   ];
 
-  //기술스택 뱃지 색깔깔
+  //기술스택 뱃지 색깔
   const stackColors = {
     backend: "bg-yellow-100 text-yellow-800",
     database: "bg-green-100 text-green-800",
@@ -409,29 +413,49 @@ const Project = () => {
         })}
       </div>
 
-      <div>
-        <button
-          onClick={() => pageChange(nowPage - 1)}
-          disabled={nowPage === 1}
-        >
-          이전
-        </button>
-        {[...Array(totalPage)].map((_, index) => (
+      <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0 mt-[40px] mb-[40px]">
+        <div className="-mt-px flex w-0 flex-1">
           <button
-            key={index}
-            onClick={() => pageChange(index + 1)}
-            style={{ fontWeight: nowPage === index + 1 ? "bold" : "normal" }}
+            onClick={() => pageChange(nowPage - 1)}
+            disabled={nowPage === 1}
+            className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-base font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {index + 1}
+            <ArrowLongLeftIcon
+              className="mr-3 h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
+            이전
           </button>
-        ))}
-        <button
-          onClick={() => pageChange(nowPage + 1)}
-          disabled={nowPage === totalPage}
-        >
-          다음
-        </button>
-      </div>
+        </div>
+        <div className="hidden md:-mt-px md:flex">
+          {[...Array(totalPage)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => pageChange(index + 1)}
+              className={`inline-flex items-center border-t-4 px-4 pt-4 text-lg font-bold ${
+                nowPage === index + 1
+                  ? "border-indigo-500 text-indigo-600"
+                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+        <div className="-mt-px flex w-0 flex-1 justify-end">
+          <button
+            onClick={() => pageChange(nowPage + 1)}
+            disabled={nowPage === totalPage}
+            className="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-base font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            다음
+            <ArrowLongRightIcon
+              className="ml-3 h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
+          </button>
+        </div>
+      </nav>
     </>
   );
 };
