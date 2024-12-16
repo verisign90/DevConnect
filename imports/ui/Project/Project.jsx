@@ -106,7 +106,7 @@ const Project = () => {
     }
 
     //페이지당 표시할 게시물 설정
-    const itemsPerPage = 5; //페이지당 표시할 항목 개수
+    const itemsPerPage = 6; //페이지당 표시할 항목 개수
     const lastIndex = nowPage * itemsPerPage; //페이지당 마지막 항목의 인덱스. 1페이지면 5.
     const firstIndex = lastIndex - itemsPerPage; //페이지당 첫번째 항목의 인덱스. 1페이지면 0.
     const filterList = data.slice(firstIndex, lastIndex); //페이지당 표시할 항목 설정. 첫 페이지는 0부터 4까지, 총 5개 표시
@@ -301,7 +301,7 @@ const Project = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filterList.map((study) => {
           const user = users.find((u) => u._id === study.userId);
 
@@ -313,42 +313,60 @@ const Project = () => {
             >
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-xs text-gray-500">
-                    {study.role} {study.onOff}{" "}
-                    {study.onOff !== "온라인" && study.location.city}
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-base font-semibold text-gray-600">
+                      {study.role}
+                    </span>
+                    <span className="inline-flex items-center rounded-md bg-red-100 px-2 py-1 text-base font-semibold text-red-700">
+                      {study.onOff}
+                      {study.onOff !== "온라인" && ` · ${study.location.city}`}
+                    </span>
+                  </div>
+                  <p className="text-base text-gray-500">
+                    조회수 {study.views}
                   </p>
-                  <p className="text-xs text-gray-500">조회수 {study.views}</p>
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2 truncate">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2 truncate">
                   {study.title}
                 </h3>
-                <div className="flex flex-wrap gap-1 mb-4">
+                <div className="flex flex-wrap gap-1 mb-4 pt-5">
                   {study.techStack &&
                     study.techStack.map((stack) => (
                       <span
                         key={stack}
-                        className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full"
+                        className="px-2 py-1 text-base font-medium bg-gray-100 text-gray-800 rounded-full"
                       >
                         #{stack}
                       </span>
                     ))}
                 </div>
               </div>
-              <div className="px-4 py-4 sm:px-6">
+
+              <div className="px-4 py-4 sm:px-6 border-t border-gray-300">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     {user?.profile.image ? (
                       <img
                         src={user.profile.image}
-                        className="w-6 h-6 rounded-full mr-2"
+                        className="w-10 h-10 rounded-full mr-2"
                         alt={user.username}
                       />
-                    ) : null}
-                    <p className="text-xs font-medium text-gray-900 truncate">
+                    ) : (
+                      <span className="inline-block w-10 h-10 overflow-hidden rounded-full bg-gray-100 mr-2">
+                        <svg
+                          className="h-full w-full text-gray-300"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </span>
+                    )}
+                    <p className="text-base font-medium text-gray-900 truncate">
                       {user?.username}
                     </p>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-base text-gray-500">
                     {formatDay(study.createdAt)}
                   </p>
                 </div>
