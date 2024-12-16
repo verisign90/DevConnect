@@ -20,6 +20,8 @@ import StudyUserList from "./MyPage/StudyUserList.jsx";
 import Evaluate from "./MyPage/Evaluate.jsx";
 import Notice from "./MyPage/Notice.jsx";
 
+import Hi from "./Hi.jsx";
+
 export const App = () => {
   //로그인 사용자 데이터 도착 전에 화면이 렌더링되지 않도록 로딩 페이지 적용
   const { loggingIn, user } = useTracker(() => ({
@@ -76,6 +78,8 @@ export const App = () => {
         <Route path="/myProfile" element={<MyProfile />} />
         <Route path="/evaluate/:id" element={<Evaluate />} />
         <Route path="/notice" element={<Notice />} />
+
+        <Route path="/hi" element={<Hi />} />
       </Routes>
     </Router>
   );
