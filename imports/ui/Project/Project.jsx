@@ -55,6 +55,35 @@ const Project = () => {
     "ReactNative",
   ];
 
+  //기술스택 뱃지 색깔깔
+  const stackColors = {
+    backend: "bg-yellow-100 text-yellow-800",
+    database: "bg-green-100 text-green-800",
+    cloud: "bg-blue-100 text-blue-800",
+    frontend: "bg-pink-100 text-pink-800",
+    mobile: "bg-purple-100 text-purple-800",
+    other: "bg-indigo-100 text-indigo-800",
+  };
+
+  //기술스택 카테고리
+  const stackCategories = {
+    backend: ["Java", "NodeJS", "Kotlin", "Python", "Spring", "Django"],
+    database: ["Mysql", "MongoDB", "Oracle"],
+    cloud: ["AWS", "Azure", "Kubernetes", "Docker"],
+    frontend: ["NextJS", "Javascript", "Typescript", "React", "ReactNative"],
+    mobile: ["Flutter", "Swift"],
+    other: ["Other"],
+  };
+
+  //스택에 맞는 카테고리 반환
+  const getStackCategory = (stack) => {
+    //stackCategories 객체의 키와 값을 [category, stacks] 형태의 배열로 변환
+    for (const [category, stacks] of Object.entries(stackCategories)) {
+      if (stacks.includes(stack)) return category;
+    }
+    return "other";
+  };
+
   const [role, setRole] = useState("전체");
   const [onOff, setOnOff] = useState("전체");
   const [myStack, setMyStack] = useState([]);
@@ -257,7 +286,7 @@ const Project = () => {
             myStack.map((stack) => (
               <span
                 key={stack}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-200 text-indigo-800 border border-gray-500"
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-white text-indigo-800 border border-indigo-300"
               >
                 {stack}
                 <button
@@ -331,14 +360,18 @@ const Project = () => {
                 </h3>
                 <div className="flex flex-wrap gap-1 mb-4 pt-5">
                   {study.techStack &&
-                    study.techStack.map((stack) => (
-                      <span
-                        key={stack}
-                        className="px-2 py-1 text-base font-medium bg-gray-100 text-gray-800 rounded-full"
-                      >
-                        #{stack}
-                      </span>
-                    ))}
+                    study.techStack.map((stack) => {
+                      const category = getStackCategory(stack);
+                      const colorClasses = stackColors[category];
+                      return (
+                        <span
+                          key={stack}
+                          className={`inline-flex items-center rounded-md px-2 py-1 text-base font-semibold ${colorClasses}`}
+                        >
+                          #{stack}
+                        </span>
+                      );
+                    })}
                 </div>
               </div>
 
@@ -362,7 +395,7 @@ const Project = () => {
                         </svg>
                       </span>
                     )}
-                    <p className="text-base font-medium text-gray-900 truncate">
+                    <p className="text-base font-semibold text-gray-900 truncate">
                       {user?.username}
                     </p>
                   </div>
