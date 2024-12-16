@@ -245,9 +245,8 @@ const Project = () => {
       </div>
 
       <div
-        className="bg-indigo-100 flex items-center"
+        className="bg-indigo-100 flex items-center w-full"
         style={{
-          width: "1460px",
           height: "60px",
           overflow: "auto",
           marginTop: "20px",
