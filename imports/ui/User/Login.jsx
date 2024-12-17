@@ -46,14 +46,14 @@ const Login = () => {
 
   return (
     <>
-      <div className="max-w-6xl flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="max-w-6xl flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 mx-[147px]">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
-            alt="Your Company"
-            src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-            className="mx-auto h-10 w-auto"
+            alt="DevConnect"
+            src="/images/logo.png"
+            className="mx-auto h-20 w-auto"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+          <h2 className="mt-8 text-center text-2xl font-bold tracking-tight text-gray-900">
             DevConnect
           </h2>
         </div>
@@ -68,7 +68,7 @@ const Login = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="이름을 입력해 주세요"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:outline-indigo-600"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {error === "이름을 입력해 주세요" && (
                   <span className="text-red-500 text-sm">{error}</span>
@@ -84,7 +84,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="비밀번호를 입력해 주세요"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:outline-indigo-600"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {error === "비밀번호를 입력해 주세요" && (
                   <span className="text-red-500 text-sm">{error}</span>
