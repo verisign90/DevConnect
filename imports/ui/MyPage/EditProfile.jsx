@@ -202,89 +202,151 @@ const EditProfile = () => {
 
   return (
     <>
-      <h2>프로필 수정</h2>
-      <h3>사진 변경</h3>
-      {userFile ? (
-        <div style={{ marginBottom: "20px" }}>
-          <img
-            src={userFile.link()}
-            style={{
-              width: "300px",
-              height: "300px",
-              borderRadius: "50%", //모서리 둥글게
-              objectFit: "cover", //비율 유지하면서 완전히 채움
-              border: "2px solid #ddd",
-            }}
-          />
-        </div>
-      ) : previewUrl ? (
-        <div style={{ marginBottom: "20px" }}>
-          <img
-            src={previewUrl}
-            style={{
-              width: "300px",
-              height: "300px",
-              borderRadius: "50%", //모서리 둥글게
-              objectFit: "cover", //비율 유지하면서 완전히 채움
-              border: "2px solid #ddd",
-            }}
-          />
-        </div>
-      ) : (
-        <div
-          style={{
-            width: "300px",
-            height: "300px",
-            borderRadius: "50%",
-            backgroundColor: "#f0f0f0",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            border: "2px solid #ddd",
-          }}
-        ></div>
-      )}
-      <input
-        type="file"
-        onChange={fileChange}
-        ref={fileInputRef}
-        style={{ display: "none" }}
-      />
-      <button onClick={clickFileInput}>사진업로드</button>
-      <hr />
+      <div className="max-w-6xl mx-auto px-6 py-12 bg-white">
+        {/* 페이지 제목 */}
+        <h2 className="text-2xl font-bold mb-8 text-gray-900 text-center">
+          프로필 수정
+        </h2>
 
-      <h3>이름 변경</h3>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder={username}
-      />
-      <button onClick={checkName}>중복확인</button>
-      <hr />
+        {/* 사진 변경 */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-700 text-center">
+            사진 변경
+          </h3>
+          <div className="flex flex-col items-center mb-6">
+            {userFile ? (
+              <img
+                src={userFile.link()}
+                className="w-72 h-72 rounded-full object-cover border-2 border-gray-300 mb-4"
+                alt="프로필"
+              />
+            ) : previewUrl ? (
+              <img
+                src={previewUrl}
+                className="w-72 h-72 rounded-full object-cover border-2 border-gray-300 mb-4"
+                alt="미리보기"
+              />
+            ) : (
+              <div className="w-72 h-72 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-300 mb-4">
+                <span className="text-gray-400">이미지 없음</span>
+              </div>
+            )}
+            <input
+              type="file"
+              onChange={fileChange}
+              ref={fileInputRef}
+              className="hidden"
+            />
+            <button
+              onClick={clickFileInput}
+              className="bg-indigo-600 text-white font-semibold my-4 py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              사진 업로드
+            </button>
+          </div>
+        </div>
 
-      <h3>기술스택 변경</h3>
-      <label>
-        <select onChange={selectStack} value="" disabled={myStack.length === 5}>
-          <option value="" disabled>
-            기술스택 (최대 5개 선택)
-          </option>
-          {stackList.map((stack) => (
-            <option key={stack} value={stack}>
-              {stack}
-            </option>
-          ))}
-        </select>
-      </label>
-      <br />
-      {myStack.map((stack) => (
-        <span key={stack} style={{ marginRight: "10px" }}>
-          {stack}
-          <button onClick={() => removeStack(stack)}>X</button>
-        </span>
-      ))}
-      <br />
-      <button onClick={saveProfile}>프로필저장</button>
+        {/* <hr className="border-t border-gray-300 mb-8" /> */}
+
+        {/* 이름 변경 */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-700">
+            이름 변경
+          </h3>
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={username}
+              className="w-full rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+            />
+            <button
+              onClick={checkName}
+              className="bg-indigo-600 text-white min-w-[100px] font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              중복 확인
+            </button>
+          </div>
+        </div>
+
+        {/* <hr className="border-t border-gray-300 mb-8" /> */}
+
+        {/* 기술스택 변경 */}
+        <div className="mb-8">
+
+
+          <h3 className="text-xl font-semibold mb-4 text-gray-700">
+            기술스택 변경
+          </h3>
+
+
+
+          <div className="flex flex-col gap-4">
+     <div className="flex flex-col md:flex-row gap-4">
+     <select
+              onChange={selectStack}
+              value=""
+              disabled={myStack.length === 5}
+              className="w-full rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+            >
+              <option value="" disabled>
+                기술스택 (최대 5개 선택)
+              </option>
+              {stackList.map((stack) => (
+                <option key={stack} value={stack}>
+                  {stack}
+                </option>
+              ))}
+            </select>
+
+
+   {/* 프로필 저장 버튼 */}
+   <div className="flex justify-end">
+              <button
+                onClick={saveProfile}
+                className="w-full md:min-w-[200px] bg-indigo-600 text-white font-semibold py-2 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              >
+                프로필 저장
+              </button>
+
+
+     </div>
+
+
+
+
+
+
+
+
+
+
+         
+            </div>
+                 
+            <div className="w-full flex flex-wrap gap-2">
+              {myStack.map((stack) => (
+                <span
+                  key={stack}
+                  className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full"
+                >
+                  {stack}
+                  <button
+                    onClick={() => removeStack(stack)}
+                    className="text-indigo-500 hover:text-indigo-700"
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+
+          </div>
+
+          {/* <hr className="border-t border-gray-300 mb-8" /> */}
+        </div>
+      </div>
     </>
   );
 };

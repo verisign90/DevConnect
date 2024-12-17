@@ -72,60 +72,80 @@ const MyList = () => {
   };
 
   return (
-    <>
-      <h2>내 프로젝트</h2>
-      <h3>내가 참여한 프로젝트 목록</h3>
-      {joinList.length > 0 ? (
-        joinList.map((study) => (
-          <li key={study._id}>
-            <Link to={`/detail/${study._id}`}>
-              {study.title} ({study.okCount}/{study.memberCount}){" "}
-              {study.status === "시작"
-                ? `시작 ${new Date(study.startDate).toStringYMD()}`
-                : `시작 ${new Date(
-                    study.startDate
-                  ).toStringYMD()} 종료 ${new Date(
-                    study.endDate
-                  ).toStringYMD()}`}{" "}
-              {study.techStack.join(" ")}
-            </Link>
-            {study.status === "종료" && (
-              <button
-                onClick={() => evaluate(study._id)}
-                disabled={study.isDoneAllTrue}
-              >
-                {study.isDoneAllTrue ? "평가완료" : "평가하기"}
-              </button>
-            )}
-          </li>
-        ))
-      ) : (
-        <p>아직 참여한 프로젝트가 없습니다</p>
-      )}
+<>
+  <div className="max-w-6xl mx-auto px-6 py-12 bg-white">
+    {/* 페이지 제목 */}
+    <h2 className="text-2xl font-bold mb-8 text-gray-900">내 프로젝트</h2>
 
-      <h3>내가 모집한 프로젝트 목록</h3>
-      {writeList.length > 0 ? (
-        writeList.map((study) => (
-          <li key={study._id}>
-            <Link to={`/leader/${study._id}`}>
-              {study.title} ({study.okCount}/{study.memberCount}){" "}
-              {study.status === "시작"
-                ? `시작 ${new Date(study.startDate).toStringYMD()}`
-                : study.status === "종료"
-                ? `시작 ${new Date(
-                    study.startDate
-                  ).toStringYMD()} 종료 ${new Date(
-                    study.endDate
-                  ).toStringYMD()}`
-                : study.status}{" "}
-              {study.techStack.join(" ")}
-            </Link>
-          </li>
-        ))
+    {/* 내가 참여한 프로젝트 목록 */}
+    <div className="mb-12">
+      <h3 className="text-xl font-semibold mb-4 text-gray-700">내가 참여한 프로젝트 목록</h3>
+      {joinList.length > 0 ? (
+        <ul className="space-y-4">
+          {joinList.map((study) => (
+            <li key={study._id} className="border-b pb-4">
+              <Link
+                to={`/detail/${study._id}`}
+                className="block text-lg font-medium text-indigo-600 hover:underline"
+              >
+                {study.title} ({study.okCount}/{study.memberCount}){" "}
+                {study.status === "시작"
+                  ? `시작 ${new Date(study.startDate).toStringYMD()}`
+                  : `시작 ${new Date(study.startDate).toStringYMD()} 종료 ${new Date(study.endDate).toStringYMD()}`}
+                {" "}
+                <span className="text-gray-600">{study.techStack.join(", ")}</span>
+              </Link>
+              {study.status === "종료" && (
+                <button
+                  onClick={() => evaluate(study._id)}
+                  disabled={study.isDoneAllTrue}
+                  className={`mt-2 inline-block py-1 px-4 rounded-md text-white font-semibold ${
+                    study.isDoneAllTrue ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+                  }`}
+                >
+                  {study.isDoneAllTrue ? "평가완료" : "평가하기"}
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
       ) : (
-        <p>아직 작성한 모집글이 없습니다</p>
+        <p className="text-gray-500">아직 참여한 프로젝트가 없습니다.</p>
       )}
-    </>
+    </div>
+
+    {/* <hr className="border-t border-gray-300 mb-12" /> */}
+
+    {/* 내가 모집한 프로젝트 목록 */}
+    <div>
+      <h3 className="text-xl font-semibold mb-4 text-gray-700">내가 모집한 프로젝트 목록</h3>
+      {writeList.length > 0 ? (
+        <ul className="space-y-4">
+          {writeList.map((study) => (
+            <li key={study._id} className="border-b pb-4">
+              <Link
+                to={`/leader/${study._id}`}
+                className="block text-lg font-medium text-indigo-600 hover:underline"
+              >
+                {study.title} ({study.okCount}/{study.memberCount}){" "}
+                {study.status === "시작"
+                  ? `시작 ${new Date(study.startDate).toStringYMD()}`
+                  : study.status === "종료"
+                  ? `시작 ${new Date(study.startDate).toStringYMD()} 종료 ${new Date(study.endDate).toStringYMD()}`
+                  : study.status}
+                {" "}
+                <span className="text-gray-600">{study.techStack.join(", ")}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">아직 작성한 모집글이 없습니다.</p>
+      )}
+    </div>
+  </div>
+</>
+
   );
 };
 
