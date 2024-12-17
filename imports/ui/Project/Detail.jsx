@@ -205,7 +205,6 @@ const Detail = () => {
   return (
     <>
       <div className="bg-white max-w-6xl mx-auto mb-8">
-        {/* 프로젝트 헤더 */}
         <div className="border-b border-gray-300 p-6 sm:p-10 lg:flex lg:items-center lg:justify-between">
           <h2 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl mb-4 lg:mb-0">
             <span className="inline-flex items-center rounded-full bg-teal-200 px-3 py-0.5 text-base font-semibold text-teal-800 mb-2">
@@ -299,11 +298,16 @@ const Detail = () => {
         </div>
 
         {/* 프로젝트 내용 */}
+        <div className="w-full pl-6 pr-6 pt-5 pb-10 sm:pt-5 sm:pb-10 bg-white border-b border-gray-300">
+          <div className="max-w-7xl">
+            <h2 className="text-2xl font-medium tracking-tight text-gray-900 sm:text-lg py-12 sm:py-14">
+              {project?.content}
+            </h2>
+          </div>
+        </div>
+
+        {/* 버튼 그룹 */}
         <div className="p-6">
-          <hr className="my-4" />
-          <p className="text-gray-700">{project?.content}</p>
-          <hr className="my-4" />
-          {/* 버튼 그룹 */}
           <div className="flex gap-4">
             <button
               onClick={goMain}
