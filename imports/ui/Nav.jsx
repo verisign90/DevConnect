@@ -91,7 +91,7 @@ export default () => {
               <img
                 alt="DevConnect"
                 src="/images/logo.png"
-                className="h-8 w-auto"
+                className="h-14 w-auto mt-2"
               />
             </div>
             <div className="hidden md:ml-6 md:flex md:space-x-8">
@@ -149,7 +149,7 @@ export default () => {
                   className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   onClick={() => navigate("/notice")}
                 >
-                  <BellIcon aria-hidden="true" className="size-6" />
+                  <BellIcon aria-hidden="true" className="size-12" />
                   {readFalseCount > 0 && (
                     <span className="absolute -top-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                       {readFalseCount}
@@ -164,14 +164,14 @@ export default () => {
                       <img
                         alt="프로필 이미지"
                         src={user.profile.image}
-                        className="h-8 w-8 rounded-full"
+                        className="h-16 w-16 rounded-full"
                       />
                     ) : (
-                      <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
+                      <span className="inline-block h-16 w-16 overflow-hidden rounded-full bg-gray-100">
                         <svg
                           fill="currentColor"
                           viewBox="0 0 24 24"
-                          className="h-8 w-8 text-gray-300"
+                          className="h-full w-full text-gray-300"
                         >
                           <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
