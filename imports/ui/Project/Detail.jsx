@@ -217,7 +217,7 @@ const Detail = () => {
               작성일 {formatDay(project?.createdAt)} · 조회수 {project?.views}
             </span>
             <br />
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-lg font-semibold text-gray-700">
               작성자: {project?.username}
             </span>
           </h2>
