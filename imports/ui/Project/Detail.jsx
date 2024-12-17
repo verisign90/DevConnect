@@ -380,7 +380,7 @@ const Detail = () => {
         ) : (
           <p className="text-gray-500 mb-4">로그인하지 않은 사용자는 댓글을 입력할 수 없습니다.</p>
         )}
-        <form onSubmit={commentSubmit} className="flex gap-2">
+        <form onSubmit={commentSubmit} className="flex flex-col md:flex md:flex-row gap-2">
           <input
             type="text"
             value={comment}
