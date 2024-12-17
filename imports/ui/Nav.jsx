@@ -86,8 +86,8 @@ export default () => {
             </div>
             <div className="flex shrink-0 items-center">
               <img
-                alt="Your Company"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
+                alt="DevConnect"
+                src="/images/logo.png"
                 className="h-8 w-auto"
               />
             </div>
