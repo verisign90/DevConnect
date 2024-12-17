@@ -54,6 +54,15 @@ if (!Meteor.users.findOne({ username: "admin" })) {
 
 //일반 유저가 없다면
 if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
+  const imagePaths = [
+    "/images/img1.png",
+    "/images/img2.png",
+    "/images/img3.png",
+    "/images/img4.png",
+    "/images/img5.png",
+    null,
+  ];
+
   for (let i = 1; i <= testUserCount; i++) {
     Accounts.createUser({
       username: "user" + i,
@@ -62,7 +71,7 @@ if (!Meteor.users.findOne({ username: { $ne: "admin" } })) {
       profile: {
         role: ["백엔드", "프론트엔드"].random(),
         techStack: stackList.random(1, 5),
-        image: null,
+        image: imagePaths.random(),
         score: {
           manner: 3,
           mentoring: 3,
@@ -140,7 +149,7 @@ if (!Comments.findOne()) {
       studyId: study._id,
       userId: user._id,
       username: user.username,
-      image: null,
+      image: user.profile.image,
       comment: "댓글" + i,
       createdAt: new Date(),
     });
