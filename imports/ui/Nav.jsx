@@ -68,7 +68,7 @@ export default () => {
   };
 
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="bg-white border-b border-gray-100 max-w-6xl mx-auto">
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 justify-between">
           <div className="flex">
@@ -83,6 +83,11 @@ export default () => {
                   className="hidden size-6 group-data-[open]:block"
                 />
               </DisclosureButton>
+
+
+
+
+
             </div>
             <div className="flex shrink-0 items-center">
               <img
@@ -105,7 +110,11 @@ export default () => {
               {user ? (
                 <Link
                   to="/write"
-                  className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-lg font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  className={`inline-flex items-center px-1 pt-1 text-lg font-semibold ${
+                    location.pathname === "/write"
+                      ? "border-b-4 border-indigo-500 text-gray-900"
+                      : "border-b-4 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  }`}
                 >
                   모집글 작성
                 </Link>
@@ -142,7 +151,7 @@ export default () => {
                   className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   onClick={() => navigate("/notice")}
                 >
-                  <BellIcon aria-hidden="true" className="size-12" />
+                  <BellIcon aria-hidden="true" className="size-6" />
                   {readFalseCount > 0 && (
                     <span className="absolute -top-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                       {readFalseCount}
@@ -157,14 +166,14 @@ export default () => {
                       <img
                         alt="프로필 이미지"
                         src={user.profile.image}
-                        className="h-16 w-16 rounded-full"
+                        className="h-8 w-8 rounded-full"
                       />
                     ) : (
-                      <span className="inline-block h-16 w-16 overflow-hidden rounded-full bg-gray-100">
+                      <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
                         <svg
                           fill="currentColor"
                           viewBox="0 0 24 24"
-                          className="h-full w-full text-gray-300"
+                          className="h-8 w-8 text-gray-300"
                         >
                           <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
@@ -205,7 +214,41 @@ export default () => {
             </div>
           </div>
         </div>
+
+        
       </div>
+      
+
+
+      
+{/* 모바일 메뉴 구현 */}
+{/* 모바일 메뉴 패널 */}
+<Disclosure.Panel className="md:hidden">
+  <div className="space-y-1 px-2 pb-3 pt-2">
+    <Link
+      to="/"
+      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+    >
+      프로젝트 목록조회
+    </Link>
+    {user ? (
+      <Link
+        to="/write"
+        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+      >
+        모집글 작성
+      </Link>
+    ) : (
+      <Link
+        to="/join"
+        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+      >
+        회원가입
+      </Link>
+    )}
+  </div>
+</Disclosure.Panel>
+
     </Disclosure>
   );
 };

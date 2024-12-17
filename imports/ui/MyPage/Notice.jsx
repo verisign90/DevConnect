@@ -58,15 +58,45 @@ const Notice = () => {
 
   return (
     <>
-      <h2>알림페이지</h2>
-      {notices.map((noti) => (
-        <li key={noti._id}>
-          <Link to={navi(noti.message, noti.studyId)}>{noti.message}</Link>{" "}
-          {noti.createdAt.toStringYMDHMS()}{" "}
-          <button onClick={() => removeMsg(noti._id)}>X</button>
-        </li>
-      ))}
-    </>
+    <div className="max-w-6xl mx-auto px-6 py-12 bg-white">
+      {/* 페이지 제목 */}
+      <h2 className="text-2xl font-bold mb-6 text-gray-900">알림 페이지</h2>
+  
+      {/* 알림 리스트 */}
+      {notices.length > 0 ? (
+        <ul className="space-y-4">
+          {notices.map((noti) => (
+            <li
+              key={noti._id}
+              className="flex items-center justify-between bg-gray-50 p-4 rounded-md shadow-sm border border-gray-200"
+            >
+              <div>
+                <Link
+                  to={navi(noti.message, noti.studyId)}
+                  className="text-lg font-medium text-indigo-600 hover:underline"
+                >
+                  {noti.message}
+                </Link>
+                <p className="text-sm text-gray-500 mt-1">
+                  {noti.createdAt.toStringYMDHMS()}
+                </p>
+              </div>
+  
+              <button
+                onClick={() => removeMsg(noti._id)}
+                className="text-red-500 hover:text-red-700 focus:outline-none"
+              >
+                &times;
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">알림이 없습니다.</p>
+      )}
+    </div>
+  </>
+  
   );
 };
 

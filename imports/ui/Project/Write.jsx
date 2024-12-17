@@ -171,224 +171,166 @@ const Write = () => {
   };
 
   return (
-    <>
-      <h2>프로젝트 모집글 작성페이지</h2>
-      <input type="text" ref={titleRef} placeholder="제목을 입력하세요" />
-      <h4>모집분야</h4>
-      <label>
-        <input
-          type="radio"
-          value="all"
-          name="role"
-          checked={role === "백엔드/프론트엔드"}
-          onChange={() => setRole("백엔드/프론트엔드")}
-        />
-        백엔드/프론트엔드{" "}
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="backend"
-          name="role"
-          checked={role === "백엔드"}
-          onChange={() => setRole("백엔드")}
-        />
-        백엔드{" "}
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="frontend"
-          name="role"
-          checked={role === "프론트엔드"}
-          onChange={() => setRole("프론트엔드")}
-        />
-        프론트엔드{" "}
-      </label>
-      <h4>모임형태</h4>
-      <label>
-        <input
-          type="radio"
-          value="online"
-          name="onOff"
-          checked={onOff === "온라인"}
-          onChange={() => setOnOff("온라인")}
-        />
-        온라인{" "}
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="offline"
-          name="onOff"
-          checked={onOff === "오프라인"}
-          onChange={() => setOnOff("오프라인")}
-        />
-        오프라인{" "}
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="onOffline"
-          name="onOff"
-          checked={onOff === "온/오프라인"}
-          onChange={() => setOnOff("온/오프라인")}
-        />
-        온/오프라인{" "}
-      </label>
-      {onOff !== "온라인" && (
-        <>
-          <h4>지역</h4>
-          <select
-            name="location"
-            value={city}
-            onChange={cityGubun}
-            disabled={onOff === "online"}
-          >
-            <option value="" disabled>
-              시/도를 선택하세요
-            </option>
-            {Location.map((loc) => (
-              <option key={loc.city} value={loc.city}>
-                {loc.city}
-              </option>
-            ))}
-          </select>
-        </>
-      )}
-      {city && onOff !== "online" && (
+<>
+  <div className="max-w-6xl mx-auto px-6 py-12 bg-white">
+    <h2 className="text-2xl font-bold mb-6 text-gray-900">프로젝트 모집글 작성페이지</h2>
+
+    {/* 제목 입력 */}
+    <div className="mb-6">
+      <input
+        type="text"
+        ref={titleRef}
+        placeholder="제목을 입력하세요"
+        className="w-full rounded-md border-gray-300 shadow-sm py-2 px-4 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+      />
+    </div>
+
+    {/* 모집분야 */}
+    <div className="mb-6">
+      <h4 className="text-lg font-medium mb-2 text-gray-700">모집분야</h4>
+      <div className="flex gap-4">
+        {["백엔드/프론트엔드", "백엔드", "프론트엔드"].map((value) => (
+          <label key={value} className="flex items-center gap-2">
+            <input
+              type="radio"
+              value={value}
+              name="role"
+              checked={role === value}
+              onChange={() => setRole(value)}
+              className="text-indigo-600"
+            />
+            {value}
+          </label>
+        ))}
+      </div>
+    </div>
+
+    {/* 모임형태 */}
+    <div className="mb-6">
+      <h4 className="text-lg font-medium mb-2 text-gray-700">모임형태</h4>
+      <div className="flex gap-4">
+        {["온라인", "오프라인", "온/오프라인"].map((value) => (
+          <label key={value} className="flex items-center gap-2">
+            <input
+              type="radio"
+              value={value}
+              name="onOff"
+              checked={onOff === value}
+              onChange={() => setOnOff(value)}
+              className="text-indigo-600"
+            />
+            {value}
+          </label>
+        ))}
+      </div>
+    </div>
+
+    {/* 지역 선택 */}
+    {onOff !== "온라인" && (
+      <div className="mb-6">
+        <h4 className="text-lg font-medium mb-2 text-gray-700">지역</h4>
         <select
-          name="gubun"
-          value={gubun}
-          onChange={(e) => setGubun(e.target.value)}
+          name="location"
+          value={city}
+          onChange={cityGubun}
+          className="w-full rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
         >
           <option value="" disabled>
-            구/군을 선택하세요
+            시/도를 선택하세요
           </option>
-          {gubunList.map((gubun) => (
-            <option key={gubun} value={gubun}>
-              {gubun}
+          {Location.map((loc) => (
+            <option key={loc.city} value={loc.city}>
+              {loc.city}
             </option>
           ))}
         </select>
-      )}
-      <h4>총 참여 인원 수</h4>
+      </div>
+    )}
+
+    {/* 기술스택 선택 */}
+    <div className="mb-6">
+      <h4 className="text-lg font-medium mb-2 text-gray-700">기술스택</h4>
       <select
-        value={memberCount}
-        onChange={(e) => setMemberCount(e.target.value)}
+        onChange={selectStack}
+        value=""
+        disabled={myStack.length === 5}
+        className="w-full rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
       >
         <option value="" disabled>
-          참여 인원 수를 선택하세요
+          기술스택 (최대 5개 선택)
         </option>
-        <option value="2">2명</option>
-        <option value="3">3명</option>
-        <option value="4">4명</option>
-        <option value="5">5명</option>
-        <option value="6">6명</option>
-      </select>
-      <h4>기술스택</h4>
-      <label>
-        <select onChange={selectStack} value="" disabled={myStack.length === 5}>
-          <option value="" disabled>
-            기술스택 (최대 5개 선택)
+        {stackList.map((stack) => (
+          <option key={stack} value={stack}>
+            {stack}
           </option>
-          {stackList.map((stack) => (
-            <option key={stack} value={stack}>
-              {stack}
-            </option>
-          ))}
-        </select>
-      </label>
-      <br />
+        ))}
+      </select>
       {myStack.length > 0 && (
-        <>
+        <div className="mt-4 flex flex-wrap gap-2">
           {myStack.map((stack) => (
-            <span key={stack} style={{ marginRight: "10px" }}>
+            <span
+              key={stack}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full"
+            >
               {stack}
-              <button onClick={() => deleteStack(stack)}>X</button>
+              <button
+                onClick={() => deleteStack(stack)}
+                className="text-indigo-500 hover:text-indigo-700"
+              >
+                &times;
+              </button>
             </span>
           ))}
-        </>
+        </div>
       )}
-      <h4>요구역량</h4>
-      <label>manner</label>{" "}
-      {["0", "1", "2", "3", "4"].map((value) => (
-        <label key={`manner-${value}`}>
-          <input
-            type="radio"
-            name="manner"
-            value={value}
-            checked={manner === Number(value)}
-            onChange={(e) => scoreRadio(e, setManner)}
-          />
-          {value}
-        </label>
+    </div>
+
+    {/* 요구역량 */}
+    <div className="mb-6">
+      <h4 className="text-lg font-medium mb-2 text-gray-700">요구역량</h4>
+      {["manner", "communication", "passion", "mentoring", "time"].map((category) => (
+        <div key={category} className="mb-4">
+          <label className="block font-medium text-gray-700 mb-1 capitalize">{category}</label>
+          <div className="flex gap-4">
+            {["0", "1", "2", "3", "4"].map((value) => (
+              <label key={`${category}-${value}`} className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name={category}
+                  value={value}
+                  checked={eval(category) === Number(value)}
+                  onChange={(e) => scoreRadio(e, eval(`set${category.charAt(0).toUpperCase() + category.slice(1)}`))}
+                  className="text-indigo-600"
+                />
+                {value}
+              </label>
+            ))}
+          </div>
+        </div>
       ))}
-      <br />
-      <label>communication</label>{" "}
-      {["0", "1", "2", "3", "4"].map((value) => (
-        <label key={`communication-${value}`}>
-          <input
-            type="radio"
-            name="communication"
-            value={value}
-            checked={communication === Number(value)}
-            onChange={(e) => scoreRadio(e, setCommunication)}
-          />
-          {value}
-        </label>
-      ))}
-      <br />
-      <label>passion</label>{" "}
-      {["0", "1", "2", "3", "4"].map((value) => (
-        <label key={`passion-${value}`}>
-          <input
-            type="radio"
-            name="passion"
-            value={value}
-            checked={passion === Number(value)}
-            onChange={(e) => scoreRadio(e, setPassion)}
-          />
-          {value}
-        </label>
-      ))}
-      <br />
-      <label>mentoring</label>{" "}
-      {["0", "1", "2", "3", "4"].map((value) => (
-        <label key={`mentoring-${value}`}>
-          <input
-            type="radio"
-            name="mentoring"
-            value={value}
-            checked={mentoring === Number(value)}
-            onChange={(e) => scoreRadio(e, setMentoring)}
-          />
-          {value}
-        </label>
-      ))}
-      <br />
-      <label>time</label>{" "}
-      {["0", "1", "2", "3", "4"].map((value) => (
-        <label key={`time-${value}`}>
-          <input
-            type="radio"
-            name="time"
-            value={value}
-            checked={time === Number(value)}
-            onChange={(e) => scoreRadio(e, setTime)}
-          />
-          {value}
-        </label>
-      ))}
-      <br />
+    </div>
+
+    {/* 프로젝트 설명 */}
+    <div className="mb-6">
       <textarea
-        style={{ width: "600px", height: "200px" }}
         ref={contentRef}
         placeholder="프로젝트에 대해 설명해 주세요"
+        className="w-full h-40 rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
       />
-      <br />
-      <button onClick={submit}>등록하기</button>
-    </>
+    </div>
+
+    {/* 등록 버튼 */}
+    <div className="flex justify-end">
+      <button
+        onClick={submit}
+        className="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+      >
+        등록하기
+      </button>
+    </div>
+  </div>
+</>
+
   );
 };
 
