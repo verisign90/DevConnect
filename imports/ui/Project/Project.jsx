@@ -60,13 +60,23 @@ const Project = () => {
   ];
 
   //기술스택 뱃지 색깔
+  // const stackColors = {
+  //   backend: "bg-yellow-100 text-yellow-800",
+  //   database: "bg-green-100 text-green-800",
+  //   cloud: "bg-blue-100 text-blue-800",
+  //   frontend: "bg-pink-100 text-pink-800",
+  //   mobile: "bg-purple-100 text-purple-800",
+  //   other: "bg-indigo-100 text-indigo-800",
+  // };
+
+  // 기술스택 뱃지 아웃라인 스타일
   const stackColors = {
-    backend: "bg-yellow-100 text-yellow-800",
-    database: "bg-green-100 text-green-800",
-    cloud: "bg-blue-100 text-blue-800",
-    frontend: "bg-pink-100 text-pink-800",
-    mobile: "bg-purple-100 text-purple-800",
-    other: "bg-indigo-100 text-indigo-800",
+    backend: "border border-yellow-500 text-yellow-800 bg-white",
+    database: "border border-green-500 text-green-800 bg-white",
+    cloud: "border border-blue-500 text-blue-800 bg-white",
+    frontend: "border border-pink-500 text-pink-800 bg-white",
+    mobile: "border border-purple-500 text-purple-800 bg-white",
+    other: "border border-indigo-500 text-indigo-800 bg-white",
   };
 
   //기술스택 카테고리
@@ -348,24 +358,40 @@ const Project = () => {
               >
                 <div className="px-4 py-5 sm:p-6">
                   <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-base font-semibold text-gray-600">
+
+
+
+                    {/* 오리지널 */}
+                    <div className="flex flex gap-2">
+                      <span className="inline-flex items-center rounded-md bg-gray-100 px-1 py-1 text-sm font-semibold text-gray-600">
                         {study.role}
                       </span>
-                      <span className="inline-flex items-center rounded-md bg-red-100 px-2 py-1 text-base font-semibold text-red-700">
+                  <span className="inline-flex items-center rounded-md bg-blue-100 px-1 py-1 text-sm font-semibold text-blue-700">
                         {study.onOff}
                         {study.onOff !== "온라인" &&
                           ` · ${study.location.city}`}
                       </span>
                     </div>
-                    <p className="text-base text-gray-500">
-                      조회수 {study.views}
-                    </p>
+
+                    {/* 아웃라인 스타일 적용 */}
+                    {/* <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center rounded-md border border-gray-500 px-1 py-1 text-sm font-semibold text-gray-600">
+                        {study.role}
+                      </span>
+
+                      <span className="inline-flex items-center rounded-md border border-red-500 px-1 py-1 text-sm font-semibold text-red-700">
+                        {study.onOff}
+                        {study.onOff !== "온라인" &&
+                          ` · ${study.location.city}`}
+                      </span>
+                    </div> */}
+
+             
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2 truncate">
                     {study.title}
                   </h3>
-                  <div className="flex flex-wrap gap-1 mb-4 pt-5">
+                  <div className="flex h-[84px] flex-wrap gap-2 mb-4 pt-5">
                     {study.techStack &&
                       study.techStack.map((stack) => {
                         const category = getStackCategory(stack);
@@ -373,7 +399,7 @@ const Project = () => {
                         return (
                           <span
                             key={stack}
-                            className={`inline-flex items-center rounded-md px-2 py-1 text-base font-semibold ${colorClasses}`}
+                            className={`inline-flex items-center h-[30px] rounded-md px-2 py-1 text-sm font-semibold ${colorClasses}`}
                           >
                             #{stack}
                           </span>
@@ -406,9 +432,18 @@ const Project = () => {
                         {user?.username}
                       </p>
                     </div>
-                    <p className="text-base text-gray-500">
+
+
+                    <div>
+                    <p className="text-sm text-right text-gray-500">
                       {formatDay(study.createdAt)}
                     </p>
+
+                    <p className="text-sm text-right text-gray-500">
+                      조회수 {study.views}
+                    </p>
+                    </div>
+                    
                   </div>
                 </div>
               </div>

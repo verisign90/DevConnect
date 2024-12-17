@@ -229,24 +229,52 @@ const Write = () => {
 
         {/* 지역 선택 */}
         {onOff !== "온라인" && (
-          <div className="mb-6">
-            <h4 className="text-lg font-medium mb-2 text-gray-700">지역</h4>
-            <select
-              name="location"
-              value={city}
-              onChange={cityGubun}
-              className="w-full rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
-            >
-              <option value="" disabled>
-                시/도를 선택하세요
-              </option>
-              {Location.map((loc) => (
-                <option key={loc.city} value={loc.city}>
-                  {loc.city}
+          <>
+            {/* 지역 선택 */}
+            <div className="mb-6">
+              <h4 className="text-lg font-medium mb-2 text-gray-700">지역</h4>
+              <select
+                name="location"
+                value={city}
+                onChange={cityGubun}
+                disabled={onOff === "online"}
+                className="w-full rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+              >
+                <option value="" disabled>
+                  시/도를 선택하세요
                 </option>
-              ))}
-            </select>
-          </div>
+                {Location.map((loc) => (
+                  <option key={loc.city} value={loc.city}>
+                    {loc.city}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+
+        {city && onOff !== "온라인" && (
+          <>
+            {/* 구/군 선택 */}
+            <div className="mb-6">
+              <h4 className="text-lg font-medium mb-2 text-gray-700">구/군</h4>
+              <select
+                name="gubun"
+                value={gubun}
+                onChange={(e) => setGubun(e.target.value)}
+                className="w-full rounded-md border-gray-300 py-2 px-4 shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+              >
+                <option value="" disabled>
+                  구/군을 선택하세요
+                </option>
+                {gubunList.map((gubun) => (
+                  <option key={gubun} value={gubun}>
+                    {gubun}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
         )}
 
         <div className="mb-6">
