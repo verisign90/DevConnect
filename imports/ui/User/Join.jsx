@@ -115,7 +115,7 @@ const Join = () => {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
             <img
-              className="h-10 w-auto"
+              className="h-16 w-auto"
               src="/images/logo.png"
               alt="DevConnect"
             />
