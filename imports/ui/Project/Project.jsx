@@ -60,24 +60,24 @@ const Project = () => {
   ];
 
   //기술스택 뱃지 색깔
-  // const stackColors = {
-  //   backend: "bg-yellow-100 text-yellow-800",
-  //   database: "bg-green-100 text-green-800",
-  //   cloud: "bg-blue-100 text-blue-800",
-  //   frontend: "bg-pink-100 text-pink-800",
-  //   mobile: "bg-purple-100 text-purple-800",
-  //   other: "bg-indigo-100 text-indigo-800",
-  // };
+  const stackColors = {
+    backend: "bg-yellow-100 text-yellow-800",
+    database: "bg-green-100 text-green-800",
+    cloud: "bg-blue-100 text-blue-800",
+    frontend: "bg-pink-100 text-pink-800",
+    mobile: "bg-purple-100 text-purple-800",
+    other: "bg-indigo-100 text-indigo-800",
+  };
 
   // 기술스택 뱃지 아웃라인 스타일
-  const stackColors = {
-    backend: "border border-yellow-500 text-yellow-800 bg-white",
-    database: "border border-green-500 text-green-800 bg-white",
-    cloud: "border border-blue-500 text-blue-800 bg-white",
-    frontend: "border border-pink-500 text-pink-800 bg-white",
-    mobile: "border border-purple-500 text-purple-800 bg-white",
-    other: "border border-indigo-500 text-indigo-800 bg-white",
-  };
+  // const stackColors = {
+  //   backend: "border border-yellow-500 text-yellow-800 bg-white",
+  //   database: "border border-green-500 text-green-800 bg-white",
+  //   cloud: "border border-blue-500 text-blue-800 bg-white",
+  //   frontend: "border border-pink-500 text-pink-800 bg-white",
+  //   mobile: "border border-purple-500 text-purple-800 bg-white",
+  //   other: "border border-indigo-500 text-indigo-800 bg-white",
+  // };
 
   //기술스택 카테고리
   const stackCategories = {
@@ -356,39 +356,23 @@ const Project = () => {
                 className="overflow-hidden rounded-md bg-white shadow-sm cursor-pointer ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                 onClick={() => goDetail(study._id)}
               >
-                <div className="px-4 py-5 sm:p-6">
-                  <div className="flex justify-between items-center mb-2">
-
-
-
-                    {/* 오리지널 */}
-                    <div className="flex flex gap-2">
-                      <span className="inline-flex items-center rounded-md bg-gray-100 px-1 py-1 text-sm font-semibold text-gray-600">
+                <div className="px-3 py-5 sm:p-6">
+                  <div className="flex flex-col gap-2 mb-2">
+                    <div>
+                      <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-sm font-semibold text-gray-600">
                         {study.role}
                       </span>
-                  <span className="inline-flex items-center rounded-md bg-blue-100 px-1 py-1 text-sm font-semibold text-blue-700">
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center rounded-md bg-blue-100 px-2 py-1 text-sm font-semibold text-blue-700">
                         {study.onOff}
                         {study.onOff !== "온라인" &&
                           ` · ${study.location.city}`}
                       </span>
                     </div>
-
-                    {/* 아웃라인 스타일 적용 */}
-                    {/* <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center rounded-md border border-gray-500 px-1 py-1 text-sm font-semibold text-gray-600">
-                        {study.role}
-                      </span>
-
-                      <span className="inline-flex items-center rounded-md border border-red-500 px-1 py-1 text-sm font-semibold text-red-700">
-                        {study.onOff}
-                        {study.onOff !== "온라인" &&
-                          ` · ${study.location.city}`}
-                      </span>
-                    </div> */}
-
-             
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2 truncate">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2 mt-5 line-clamp-2 h-14">
                     {study.title}
                   </h3>
                   <div className="flex h-[84px] flex-wrap gap-2 mb-4 pt-5">
@@ -433,17 +417,15 @@ const Project = () => {
                       </p>
                     </div>
 
-
                     <div>
-                    <p className="text-sm text-right text-gray-500">
-                      {formatDay(study.createdAt)}
-                    </p>
+                      <p className="text-sm text-right text-gray-500">
+                        {formatDay(study.createdAt)}
+                      </p>
 
-                    <p className="text-sm text-right text-gray-500">
-                      조회수 {study.views}
-                    </p>
+                      <p className="text-sm text-right text-gray-500">
+                        조회수 {study.views}
+                      </p>
                     </div>
-                    
                   </div>
                 </div>
               </div>
