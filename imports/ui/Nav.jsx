@@ -68,7 +68,10 @@ export default () => {
   };
 
   return (
-    <Disclosure as="nav" className="bg-white border-b border-gray-100 max-w-6xl mx-auto">
+    <Disclosure
+      as="nav"
+      className="bg-white border-b border-gray-100 max-w-6xl mx-auto"
+    >
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 justify-between">
           <div className="flex">
@@ -83,11 +86,6 @@ export default () => {
                   className="hidden size-6 group-data-[open]:block"
                 />
               </DisclosureButton>
-
-
-
-
-
             </div>
             <div className="flex shrink-0 items-center">
               <img
@@ -214,41 +212,35 @@ export default () => {
             </div>
           </div>
         </div>
-
-        
       </div>
-      
 
-
-      
-{/* 모바일 메뉴 구현 */}
-{/* 모바일 메뉴 패널 */}
-<Disclosure.Panel className="md:hidden">
-  <div className="space-y-1 px-2 pb-3 pt-2">
-    <Link
-      to="/"
-      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-    >
-      프로젝트 목록조회
-    </Link>
-    {user ? (
-      <Link
-        to="/write"
-        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-      >
-        모집글 작성
-      </Link>
-    ) : (
-      <Link
-        to="/join"
-        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-      >
-        회원가입
-      </Link>
-    )}
-  </div>
-</Disclosure.Panel>
-
+      {/* 모바일 메뉴 구현 */}
+      {/* 모바일 메뉴 패널 */}
+      <Disclosure.Panel className="md:hidden">
+        <div className="space-y-1 px-2 pb-3 pt-2">
+          <Link
+            to="/"
+            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+          >
+            프로젝트 목록조회
+          </Link>
+          {user ? (
+            <Link
+              to="/write"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+            >
+              모집글 작성
+            </Link>
+          ) : (
+            <Link
+              to="/join"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+            >
+              회원가입
+            </Link>
+          )}
+        </div>
+      </Disclosure.Panel>
     </Disclosure>
   );
 };
