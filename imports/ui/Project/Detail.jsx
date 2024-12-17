@@ -342,28 +342,50 @@ const Detail = () => {
           </div>
         </div>
 
-        {/* 프로젝트 참여자 */}
         <div className="p-6">
           <h3 className="text-xl font-semibold mb-4">프로젝트 참여자</h3>
           <div className="flex items-center gap-4">
-            {project?.image && (
+            {project?.image ? (
               <img
                 src={project.image}
                 className="w-20 h-20 rounded-full object-cover"
+                alt={`${project.username}'s profile`}
               />
+            ) : (
+              <span className="inline-block w-20 h-20 overflow-hidden rounded-full bg-gray-100">
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  className="w-full h-full text-gray-300"
+                >
+                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </span>
             )}
             <span className="text-lg font-medium">{project?.username}</span>
           </div>
+
           <ul className="mt-4 space-y-2">
             {ok
               .filter((o) => o.username !== project.username)
               .map((o) => (
                 <li key={o._id} className="flex items-center gap-4">
-                  {o.profile.image && (
+                  {o.profile.image ? (
                     <img
                       src={o.profile.image}
                       className="w-14 h-14 rounded-full object-cover"
+                      alt={`${o.username}'s profile`}
                     />
+                  ) : (
+                    <span className="inline-block w-14 h-14 overflow-hidden rounded-full bg-gray-100">
+                      <svg
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className="w-full h-full text-gray-300"
+                      >
+                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </span>
                   )}
                   <span className="text-lg">{o.username}</span>
                 </li>
@@ -405,17 +427,27 @@ const Detail = () => {
           </ul>
         </div>
 
-        {/* 댓글 입력창 */}
         <div className="p-6 border-t border-gray-200">
           <h3 className="text-xl font-semibold mb-4">댓글 입력창</h3>
           {user ? (
             <>
               <div className="flex items-center gap-4 mb-4">
-                {user.profile.image && (
+                {user.profile.image ? (
                   <img
                     src={user.profile.image}
                     className="w-14 h-14 rounded-full object-cover"
+                    alt={`${user.username}'s profile`}
                   />
+                ) : (
+                  <span className="inline-block w-14 h-14 overflow-hidden rounded-full bg-gray-100">
+                    <svg
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      className="w-full h-full text-gray-300"
+                    >
+                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  </span>
                 )}
                 <span className="text-lg font-medium">{user.username}</span>
               </div>
