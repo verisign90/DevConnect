@@ -31,6 +31,43 @@ const Detail = () => {
     }
   };
 
+  // 기술스택 뱃지 색깔
+  const stackColors = {
+    backend: "bg-yellow-100 text-yellow-800",
+    database: "bg-green-100 text-green-800",
+    cloud: "bg-blue-100 text-blue-800",
+    frontend: "bg-pink-100 text-pink-800",
+    mobile: "bg-purple-100 text-purple-800",
+    other: "bg-indigo-100 text-indigo-800",
+  };
+
+  // 기술스택 카테고리
+  const stackCategories = {
+    backend: ["Java", "NodeJS", "Kotlin", "Python", "Spring", "Django"],
+    database: ["Mysql", "MongoDB", "Oracle"],
+    cloud: ["AWS", "Azure", "Kubernetes", "Docker"],
+    frontend: ["NextJS", "Javascript", "Typescript", "React", "ReactNative"],
+    mobile: ["Flutter", "Swift"],
+    other: ["Other"],
+  };
+
+  // 스택에 맞는 카테고리 반환
+  const getStackCategory = (stack) => {
+    for (const [category, stacks] of Object.entries(stackCategories)) {
+      if (stacks.includes(stack)) return category;
+    }
+    return "other";
+  };
+
+  //요구역량 스타일
+  const badgeStyles = {
+    manner: "bg-amber-200 text-amber-600 fill-amber-400",
+    communication: "bg-lime-200 text-lime-700 fill-lime-500",
+    passion: "bg-cyan-200 text-cyan-800 fill-cyan-500",
+    mentoring: "bg-emerald-200 text-emerald-700 fill-emerald-500",
+    time: "bg-fuchsia-200 text-fuchsia-700 fill-fuchsia-500",
+  };
+
   const { id } = useParams(); //작성된 studyId
   const [project, setProject] = useState({});
   const [loading, setLoading] = useState(true);
@@ -167,34 +204,99 @@ const Detail = () => {
 
   return (
     <>
-      <h2>프로젝트 모집글 상세조회페이지</h2>
-      모집상태: {project?.status}
-      <br />
-      모집제목: {project?.title}
-      <br />
-      작성일: {formatDay(project?.createdAt)}
-      <br />
-      조회수: {project?.views}
-      <br />
-      작성자: {project?.username}
-      <hr />
-      모집분야: {project?.role}
-      <br />
-      모임형태: {project?.onOff}{" "}
-      {project?.onOff !== "온라인" && <span>{project?.location.city}</span>}
-      <br />
-      참여인원: {project?.memberCount}
-      <br />
-      기술스택: {project?.techStack.join(" ")}
-      <br />
-      요구역량{" "}
-      {Object.entries(project?.score).map(([field, value]) => (
-        <li key={field}>
-          {field} : {value}
-        </li>
-      ))}
-      <hr />
-      내용: {project.content}
+      <div className="bg-white">
+        <div className="max-w-7xl pl-6 pr-6 pt-5 pb-10 sm:pt-5 sm:pb-10 lg:flex lg:items-center lg:justify-between border-b border-gray-300">
+          <h2 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
+            <p className="inline-flex items-center rounded-full bg-teal-200 px-3 py-0.5 text-base font-semibold text-teal-800 mb-2">
+              {project?.status}
+            </p>
+            <br />
+            {project?.title}
+            <br />
+            <span className="text-base text-gray-500">
+              작성일 {formatDay(project?.createdAt)} 조회수 {project?.views}
+            </span>
+            작성자: {project?.username}
+          </h2>
+        </div>
+      </div>
+      <div className="w-full pl-6 pr-6 pt-5 pb-10 sm:pt-5 sm:pb-10 bg-white border-b border-gray-300">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <h3 className="font-semibold text-lg w-24">모집분야</h3>
+              <p className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-base font-semibold text-gray-600">
+                {project?.role}
+              </p>
+            </div>
+            <div className="flex items-center">
+              <h3 className="font-semibold text-lg w-24">참여인원</h3>
+              <p className="font-base text-lg">{project?.memberCount}명</p>
+            </div>
+            <div className="flex items-center">
+              <h3 className="font-semibold text-lg w-24">기술스택</h3>
+              <div className="flex flex-wrap gap-1">
+                {project?.techStack.map((stack) => {
+                  const category = getStackCategory(stack);
+                  const colorClasses = stackColors[category];
+                  return (
+                    <span
+                      key={stack}
+                      className={`inline-flex items-center rounded-md px-2 py-1 text-base font-semibold ${colorClasses}`}
+                    >
+                      {stack}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <h3 className="font-semibold text-lg w-24">모임형태</h3>
+              <span className="inline-flex items-center rounded-md bg-red-100 px-2 py-1 text-base font-semibold text-red-700">
+                {project?.onOff}
+                {project?.onOff !== "온라인" && ` · ${project?.location.city}`}
+              </span>
+            </div>
+            <div className="flex items-start">
+              <h3 className="font-semibold text-lg w-24">요구역량</h3>
+              <ul className="list-none">
+                {Object.entries(project?.score).map(([field, value]) => {
+                  const style =
+                    badgeStyles[field] ||
+                    "bg-gray-100 text-gray-600 fill-gray-400";
+                  const [bgColor, textColor, fillColor] = style.split(" ");
+                  return (
+                    <li key={field} className="mb-2">
+                      <span
+                        className={`inline-flex items-center gap-x-1.5 rounded-md ${bgColor} px-1.5 py-0.5 text-sm font-semibold ${textColor}`}
+                      >
+                        <svg
+                          viewBox="0 0 6 6"
+                          aria-hidden="true"
+                          className={`size-1.5 ${fillColor}`}
+                        >
+                          <circle r={3} cx={3} cy={3} />
+                        </svg>
+                        {field.charAt(0).toUpperCase() + field.slice(1)}:{" "}
+                        {value}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-white">
+        <div className="max-w-7xl pl-6 pr-6 py-12 sm:py-14 lg:flex lg:items-center lg:justify-between">
+          <h2 className="text-2xl font-medium tracking-tight text-gray-900 sm:text-lg">
+            {project.content}
+          </h2>
+        </div>
+      </div>
       <hr />
       <button onClick={goMain}>목록</button>
       {writer && (

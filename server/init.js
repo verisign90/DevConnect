@@ -111,9 +111,9 @@ if (!Studys.findOne()) {
       techStack: stackList.random(1, 5),
       score: {
         manner: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
-        mentoring: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
-        passion: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
         communication: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
+        passion: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
+        mentoring: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
         time: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
       },
       content: "내용" + i,
