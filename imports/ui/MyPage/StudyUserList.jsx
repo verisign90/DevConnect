@@ -62,27 +62,68 @@ const StudyUserList = () => {
 
   return (
     <>
-      <h2>신청자 목록</h2>
-      <ul>
+      <div className="max-w-6xl mx-auto px-6 py-12 bg-white">
+        {/* 제목 */}
+        <h2 className="text-2xl font-bold mb-6 text-gray-900">신청자 목록</h2>
+
+        {/* 신청자 목록 */}
         {wait && wait.length > 0 ? (
-          wait.map((w) => (
-            <li key={w._id}>
-              {w.profile.image && (
-                <img
-                  src={w.profile.image}
-                  style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-                />
-              )}
-              {w.username}{" "}
-              <button onClick={() => goProfile(w._id)}>프로필</button>{" "}
-              <button onClick={() => statusOk(w._id)}>승인</button>{" "}
-              <button onClick={() => statusNo(w._id)}>거절</button>
-            </li>
-          ))
+          <ul className="space-y-4">
+            {wait.map((w) => (
+              <li
+                key={w._id}
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200"
+              >
+                <div className="flex items-center gap-4">
+                  {/* 프로필 이미지 */}
+                  {w.profile.image ? (
+                    <img
+                      src={w.profile.image}
+                      alt="profile"
+                      className="w-16 h-16 rounded-full object-cover border border-gray-300"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-lg">
+                      ?
+                    </div>
+                  )}
+
+                  {/* 신청자 이름 */}
+                  <span className="text-lg font-semibold text-gray-800">
+                    {w.username}
+                  </span>
+                </div>
+
+                {/* 버튼 그룹 */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => goProfile(w._id)}
+                    className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    프로필
+                  </button>
+                  <button
+                    onClick={() => statusOk(w._id)}
+                    className="bg-green-600 text-white py-1 px-3 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    승인
+                  </button>
+                  <button
+                    onClick={() => statusNo(w._id)}
+                    className="bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  >
+                    거절
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : (
-          <p>아직 신청한 사람이 없습니다</p>
+          <p className="text-gray-500 text-lg text-center">
+            아직 신청한 사람이 없습니다.
+          </p>
         )}
-      </ul>
+      </div>
     </>
   );
 };
