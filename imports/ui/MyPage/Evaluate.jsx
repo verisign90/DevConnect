@@ -90,39 +90,67 @@ const Evaluate = () => {
   };
 
   return (
-    <>
-      <h2>{`${study.title} 평가 페이지`}</h2>
-      {teamMembers.map((member) => (
-        <li key={member._id}>
-          <h3 style={{ display: "inline-block", marginRight: "10px" }}>
-            {member.username}
-          </h3>
-          <button onClick={() => goProfile(member._id)}>프로필</button>
-          <div>
-            {["manner", "mentoring", "passion", "communication", "time"].map(
-              (category) => (
-                <div key={category} style={{ marginBottom: "10px" }}>
-                  <label>{category}</label>
-                  <div style={{ display: "inline-block" }}>
-                    {[1, 2, 3, 4, 5].map((scoreVal) => (
-                      <label key={scoreVal} style={{ marginRight: "5px" }}>
-                        <input
-                          type="radio"
-                          name={`${member._id}-${category}`}
-                          value={scoreVal}
-                        />
-                        {scoreVal}
-                      </label>
-                    ))}
+    <div className="max-w-6xl mx-auto px-6 py-4 bg-white">
+      <div className="max-w-4xl mx-auto p-6 sm:p-10">
+        <div className="lg:flex lg:items-center lg:justify-center">
+          <h2 className="text-xl font-semibold tracking-tight text-gray-900 sm:text-2xl mb-4 lg:mb-0 text-center">
+            {`${study.title} 평가 페이지`}
+          </h2>
+        </div>
+      </div>
+
+      <ul className="space-y-4 mt-6">
+        {teamMembers.map((member) => (
+          <li
+            key={member._id}
+            className="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200 max-w-lg mx-auto"
+          >
+            <div className="flex items-center mb-4">
+              <h3 className="text-2xl font-semibold mr-3">{member.username}</h3>
+              <button
+                onClick={() => goProfile(member._id)}
+                className="px-3 py-1 text-sm bg-blue-700 text-white rounded hover:bg-blue-600"
+              >
+                프로필
+              </button>
+            </div>
+            <div className="space-y-2">
+              {["manner", "mentoring", "passion", "communication", "time"].map(
+                (category) => (
+                  <div key={category} className="flex items-center">
+                    <label className="w-32 font-medium font-semibold">
+                      {category}
+                    </label>
+                    <div className="flex space-x-4">
+                      {[1, 2, 3, 4, 5].map((scoreVal) => (
+                        <label key={scoreVal} className="flex items-center">
+                          <input
+                            type="radio"
+                            name={`${member._id}-${category}`}
+                            value={scoreVal}
+                            className="mr-1"
+                          />
+                          <span>{scoreVal}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )
-            )}
-          </div>
-        </li>
-      ))}
-      <button onClick={handleSubmit}>평가제출</button>
-    </>
+                )
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div className="flex justify-center">
+        <button
+          onClick={handleSubmit}
+          className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          평가제출
+        </button>
+      </div>
+    </div>
   );
 };
 
