@@ -239,7 +239,7 @@ const Project = () => {
             </div>
           </div>
 
-          <div className="w-[200px]">
+          <div className="w-[210px]">
             <h4 className="text-base font-medium text-gray-900">기술스택</h4>
             <div className="mt-1 grid grid-cols-1">
               <select
