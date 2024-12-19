@@ -107,9 +107,22 @@ if (!Studys.findOne()) {
     const randomCity = locationData.random();
     const randomGubun = randomCity.gubun.random();
 
+    const title = [
+      "글로벌 여행 경험 공유 앱 'TravelTales' 개발자 모집",
+      "엔터프라이즈급 프로젝트 관리 플랫폼 'ProjectPro' 개발자 모집",
+      "AI 기반 개인화 학습 플랫폼 'EduMind' 개발자 모집",
+      "크로스 플랫폼 소셜 피트니스 앱 'FitConnect' 개발자 모집",
+      "스마트 헬스케어 통합 플랫폼 'HealthSync' 개발자 모집",
+      "AI 기반 지속 가능한 농업 플랫폼 'GreenGrow' 개발자 모집",
+      "멀티 플랫폼 지속 가능한 농업 관리 시스템 'GreenHarvest' 개발자 모집",
+      "글로벌 여행 동행 앱 'WanderMate' 개발자 모집",
+      "클라우드 네이티브 마이크로서비스 플랫폼 'CloudNative Hub' 개발자 모집",
+      "AI 기반 컨테이너화 데이터 분석 플랫폼 'DataDock' 개발자 모집",
+    ];
+
     Studys.insert({
       userId: user._id,
-      title: "제목" + i,
+      title: title.random(),
       role: ["백엔드/프론트엔드", "백엔드", "프론트엔드"].random(),
       onOff: ["온라인", "오프라인", "온/오프라인"].random(),
       location: {
