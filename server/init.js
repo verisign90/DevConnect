@@ -107,22 +107,65 @@ if (!Studys.findOne()) {
     const randomCity = locationData.random();
     const randomGubun = randomCity.gubun.random();
 
-    const title = [
-      "글로벌 여행 경험 공유 앱 'TravelTales' 개발자 모집",
-      "엔터프라이즈급 프로젝트 관리 플랫폼 'ProjectPro' 개발자 모집",
-      "AI 기반 개인화 학습 플랫폼 'EduMind' 개발자 모집",
-      "크로스 플랫폼 소셜 피트니스 앱 'FitConnect' 개발자 모집",
-      "스마트 헬스케어 통합 플랫폼 'HealthSync' 개발자 모집",
-      "AI 기반 지속 가능한 농업 플랫폼 'GreenGrow' 개발자 모집",
-      "멀티 플랫폼 지속 가능한 농업 관리 시스템 'GreenHarvest' 개발자 모집",
-      "글로벌 여행 동행 앱 'WanderMate' 개발자 모집",
-      "클라우드 네이티브 마이크로서비스 플랫폼 'CloudNative Hub' 개발자 모집",
-      "AI 기반 컨테이너화 데이터 분석 플랫폼 'DataDock' 개발자 모집",
+    //모집글 더미데이터
+    const titleContent = [
+      {
+        title: "글로벌 여행 경험 공유 앱 'TravelTales' 개발자 모집",
+        content:
+          "전 세계 여행자들의 경험을 공유하는 TravelTales 개발에 함께할 개발자를 찾습니다!",
+      },
+      {
+        title: "엔터프라이즈급 프로젝트 관리 플랫폼 'ProjectPro' 개발자 모집",
+        content:
+          "대규모 프로젝트 관리를 효율적으로 지원하는 ProjectPro 개발에 참여하세요!",
+      },
+      {
+        title: "AI 기반 개인화 학습 플랫폼 'EduMind' 개발자 모집",
+        content:
+          "사용자의 학습 패턴을 분석하여 맞춤형 교육을 제공하는 EduMind를 개발할 개발자를 찾습니다.",
+      },
+      {
+        title: "크로스 플랫폼 소셜 피트니스 앱 'FitConnect' 개발자 모집",
+        content:
+          "운동을 더 즐겁게! FitConnect에서 크로스 플랫폼 소셜 피트니스 서비스를 함께 개발할 개발자를 모집합니다.",
+      },
+      {
+        title: "스마트 헬스케어 통합 플랫폼 'HealthSync' 개발자 모집",
+        content:
+          "건강 데이터를 하나로 통합하는 HealthSync 개발 프로젝트에 함께할 개발자를 찾습니다.",
+      },
+      {
+        title: "AI 기반 지속 가능한 농업 플랫폼 'GreenGrow' 개발자 모집",
+        content: "농업의 미래를 AI로 혁신하는 GreenGrow 개발에 참여하세요!",
+      },
+      {
+        title:
+          "멀티 플랫폼 지속 가능한 농업 관리 시스템 'GreenHarvest' 개발자 모집",
+        content:
+          "지속 가능한 농업을 위한 GreenHarvest 시스템을 함께 개발할 개발자를 찾습니다.",
+      },
+      {
+        title: "글로벌 여행 동행 앱 'WanderMate' 개발자 모집",
+        content:
+          "여행자들의 동행을 연결하는 WanderMate 개발에 함께할 개발자를 모집합니다.",
+      },
+      {
+        title:
+          "클라우드 네이티브 마이크로서비스 플랫폼 'CloudNative Hub' 개발자 모집",
+        content:
+          "클라우드 환경에서 확장 가능한 마이크로서비스 플랫폼, CloudNative Hub를 개발할 인재를 찾습니다.",
+      },
+      {
+        title: "AI 기반 컨테이너화 데이터 분석 플랫폼 'DataDock' 개발자 모집",
+        content:
+          "데이터 분석의 새로운 패러다임, DataDock을 함께 개발할 개발자를 모집합니다.",
+      },
     ];
+    const studyPost = titleContent.random();
 
     Studys.insert({
       userId: user._id,
-      title: title.random(),
+      title: studyPost.title,
       role: ["백엔드/프론트엔드", "백엔드", "프론트엔드"].random(),
       onOff: ["온라인", "오프라인", "온/오프라인"].random(),
       location: {
@@ -138,7 +181,7 @@ if (!Studys.findOne()) {
         mentoring: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
         time: [0, 1, 2, 2, 2, 3, 3, 3, 3].random(),
       },
-      content: "내용" + i,
+      content: studyPost.content,
       status: "모집중",
       views: i,
       createdAt: new Date(),
@@ -157,17 +200,30 @@ if (!Comments.findOne()) {
   Array.range(0, testUserCount * 0.5).forEach((i) => {
     const user = users.random();
     const study = studys.random();
+    const comments = [
+      "프로젝트 기간은 얼마나 되나요? 장기 프로젝트인가요?",
+      "이런 기회가 많아졌으면 좋겠어요. 좋은 프로젝트입니다!",
+      "이전에 비슷한 프로젝트 경험이 있으신 분들도 계신가요?",
+      "팀원들과의 협업이 기대됩니다. 함께 일해보고 싶어요!",
+      "이 프로젝트에 대한 더 많은 정보가 필요해요",
+      "참여할 수 있는 기회를 주셔서 감사합니다!",
+      "이런 프로젝트는 정말 흥미롭네요. 지원할게요!",
+      "원격으로 참여 가능한지 궁금합니다",
+      "프로젝트가 처음인 사람도 지원 가능한가요? 열정만큼은 자신 있습니다!",
+      "모두가 함께 성장할 수 있는 기회가 되길 바랍니다!",
+    ];
 
     Comments.insert({
       studyId: study._id,
       userId: user._id,
       username: user.username,
       image: user.profile.image,
-      comment: "댓글" + i,
+      comment: comments.random(),
       createdAt: new Date(),
     });
   });
 }
+//console.log("댓글 생성 완료");
 
 //스터디 신청자가 없다면
 if (!StudyUsers.findOne()) {

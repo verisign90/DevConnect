@@ -395,36 +395,42 @@ const Detail = () => {
 
         <div className="p-6">
           <h3 className="text-xl font-semibold mb-4">댓글 목록</h3>
-          <ul className="space-y-4">
-            {comments.map((cmt) => (
-              <li key={cmt._id} className="flex items-start gap-4">
-                {cmt.image ? (
-                  <img
-                    src={cmt.image}
-                    className="w-10 h-10 rounded-full object-cover"
-                    alt={`${cmt.username}'s profile`}
-                  />
-                ) : (
-                  <span className="inline-block size-10 overflow-hidden rounded-full bg-gray-100">
-                    <svg
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      className="size-full text-gray-300"
-                    >
-                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                  </span>
-                )}
-                <div>
-                  <p className="font-medium">{cmt.username}</p>
-                  <p className="text-gray-700">{cmt.comment}</p>
-                  <p className="text-sm text-gray-500">
-                    {formatDay(cmt.createdAt)}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {comments.length === 0 ? (
+            <p className="text-gray-500">
+              아직 댓글이 없습니다. 첫 번째로 의견을 남겨보세요!
+            </p>
+          ) : (
+            <ul className="space-y-4">
+              {comments.map((cmt) => (
+                <li key={cmt._id} className="flex items-start gap-4">
+                  {cmt.image ? (
+                    <img
+                      src={cmt.image}
+                      className="w-10 h-10 rounded-full object-cover"
+                      alt={`${cmt.username}'s profile`}
+                    />
+                  ) : (
+                    <span className="inline-block size-10 overflow-hidden rounded-full bg-gray-100">
+                      <svg
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className="size-full text-gray-300"
+                      >
+                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </span>
+                  )}
+                  <div>
+                    <p className="font-medium">{cmt.username}</p>
+                    <p className="text-gray-700">{cmt.comment}</p>
+                    <p className="text-sm text-gray-500">
+                      {formatDay(cmt.createdAt)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="p-6 border-t border-gray-200">
