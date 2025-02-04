@@ -83,9 +83,15 @@ const StudyUserList = () => {
                       className="w-16 h-16 rounded-full object-cover border border-gray-300"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-lg">
-                      ?
-                    </div>
+                    <span className="inline-block size-16 overflow-hidden rounded-full bg-gray-100">
+                      <svg
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className="size-full text-gray-300"
+                      >
+                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </span>
                   )}
 
                   {/* 신청자 이름 */}

@@ -60,12 +60,22 @@ const MyProfile = () => {
 
         {/* 프로필 이미지와 사용자 정보 */}
         <div className="flex items-center gap-6 mb-8">
-          {user.profile.image && (
+          {user.profile.image ? (
             <img
               src={user.profile.image}
               alt="프로필 이미지"
               className="w-36 h-36 rounded-full object-cover border-2 border-gray-200"
             />
+          ) : (
+            <span className="inline-block w-36 h-36 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center border-2 border-gray-200">
+              <svg
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                className="size-full text-gray-300"
+              >
+                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </span>
           )}
           <div>
             <p className="text-lg font-semibold text-gray-900">

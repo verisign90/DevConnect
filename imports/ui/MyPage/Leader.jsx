@@ -152,22 +152,32 @@ const Leader = () => {
 
           {/* 팀장 정보 */}
           <div className="flex items-center gap-4 mb-6">
-            {user.profile.image && (
+            {user.profile.image ? (
               <img
                 src={user.profile.image}
                 className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
                 alt="팀장 프로필"
               />
+            ) : (
+              <span className="inline-block w-24 h-24 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center border-2 border-gray-200">
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  className="size-full text-gray-300"
+                >
+                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </span>
             )}
             <div>
-              <p className="text-lg font-semibold text-gray-900">팀장:</p>
+              <p className="text-lg font-semibold text-gray-900">팀장</p>
               <p className="text-lg text-gray-700">{user.username}</p>
             </div>
           </div>
 
           {/* 팀원 목록 */}
           <div className="space-y-4">
-            <p className="text-lg font-semibold text-gray-900">팀원:</p>
+            <p className="text-lg font-semibold text-gray-900">팀원 목록</p>
             <ul className="space-y-4">
               {ok
                 .filter((o) => o._id !== user._id)
