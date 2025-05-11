@@ -433,7 +433,7 @@ if (!Studys.findOne({ status: "종료" })) {
       teamMembers.forEach((studyUser) => {
         Notices.insert({
           studyId: study._id,
-          userId: teamMembers.userId,
+          userId: studyUser.userId,
           message: `${study.title} 프로젝트가 종료되었습니다. 팀원을 평가해 주세요`,
           read: false,
           createdAt: new Date(),
